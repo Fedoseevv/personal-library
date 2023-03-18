@@ -1,14 +1,15 @@
 const ApiError = require('../handlers/api-error');
-const articleQueries = require('../dbQueries/article-queries');
+const documentQueries = require('../dbQueries/document-queries');
+const bookQueries = require("../dbQueries/book-queries");
 
-class ArticlesController {
-    async addArticle(req, res, next) {
+class DocumentController {
+    async addDocument(req, res, next) {
         try {
-            const {title, link, publishDate, userId} = req.body;
+            const {title, dateOfPub, idExpans, location, locationObl, idUser} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.addArticle(title, link, publishDate, userId)
+            await documentQueries.addDocument(title, dateOfPub, idExpans, location, locationObl, idUser)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -16,13 +17,13 @@ class ArticlesController {
             return res.status(400).json({message: e.message});
         }
     }
-    async deleteArticle(req, res, next) {
+    async deleteDocument(req, res, next) {
         try {
             const {id} = req.query;
             if (!id) {
-                return next(ApiError.badReq("Идентификатор статьи не указан!"));
+                return next(ApiError.badReq("Идентификатор документа не указан!"));
             }
-            await articleQueries.deleteArticle(id)
+            await documentQueries.deleteDocument(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -30,9 +31,9 @@ class ArticlesController {
             return res.status(400).json({message: e.message});
         }
     }
-    async allArticles(req, res) {
+    async allDocuments(req, res) {
         try {
-            await articleQueries.allArticles()
+            await documentQueries.allDocuments()
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -40,24 +41,24 @@ class ArticlesController {
             return res.status(400).json({message: e.message});
         }
     }
-    async updateArticle(req, res, next) {
+    async updateBook(req, res, next) {
         try {
-            const {idArt, title, link, publishDate, userId} = req.body;
+            const {idDoc, title, dateOfPub, idExpans, location, locationObl, idUser} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.updateArticle(idArt, title, link, publishDate, userId)
+            await documentQueries.updateDocument(idDoc, title, dateOfPub, idExpans, location, locationObl, idUser)
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
     }
-    async articleById(req, res, next) {
+    async docById(req, res, next) {
         try {
             const {id} = req.query;
             if (!id) {
-                return next(ApiError.badReq("Идентификатор статьи не указан!"));
+                return next(ApiError.badReq("Идентификатор документа не указан!"));
             }
-            await articleQueries.articleById(id)
+            await documentQueries.documentById(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -67,4 +68,4 @@ class ArticlesController {
     }
 }
 
-module.exports = new ArticlesController();
+module.exports = new DocumentController();

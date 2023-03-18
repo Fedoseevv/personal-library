@@ -3,7 +3,7 @@ const {request} = require('express');
 
 const addPublish = (name, city) => {
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO course_work.library.publishing_house (id_publishing_house, name, city_of_publication) VALUES (3, $1, $2)", [name, city],
+        pool.query("INSERT INTO course_work.library.publishing_house (id_publishing_house, name, city_of_publication) VALUES (DEFAULT, $1, $2)", [name, city],
             (error, result) => {
                 if (error) {
                     reject(error);

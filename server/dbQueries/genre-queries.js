@@ -3,7 +3,7 @@ const {request} = require('express');
 
 const addGenre = (name) => {
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO course_work.library.genre (id_genre, name) VALUES (2, $1)", [name],
+        pool.query("INSERT INTO course_work.library.genre (id_genre, name) VALUES (DEFAULT, $1)", [name],
             (error, result) => {
                 if (error) {
                     reject(error);
