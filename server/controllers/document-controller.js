@@ -1,6 +1,5 @@
 const ApiError = require('../handlers/api-error');
 const documentQueries = require('../dbQueries/document-queries');
-const bookQueries = require("../dbQueries/book-queries");
 
 class DocumentController {
     async addDocument(req, res, next) {

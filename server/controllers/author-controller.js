@@ -1,17 +1,14 @@
-const uuid = require('uuid');
 const ApiError = require('../handlers/api-error');
-const bookQueries = require('../dbQueries/book-queries');
+const authorQueries = require('../dbQueries/author-queries');
 
-class BookController {
-    async addBook(req, res, next) {
+class AuthorController {
+    async addAuthor(req, res, next) {
         try {
-            const {title, year, keywords, cover, id_genre, annotation, expansion, location, locationObl, user} = req.body;
-            // const img = req.files;
-            // const fileName = uuid.v4() + ".jpg";
+            const {name, patronymic, surname, birthDate} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.addBook(title, year, keywords, cover, id_genre, annotation, expansion, location, locationObl, user)
+            await authorQueries.addAuthor(name, patronymic, surname, birthDate)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -19,13 +16,13 @@ class BookController {
             return res.status(400).json({message: e.message});
         }
     }
-    async deleteBook(req, res, next) {
+    async deleteAuthor(req, res, next) {
         try {
             const {id} = req.query;
             if (!id) {
-                return next(ApiError.badReq("Идентификатор книги не указан!"));
+                return next(ApiError.badReq("Идентификатор автора не указан!"));
             }
-            await bookQueries.deleteBook(id)
+            await authorQueries.deleteAuthor(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -33,9 +30,9 @@ class BookController {
             return res.status(400).json({message: e.message});
         }
     }
-    async allBooks(req, res) {
+    async allAuthors(req, res) {
         try {
-            await bookQueries.allBooks()
+            await authorQueries.allAuthors()
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -43,26 +40,26 @@ class BookController {
             return res.status(400).json({message: e.message});
         }
     }
-    async updateBook(req, res, next) {
+    async updateAuthor(req, res, next) {
         try {
-            const {id, title, year, keywords, cover, id_genre, annotation, expansion, location, locationObl, user} = req.body;
+            const {authorId, name, patronymic, surname, birthDate} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.updateBook(id, title, year, keywords, cover, id_genre, annotation, expansion, location, locationObl, user)
+            await authorQueries.updateAuthor(authorId, name, patronymic, surname, birthDate)
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
     }
-    async bookById(req, res, next) {
+    async authorById(req, res, next) {
         try {
             const {id} = req.query;
             if (!id) {
-                return next(ApiError.badReq("Идентификатор книги не указан!"));
+                return next(ApiError.badReq("Идентификатор документа не указан!"));
             }
-            await bookQueries.bookById(id)
+            await authorQueries.authorById(id)
                 .then(response => {
-                    return res.status(200).send(response);
+                   return res.status(200).send(response);
                 });
         } catch (e) {
             return res.status(400).json({message: e.message});
@@ -70,4 +67,4 @@ class BookController {
     }
 }
 
-module.exports = new BookController();
+module.exports = new AuthorController();

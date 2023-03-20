@@ -18,7 +18,7 @@ const addDocument = (title, dateOfPub, idExpans, location, locationObl, idUser) 
 
 const deleteDocument = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("DELETE FROM course_work.library.document WHERE id = $1", [id],
+        pool.query("DELETE FROM course_work.library.document WHERE id_document = $1", [id],
             (error, result) => {
                 if (error) {
                     reject(error);
