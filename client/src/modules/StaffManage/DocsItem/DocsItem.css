@@ -1,0 +1,29 @@
+.docs_item {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 40px;
+}
+
+.docs_item__title {
+    font-size: 25px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.docs_item__info {
+    font-size: 18px;
+    text-align: left;
+}
+.docs_item__btns {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.docs_standard__btn {
+    font-size: 17px;
+    margin-right: 10px;
+}

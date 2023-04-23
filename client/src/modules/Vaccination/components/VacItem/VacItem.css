@@ -1,0 +1,42 @@
+.vacPage_item {
+    text-align: start;
+    background-color: rgb(45, 87, 150);
+    border-radius: 15px;
+    border: 2px solid lightblue;
+    font-size: 18px;
+    margin-bottom: 50px;
+    box-shadow: 8px 8px 10px rgb(38, 88, 126),
+                -8px -8px 15px rgba(38, 88, 126);
+}
+.vacPage_item__container {
+    padding: 35px;
+}
+.vacPage_item__name {
+    font-size: 35px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.vacItem_btns {
+    display: flex;
+    justify-content: end;
+}
+.vacItem_btn {
+    margin: 25px 0;
+}
+.vacItem_btn:not(:last-child) {
+    margin-right: 30px;
+}
+.vacPage_item__btns {
+    display: flex;
+    justify-content: end;
+}
+
+.vacPage_item__descr {
+    margin-bottom: 25px;
+}
+.vacPage_item__contr li {
+    margin-bottom: 5px;
+    padding-left: 15px;
+}

@@ -1,0 +1,7 @@
+.drugs_container {
+    display: grid;
+    grid-template-columns: repeat(3, 350px);
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}

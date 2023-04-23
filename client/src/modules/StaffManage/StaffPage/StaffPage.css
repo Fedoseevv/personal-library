@@ -1,0 +1,13 @@
+.staff {
+    color: #fff;
+    min-height: 100vh;
+    padding: 50px;
+    background-color: steelblue;
+    align-items: center;
+    text-align: center;
+}
+.msg_title {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 50px;
+}

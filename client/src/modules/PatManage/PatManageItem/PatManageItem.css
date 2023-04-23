@@ -1,0 +1,45 @@
+.card {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px 20px 10px;
+    border-radius: 5px;
+    font-size: 18px;
+}
+.card_content__item {
+    margin-bottom: 3px;
+    font-weight: 300;
+}
+.card_btns__wrap {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card_btn {
+    margin: 0!important;
+    padding: 2px 0!important;
+    width: 50%!important;
+}
+.card_btn:not(:last-child) {
+    margin-right: 10px!important;
+}
+
+
+/* Модальное окно */
+.card_modal_title {
+    font-size: 45px;
+    font-weight: 300;
+}
+.card_modal__btns {
+    margin-top: 30px;
+}
+.card_modal__btn {
+    width: 48% !important;
+}
+.card_modal__btn:not(:last-child) {
+    margin-right: 25px;
+}
+.hide_btn {
+    display: none;
+}

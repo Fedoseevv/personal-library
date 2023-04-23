@@ -1,0 +1,8 @@
+.addCol_form {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(1, 450px);
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}

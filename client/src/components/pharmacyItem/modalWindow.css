@@ -1,0 +1,33 @@
+.pharm_modal__info {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21, 74, 126);
+
+    padding: 40px;
+    font-size: 25px;
+    border: 2px solid steelblue;
+    border-radius: 12px;
+}
+.pharm_modal__name {
+    font-size: 30px;
+}
+
+.pharm_modal__name,
+.pharm_modal__id,
+.pharm_modal__rec,
+.pharm_modal__count,
+.pharm_modal__endDate,
+.pharm_modal__price {
+    font-weight: 300;
+}
+.pharm_modal__name span,
+.pharm_modal__id span,
+.pharm_modal__rec span,
+.pharm_modal__count span,
+.pharm_modal__endDate span,
+.pharm_modal__price span {
+    font-weight: 600;
+}
+.pharm_modal__btn {
+    margin-top: 15px!important;
+}

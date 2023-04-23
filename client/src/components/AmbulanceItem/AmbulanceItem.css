@@ -1,0 +1,31 @@
+.ambulance_list__item {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 300;
+    cursor: default;
+}
+.list_item__rec {
+    font-size: 18px;
+}
+.list_item__rec:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.list_item__rec button {
+    font-size: 15px;
+    color: white;
+    font-weight: 700;
+    background-color: rgb(45, 87, 150);
+    border: none;
+    transition: all .4s ease;
+}
+.list_item__rec button:hover {
+    color: rgba(255, 255, 255, .4);
+}
+.list_item__rec button {
+    cursor: pointer;
+}

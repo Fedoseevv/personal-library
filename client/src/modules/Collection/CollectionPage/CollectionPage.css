@@ -1,0 +1,8 @@
+.collection_wrap {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
+    align-items: center;
+    justify-content: center;
+    gap: 35px;
+}

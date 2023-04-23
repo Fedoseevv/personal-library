@@ -1,0 +1,58 @@
+
+.analysisItem {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px 20px 0;
+    border-radius: 5px;
+    font-size: 19px;
+    font-weight: 300;
+}
+.analysisItem_content {
+    margin-bottom: 15px;
+}
+.analysisItem__btns {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    font-weight: 400;
+}
+.analysisItem_btn {
+    padding: 1px!important;
+    margin: 0 0 10px;
+}
+.analysisItem_btn:not(:last-child) {
+    margin-right: 10px;
+}
+
+.analysisItem_modal {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.analysisItem_modal__title {
+    font-weight: 300;
+    letter-spacing: .1em;
+    margin-bottom: 30px;
+}
+.analysisItem_modal__content {
+    font-size: 20px;
+}
+.analysisItem_modal__item {
+    margin-bottom: 25px;
+}
+.analysisItem_modal__btns {
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.analysisItem_modal__btn {
+    margin: 0;
+}
+.analysisItem_modal__btn:not(:last-child) {
+    margin-right: 25px;
+}

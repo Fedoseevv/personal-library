@@ -4,14 +4,18 @@ const documentQueries = require('../dbQueries/document-queries');
 class DocumentController {
     async addDocument(req, res, next) {
         try {
-            const {title, dateOfPub, idExpans, location, locationObl, idUser} = req.body;
+            const {title, dateOfPub, location, locationObl, authorId} = req.body;
+            console.log(req.body)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await documentQueries.addDocument(title, dateOfPub, idExpans, location, locationObl, idUser)
+            await documentQueries.addDocument(title, dateOfPub, location, locationObl, 1)
+            await documentQueries.maxDocId()
                 .then(response => {
-                    return res.status(200).send(response);
-                });
+                    const docId = response["max_id"]
+                    documentQueries.addDocAuthor(docId, authorId)
+                })
+
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
@@ -40,13 +44,68 @@ class DocumentController {
             return res.status(400).json({message: e.message});
         }
     }
+    async docInCollection(req, res) {
+        try {
+            const {id} = req.body;
+            await documentQueries.docInCollection(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                })
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+    async docNotInCollection(req, res) {
+        try {
+            const {id} = req.body;
+            await documentQueries.docNotInCollection(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                })
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+
+    async deleteFromCollection(req, res) {
+        try {
+            const {docId, colId} = req.body;
+            console.log(docId, colId)
+            await documentQueries.deleteFromCollection(docId, colId)
+                .then(response => {
+                    return res.status(200).json({message: response});
+                })
+
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+    async addInCollection(req, res) {
+        try {
+            const {docId, colId} = req.body;
+            console.log(docId, colId)
+            await documentQueries.addInCollection(docId, colId)
+                .then(response => {
+                    return res.status(200).json({message: response});
+                })
+
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+
     async updateBook(req, res, next) {
         try {
-            const {idDoc, title, dateOfPub, idExpans, location, locationObl, idUser} = req.body;
+            const {id_document, id_da, title, date_of_publication, location, location_obl, id_author} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await documentQueries.updateDocument(idDoc, title, dateOfPub, idExpans, location, locationObl, idUser)
+            console.log([id_document, id_da, title, date_of_publication, location, location_obl, id_author].join("\n"))
+            await documentQueries.updateDocument(id_document, title, date_of_publication, location, location_obl)
+            await documentQueries.updateDocumentAuthor(id_da, id_document, id_author)
+                .then(response => {
+                    return res.status(201).json({message: response});
+                })
         } catch (e) {
             return res.status(400).json({message: e.message});
         }

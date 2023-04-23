@@ -1,0 +1,114 @@
+import {useEffect, useState} from "react";
+
+const useInput = (initialValue, validations) => {
+    const [value, setValue] = useState(initialValue);
+    const [isDirty, setDirty] = useState(false);
+    const valid = useValidation(value, validations);
+
+    const onChange = (e) => {
+        setValue(e.target.value);
+    }
+
+    const onBlur = (e) => {
+        setDirty(true);
+    }
+    return {
+        value,
+        onChange,
+        onBlur,
+        isDirty,
+        ...valid,
+    }
+}
+
+const useValidation = (value, validations) => {
+    const [isEmpty, setEmpty] = useState(true);
+    const [minLengthError, setMinLengthError] = useState(false);
+    const [maxLengthError, setMaxLengthError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    const [dateError, setDateError] = useState(false);
+    const [passError, setPassError] = useState(false);
+    const [snilsError, setSnilsError] = useState(false);
+
+    const [isMatchError, setIsMatchError] = useState(false);
+    const [isDigitError, setIsDigitError] = useState(false);
+
+    const [inputValid, setInputValid] = useState(false);
+
+    useEffect(() => {
+        for (const validation in validations) {
+            switch (validation) {
+                case 'minLength':
+                    value.length < validations[validation] ? setMinLengthError(true) : setMinLengthError(false);
+                    break;
+
+                case 'isEmpty':
+                    value ? setEmpty(false) : setEmpty(true)
+                    break;
+
+                case 'maxLength':
+                    value.length > validations[validation] ? setMaxLengthError(true) : setMaxLengthError(false);
+                    break;
+
+                case 'isMatch':
+                    value === validations[validation] ? setIsMatchError(false) : setIsMatchError(true);
+                    break;
+
+                case 'isEmail':
+                    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    re.test(String(value).toLowerCase()) ? setEmailError(false) : setEmailError(true);
+                    break;
+
+                case 'isPhoneNumber':
+                    const regExp = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
+                    regExp.test(String(value)) ? setPhoneError(false) : setPhoneError(true);
+                    break;
+
+                case 'isDate':
+                    const reg = /\d{4}(-|\/)\d{2}(-|\/)\d{2}/g
+                    reg.test(String(value)) ? setDateError(false) : setDateError(true);
+                    break;
+
+                case 'isPass':
+                    const regPass = /\d{4}(-)\d{6}/
+                    regPass.test(String(value)) ? setPassError(false) : setPassError(true);
+                    break;
+
+                case 'isSnils':
+                    const regSnils = /\d{3}(-)\d{3}(-)\d{3}( )\d{2}/
+                    regSnils.test(String(value)) ? setSnilsError(false) : setSnilsError(true);
+                    break;
+
+                case 'isDigit':
+                    const regDIgit = /\d/g;
+                    regDIgit.test(String(value)) ? setIsDigitError(false) : setIsDigitError(true);
+
+            }
+        }
+    }, [value])
+
+    useEffect(() => {
+        if (isEmpty || maxLengthError ||  minLengthError || emailError) {
+            setInputValid(false)
+        } else {
+            setInputValid(true);
+        }
+    }, [isEmpty, maxLengthError, minLengthError, emailError])
+
+    return {
+        isEmpty,
+        minLengthError,
+        emailError,
+        maxLengthError,
+        phoneError,
+        dateError,
+        passError,
+        snilsError,
+        isMatchError,
+        isDigitError,
+
+        inputValid
+    }
+}
+export {useInput, useValidation};

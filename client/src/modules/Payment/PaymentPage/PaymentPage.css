@@ -1,0 +1,22 @@
+.payment {
+    background-color: steelblue;
+    min-height: 100vh;
+    padding: 50px;
+    text-align: center;
+    color: #ffffff;
+}
+.payment_title {
+    font-size: 45px;
+    font-weight: 400;
+    margin-bottom: 50px;
+}
+.payment_content {
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
+    gap: 45px;
+    align-items: stretch;
+    justify-content: center;
+}
+.payment_btns {
+    margin-top: 50px;
+}

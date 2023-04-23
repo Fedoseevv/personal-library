@@ -1,0 +1,42 @@
+.bedFund {
+    min-height: 100vh;
+    color: #ffffff;
+    background-color: steelblue;
+    padding: 50px;
+    text-align: center;
+    align-items: center;
+}
+.bedFund_title {
+    margin-bottom: 40px;
+}
+.bedFund_content {
+    display: grid;
+    grid-template-columns: repeat(4, 300px);
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+.bedFund_btns {
+    margin: 50px auto 0;
+}
+.bedFund_btn {
+    width: 20%;
+}
+.bedFund_btn:not(:last-child) {
+    margin-right: 25px;
+}
+
+.bedFund_modal {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 15px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+}
+.bedFund_modal__title {
+    font-size: 25px;
+    font-weight: 600;
+}
+.bedFund_modal__btn:not(:last-child) {
+    margin-right: 25px;
+}

@@ -1,0 +1,145 @@
+.recModal {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.recModal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.recModal__content {
+    border-radius: 12px;
+    width: 80vw;
+    height: 80vh;
+    transform: scale(0.5);
+    transition: all 0.3s ease;
+    overflow-y: scroll;
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 25px;
+}
+
+.recModal__content.active {
+    transform: scale(1);
+}
+body.active {
+    overflow: hidden!important;
+}
+
+/* полоса прокрутки (скроллбар) */
+.recModal ::-webkit-scrollbar {
+    width: 5px; /* ширина для вертикального скролла */
+    height: 8px; /* высота для горизонтального скролла */
+    background-color: #143861;
+}
+
+/* ползунок скроллбара */
+.recModal ::-webkit-scrollbar-thumb {
+    background-color: steelblue;
+    border-radius: 9em;
+    box-shadow: inset 1px 1px 10px #f3faf7;
+}
+.docRecord_modal__container {
+    text-align: center;
+}
+.docRecord_modal__title {
+    font-size: 45px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+.docRecord_modal__subtitle {
+    font-size: 25px;
+    margin: 15px 0;
+    font-weight: 700;
+}
+.docRecord_modal__items {
+    align-items: center;
+}
+.docRecord_modal__item {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.docRecord_modal__item span {
+    font-weight: 500;
+    font-size: 22px;
+}
+
+.docRecord_modal__btns {
+    padding-top: 10px;
+}
+.modal_btns__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+.docRecord_modal__btn:not(:last-child) {
+    margin-right: 10px;
+}
+
+.docRecord_modal__pharma {
+    padding-top: 20px;
+}
+
+.docRecord_modal__wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.docRecord_input__modal {
+    width: 45%;
+}
+
+.docRecord_modal__select {
+    width: 45%;
+    height: 60px;
+    font-size: 25px;
+}
+.docRecord_modal__select {
+    outline: none;
+    color: rgb(45, 87, 150);
+    background-color: lightblue;
+    border: 1px solid steelblue;
+    border-radius: 5px;
+}
+.docRecord_modal__select option:focus {
+    background-color: steelblue;
+}
+
+.pharma_list {
+    font-size: 18px;
+    width: 200px;
+    margin: 0 auto!important;
+}
+.pharma_list__item {
+    cursor: pointer;
+    text-align: start;
+    transition: all .3s ease;
+}
+.pharma_list__item:hover {
+    color: rgba(255, 255, 255, .4);
+}
+.incorrect_value__recModal {
+    top: -10px;
+}
+.modal_subtitle__sick {
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.modal_subtitle__sick:hover {
+    color: rgba(255, 255, 255, .4);
+}

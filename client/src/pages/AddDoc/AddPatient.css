@@ -1,0 +1,67 @@
+* {
+    box-sizing: border-box;
+}
+.add_patient {
+    padding: 30px 0;
+    background-color: steelblue;
+    color: #fff;
+    font-family: Oswald, sans-serif;
+    text-align: center;
+    min-height: 100vh;
+}
+.add_patient__container {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 30px 40px;
+    border-radius: 15px;
+    max-width: 80%;
+    margin: 0 auto;
+}
+.add_patient__header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 45px;
+}
+.addPat_form {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 450px);
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+.addPat_form__input {
+    position: relative;
+}
+.addPat_form__input input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px #fff solid;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.addPat_form__input input::placeholder {
+    color: steelblue;
+}
+.addPat_form__input input:focus,
+.addPat_form__input input:valid {
+    outline: 0;
+    border-bottom-color: lightblue;
+}
+
+.addPat_form__input input:valid {
+    color: #ffffff;
+}
+
+.addPat_form__btn {
+    width: 100% !important;
+    padding: 13px!important;
+    margin: 15px 0;
+}
+
+.addPat_incorrect__value {
+    right: 0!important;
+}

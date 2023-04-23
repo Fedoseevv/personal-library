@@ -1,0 +1,7 @@
+.orders_container {
+    display: grid;
+    justify-content: space-between;
+    align-items: stretch;
+    grid-template-columns: repeat(3, 430px);
+    gap: 25px;
+}

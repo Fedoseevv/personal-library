@@ -1,0 +1,106 @@
+.callItem {
+    background-color: rgb(45, 87, 150);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 5px 5px 10px rgb(10, 59, 93),
+                -5px -5px 15px rgb(10, 59, 93);
+    margin-bottom: 30px;
+    color: lightblue;
+}
+
+.callItem__info {
+    margin-bottom: 20px;
+}
+
+.callItem_info__item {
+    padding-bottom: 2px;
+}
+
+.callItem_actions {
+    font-size: 20px;
+}
+.callItem_actions__title {
+    margin-bottom: 10px;
+}
+.callItem_btns__wrap {
+
+}
+.callItem_btn__confirm {
+    margin-right: 10px;
+}
+
+.callItem_btn {
+    width: auto!important;
+    margin: 0!important;
+    padding: 3px!important;
+}
+.callItem_btn:not(:last-child) {
+    margin-right: 10px!important;
+}
+
+.callItem_info__item span {
+    font-size: 15px;
+    color: white;
+    font-weight: 700;
+}
+.red span {
+    color: #f34242;
+    font-size: 15px;
+    font-weight: 700;
+}
+.green span {
+    color: #1dee1d;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+/* Модальное окно */
+.callItem_modal__info {
+    text-align: center;
+    padding: 25px;
+    background-color: rgb(45, 87, 150);
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgb(36, 61, 84);
+    font-size: 23px;
+    color: white;
+    border: 1px solid lightblue;
+}
+.callItem_modal__title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.callItem_modal__item {
+    font-weight: 300;
+}
+.callItem_modal__item span {
+    font-weight: 600;
+}
+.callItem_info__item button {
+    background-color: inherit;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.callItem_info__item button:hover {
+    color: #d0caca;
+}
+
+.callItem_form__btn {
+    width: 80%!important;
+    padding: 15px!important;
+}
+
+.no-visible {
+    display: none;
+}
+.incorrect_value {
+    color: #fa7373;
+    font-size: 18px;
+    position: absolute;
+    right: 0;
+}

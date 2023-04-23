@@ -1,0 +1,44 @@
+.PatientVacsItem {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+    gap: 30px;
+}
+
+.PatientVacsItem_item {
+    font-size: 20px;
+}
+.PatientVacsItem_item span {
+    font-weight: 700;
+}
+.PatientVacsItem_btn {
+    background-color: inherit;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.PatientVacsItem_btn:hover {
+    color: #bebdbd;
+}
+
+
+.patientVacsItem_modal {
+    background-color: rgb(45, 87, 150);
+    padding: 25px 50px;
+    border-radius: 12px;
+    text-align: start;
+    font-size: 18px;
+    border: 2px solid lightblue;
+    box-shadow: 5px 5px 10px rgb(33, 56, 77),
+                -5px -5px 10px rgb(33, 56, 77);
+}
+.patientVacsItem_modal_title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}

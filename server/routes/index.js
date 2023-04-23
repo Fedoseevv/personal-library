@@ -9,7 +9,9 @@ const genreRouter = require('./genres-routes');
 const publishRouter = require('./publishing-routes');
 const documentRouter = require('./documents-routes');
 const authorRouter = require('./author-routes');
+const collectionRouter = require('./collection-routes');
 
+router.use('/collections', collectionRouter);
 router.use('/user', userRouter);
 router.use('/genre', genreRouter);
 router.use('/publishing', publishRouter);

@@ -1,0 +1,191 @@
+.findPatient {
+    min-height: 100vh;
+    background-color: steelblue;
+    color: #fff;
+}
+.findPatient_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+}
+.findPatient__title {
+    font-size: 45px;
+    font-weight: 700;
+    text-align: center;
+    padding: 50px 0 30px;
+}
+.findPatient_form__subtitle {
+    font-size: 25px;
+    margin-bottom: 35px;
+}
+.findField {
+    width: 23.5%;
+    text-align: center;
+    transition: all .5s ease;
+    box-shadow: 3px 3px 15px rgb(33, 64, 103);
+    cursor: pointer;
+    border: 2px solid lightblue;
+}
+.findField:hover {
+    border: 2px solid lightblue;
+    background-color: steelblue;
+    color: #fff;
+
+}
+
+
+
+.standard_input__wrap {
+    position: relative;
+}
+.standard_input__wrap input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px #fff solid;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.standard_input__wrap input::placeholder {
+    color: rgba(255, 255, 255, .6);
+}
+.standard_input__wrap input:focus,
+.standard_input__wrap input:valid {
+    outline: 0;
+    border-bottom-color: lightblue;
+}
+
+.standard_input__wrap input:valid {
+    color: #fff;
+}
+.findPatient_input input {
+    margin: 30px auto;
+    width: 40%;
+}
+.incorrect_value {
+    color: #fa7373 !important;
+    position: absolute;
+    /*right: 30%;*/
+}
+
+/*Визиты*/
+.patVisits {
+    padding: 50px;
+    color: #ffffff;
+}
+.patVisits_container {
+    margin-bottom: 50px;
+}
+.patVisits_title {
+    font-size: 45px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.patVisits_btns__wrap {
+    text-align: center;
+    align-items: center;
+    margin-top: 30px;
+}
+.patVisits_btn {
+    font-weight: 300;
+    font-size: 25px;
+}
+.patVisits_btn__link {
+    width: 100%;
+    margin: 25px 0;
+}
+.patVisits_content {
+    display: grid;
+    grid-template-columns: repeat(3, 400px);
+    gap: 25px;
+    margin: 0 auto;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.visitInfo_title {
+    font-size: 25px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
+.sickListItem {
+    background-color: rgb(45, 87, 150);
+    color: white;
+    box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
+    padding: 20px;
+    border-radius: 5px;
+}
+.sickList_content {
+    display: grid;
+    grid-template-columns: repeat(3, 330px);
+    gap: 100px;
+    margin: 0 auto;
+    align-items: stretch;
+    justify-content: center;
+}
+.sickListItem_title {
+    font-size: 22px;
+    font-weight: 500;
+}
+.sickListItem_field {
+    font-weight: 300;
+    font-size: 18px;
+}
+.sickListItem_btns {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+.sickListItem_btn {
+    margin: 0;
+    padding: 2px 0!important;
+    font-weight: 300;
+    width: 35%;
+}
+
+
+/*Modal*/
+.sickListItem_modal__container {
+    font-size: 20px;
+    font-weight: 300;
+}
+.sickListItem_modal__title {
+    font-size: 45px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 15px;
+}
+.sickListItem_modal__content {
+    margin-bottom: 20px;
+
+}
+.sickListItem_modal__subtitle {
+    font-size: 25px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.patVisits_info__item {
+    font-weight: 300;
+    font-size: 25px;
+    text-align: center;
+}
+.patVisits_btns__wrap {
+    display: flex;
+    flex-direction: column;
+}
+.patVisits_info__btns {
+    text-align: center;
+}
+.patVisits_info__btn {
+    width: 80% !important;
+}

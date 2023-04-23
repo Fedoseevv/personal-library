@@ -1,0 +1,98 @@
+.add_pharm {
+    background-color: steelblue;
+    min-height: 100vh;
+    color: white;
+    padding: 30px 50px;
+}
+.add_pharm__container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: rgb(45, 87, 150);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 5px 5px 15px rgb(16, 82, 126);
+}
+.add_pharm__title {
+    text-align: center;
+    padding-bottom: 55px;
+}
+.add_form__wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.add_pharm__form {
+    display: flex;
+    flex-direction: column;
+}
+.add_pharm__input {
+    width: 100%;
+}
+.add_pharm__input input {
+    width: 80%;
+    float: right;
+}
+.add_pharm__input select {
+    width: 80%;
+    float: left;
+}
+
+.add_pharm__input input,
+.add_pharm__input select {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px lightblue solid;
+    display: block;
+    width: 80%;
+    padding: 15px 0;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.add_pharm__input select option {
+    color: steelblue;
+}
+.add_pharm__total {
+    font-size: 30px;
+}
+
+.add_pharm__input input::placeholder {
+    color: lightblue;
+}
+.add_pharm__input input:focus,
+.add_pharm__input input:valid {
+    outline: 0;
+    border-bottom-color: white;
+}
+
+.add_pharm__input input:valid {
+    color: white;
+}
+
+.add_pharm__btn {
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
+    background: lightblue;
+    border: 2px solid lightblue;
+    padding: 15px;
+    font-family: inherit;
+    border-radius: 5px;
+    margin: 15px auto;
+    color: rgb(45, 87, 150);
+    font-size: 20px;
+    transition: all .5s ease;
+    box-shadow: 3px 3px 15px rgb(33, 64, 103);
+
+}
+.add_pharm__btn:hover {
+    border: 2px solid lightblue;
+    background-color: steelblue;
+    color: #fff;
+}
+.incorrect_value {
+    color: #fa7373 !important;
+    position: absolute;
+    right: 0;
+}

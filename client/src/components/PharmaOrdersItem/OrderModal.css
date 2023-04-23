@@ -1,0 +1,68 @@
+.order_modal__info {
+    padding: 25px;
+    background-color: rgb(45, 87, 150);
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgb(36, 61, 84);
+    font-size: 23px;
+    color: white;
+}
+
+.order_modal__name,
+.order_modal__id,
+.order_modal__rec,
+.order_modal__count,
+.order_modal__endDate,
+.order_modal__price {
+    font-weight: 300;
+}
+.order_modal__name span,
+.order_modal__id span,
+.order_modal__rec span,
+.order_modal__count span,
+.order_modal__endDate span,
+.order_modal__price span {
+    font-weight: 600;
+}
+
+.order_form__input {
+    padding-top: 10px;
+    position: relative;
+}
+.order_form__input input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px #fff solid;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.order_form__input input::placeholder {
+    color: steelblue;
+}
+.order_form__input input:focus,
+.order_form__input input:valid {
+    outline: 0;
+    border-bottom-color: lightblue;
+}
+.order_modal__endDate {
+    margin-bottom: 10px;
+}
+.order_form__input input:valid {
+    color: #fff;
+}
+.order_form__btns {
+    text-align: center;
+    padding: 20px 0;
+}
+.order_form__btn {
+    width: 60%!important;
+}
+.incorrect_value {
+    color: #fa7373;
+    font-size: 18px;
+    position: absolute;
+    right: 0;
+}
