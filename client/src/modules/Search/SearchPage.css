@@ -1,0 +1,164 @@
+/* Верно */
+input ~ .checkbox__checkmark {} /* выбирает .checkbox__checkmark */
+input ~ .checkbox__body {} /* выбирает .checkbox__body */
+.checkbox__checkmark ~ .checkbox__body {} /* выбирает .checkbox__body */
+
+/* Не верно */
+.checkbox__checkmark ~ input {} /* выше расположеный input НЕ БУДЕТ выбран */
+.checkbox__body ~ .checkbox__checkmark {} /* выше расположеный .checkbox__checkmark НЕ БУДЕТ выбран */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+/* Для самого блока .checkbox */
+.checkbox,
+.checkbox::before,
+.checkbox::after {
+    box-sizing: border-box;
+}
+/* И для его дочерних элементов */
+.checkbox *,
+.checkbox *::before,
+.checkbox *::after {
+    box-sizing: border-box;
+}
+.checkbox.style-a {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px; /* Так как .checkbox__checkmark имеет position: absolute; оставляем для него свободное место */
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Скрываем стандарный input */
+.checkbox.style-a input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Если input отмечен(:checked), то .checkbox__checkmark(область отметки), применяет данные стили */
+.checkbox.style-a input:checked ~ .checkbox__checkmark {
+    background-color: #fff;
+}
+
+/* Если input отмечен(:checked), то псевдо-элемент .checkbox__checkmark:after(отметка-галочка), применяет данные стили */
+.checkbox.style-a input:checked ~ .checkbox__checkmark:after {
+    opacity: 1; /* отображаем отметку-галочку */
+}
+
+/* При наведении(:hover) на всю область checkbox элемент .checkbox__checkmark(область отметки) применяет данные стили*/
+.checkbox.style-a:hover input ~ .checkbox__checkmark {
+    background-color: #eee; /* окрашиваем фон в серый цвет*/
+}
+
+/* При наведении(:hover) на всю область checkbox и при отмеченном input  элемент .checkbox__checkmark(область отметки) применяет данные стили*/
+.checkbox.style-a:hover input:checked ~ .checkbox__checkmark {
+    background-color: #fff; /* окрашиваем фон в белый цвет*/
+}
+.checkbox.style-e {
+    display: inline-block;
+    position: relative;
+    padding-left: 50px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.checkbox.style-e input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.checkbox.style-e input:checked ~ .checkbox__checkmark {
+    background-color: lightblue;
+}
+.checkbox.style-e input:checked ~ .checkbox__checkmark:after {
+    left: 21px;
+}
+.checkbox.style-e:hover input ~ .checkbox__checkmark {
+    background-color: #eee;
+}
+.checkbox.style-e:hover input:checked ~ .checkbox__checkmark {
+    background-color: lightblue;
+}
+.checkbox.style-e .checkbox__checkmark {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 32px;
+    width: 50px;
+    background-color: #eee;
+    transition: background-color 0.25s ease;
+    border-radius: 15px;
+}
+.checkbox.style-e .checkbox__checkmark:after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 26px;
+    height: 26px;
+    display: block;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: left 0.25s ease;
+}
+.checkbox.style-e .checkbox__body {
+    line-height: 1.4;
+    font-size: 25px;
+    transition: color 0.25s ease;
+
+}
+.checkbox__body {
+    padding-left: 5px;
+    margin-right: 25px;
+}
+.checkbox__body_last {
+    margin-right: 0;
+}
+
+.source_categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    color: #fff;
+    margin-bottom: 50px;
+}
+.search_title {
+    font-size: 35px;
+    font-weight: 300;
+    margin-bottom: 60px;
+}
+.search_subtitle {
+    font-size: 25px;
+    font-weight: 300;
+    margin-bottom: 25px;
+}
+.search_form__field {
+    width: 500px;
+}
+.search_field__input {
+    margin: 35px auto;
+    width: 500px;
+}
+.search_btn {
+    width: 500px!important;
+}
+.search_radio__group {
+    font-size: 23px;
+    font-weight: 300;
+    margin: 25px auto;
+    width: 500px;
+}
+.doc_item__search {
+    width: 800px!important;
+    margin: 30px auto;
+}

@@ -14,6 +14,9 @@ class DocumentController {
                 .then(response => {
                     const docId = response["max_id"]
                     documentQueries.addDocAuthor(docId, authorId)
+                        .then(response => {
+                            return res.status(201).json({message: "Запись успешно добавлена!"});
+                        })
                 })
 
         } catch (e) {
@@ -22,10 +25,12 @@ class DocumentController {
     }
     async deleteDocument(req, res, next) {
         try {
-            const {id} = req.query;
+            const {id} = req.body;
             if (!id) {
                 return next(ApiError.badReq("Идентификатор документа не указан!"));
             }
+            await documentQueries.deleteDocAuthor(id)
+            await documentQueries.deleteDocCollection(id)
             await documentQueries.deleteDocument(id)
                 .then(response => {
                     return res.status(200).send(response);
@@ -117,6 +122,49 @@ class DocumentController {
                 return next(ApiError.badReq("Идентификатор документа не указан!"));
             }
             await documentQueries.documentById(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+    async findByTitle(req, res, next) {
+        try {
+            const {title} = req.body;
+            console.log(title)
+            if (!title) {
+                return next(ApiError.badReq("Тело запроса пустое!"));
+            }
+            await documentQueries.findByTitle(title)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+    async findByAuthor(req, res, next) {
+        try {
+            const {author} = req.body;
+            console.log(author)
+            if (!author) {
+                return next(ApiError.badReq("Тело запроса пустое!"));
+            }
+            await documentQueries.findByAuthor(author)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+    async findByDate(req, res, next) {
+        try {
+            const {date} = req.body;
+            console.log(date)
+
+            await documentQueries.findByDate(date)
                 .then(response => {
                     return res.status(200).send(response);
                 });

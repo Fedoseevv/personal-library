@@ -31,6 +31,9 @@ export const Header = (props) => {
                         </li>
                         <li><Link to={'/collections'}>Мои коллекции</Link></li>
                         <li><Link to={'/addCollection'}>Добавить коллекцию</Link></li>
+                        <li><Link to={'/search'}>Расширенный поиск</Link></li>
+                        <li><Link to={'/authors'}>Авторы</Link></li>
+                        <li><Link to={'/addAuthor'}>Добавить автора</Link></li>
                         {/*<li><Link to={'/pharmacy'}>Управленческие модули</Link>*/}
                         {/*    <ul>*/}
                         {/*        <li><Link to={'/pharmacy'}>Склад медицинских препаратов</Link></li>*/}

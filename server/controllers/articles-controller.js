@@ -14,6 +14,9 @@ class ArticlesController {
                 .then(response => {
                     const artId = response["max_id"]
                     articleQueries.addRec(artId, authorId)
+                        .then(resp => {
+                            return res.status(201).json({message: "Запись успешно добавлена!"});
+                        })
                 })
 
         } catch (e) {
@@ -23,10 +26,12 @@ class ArticlesController {
 
     async deleteArticle(req, res, next) {
         try {
-            const {id} = req.query;
+            const {id} = req.body;
             if (!id) {
                 return next(ApiError.badReq("Идентификатор статьи не указан!"));
             }
+            await articleQueries.deleteAuthorArticle(id)
+            await articleQueries.deleteArticleCollection(id)
             await articleQueries.deleteArticle(id)
                 .then(response => {
                     return res.status(200).json({message: response});
@@ -118,6 +123,47 @@ class ArticlesController {
                 return next(ApiError.badReq("Идентификатор статьи не указан!"));
             }
             await articleQueries.articleById(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+
+    async findByTitle(req, res, next) {
+        try {
+            const {title} = req.body;
+            if (!title) {
+                return next(ApiError.badReq("Тело запроса пустое!"));
+            }
+            await articleQueries.findByTitle(title)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+    async findByAuthor(req, res, next) {
+        try {
+            const {author} = req.body;
+            if (!author) {
+                return next(ApiError.badReq("Тело запроса пустое!"));
+            }
+            await articleQueries.findByAuthor(author)
+                .then(response => {
+                    return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+    async findByDate(req, res, next) {
+        try {
+            const {date} = req.body;
+            console.log(date)
+            await articleQueries.findByDate(date)
                 .then(response => {
                     return res.status(200).send(response);
                 });

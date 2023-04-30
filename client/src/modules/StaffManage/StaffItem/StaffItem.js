@@ -8,7 +8,8 @@ import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../../hooks/validationHook";
 
 
-export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
+export const StaffItem = ({ item, onDeleteBook }) => {
+    console.log(item);
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
@@ -21,9 +22,11 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
     const annotation = useInput(item.brief_annotation, {isEmpty: true, minLength: 10});
     const pcLocation = useInput(item.location, {isEmpty: true, minLength: 1});
     const oblLocation = useInput(item.location_obl, {isEmpty: true, minLength: 1});
+    const pubName = useInput(item.pub_name, {isEmpty: true, minLength: 1});
+    const pubCity = useInput(item.city_of_publication, {isEmpty: true, minLength: 1});
     const [genre, setGenre] = useState(item.id_genre);
-    const [authors, setAuthors] = useState([])
-    const [authorId, setAuthorId] = useState(item.id_author)
+    const [authors, setAuthors] = useState([]);
+    const [authorId, setAuthorId] = useState(item.id_author);
 
 
     const fetchAuthors = useCallback(async () => {
@@ -45,7 +48,8 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
         location: item.location,
         location_obl: item.location_obl,
         id_author: item.id_author,
-        id_genre: item.id_genre
+        id_genre: item.id_genre,
+        pubName: item.pub_name
     });
     const changeHandler = event => {
         console.log(event.target.value);
@@ -57,7 +61,6 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
         const body = {
             id_book: item.id_book,
             id_ba: item.id_ba,
-
             title: title.value,
             year_of_publication: pubYear.value,
             keywords: keywords.value,
@@ -66,10 +69,13 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
             location: pcLocation.value,
             location_obl: oblLocation.value,
             id_author: authorId,
-            id_genre: genre
+            id_genre: genre,
+            id_publishing_house: item.id_publishing_house,
+            pub_name: pubName.value,
+            pub_city: pubCity.value
         }
         console.log(body)
-        const fetched = request('/api/books/update', 'POST', body)
+        const updated = request('/api/books/update', 'POST', body)
             .then((resp) => setModalActive(false))
             .then(response => history.go(0));
     }
@@ -90,6 +96,8 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
                     <div className="staff_item__info">Расположение на компьютере: <span>{item.location.replace("myproto://", "")}</span></div>
                     <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
                     <div className="staff_item__info">Автор: <span>{item.surname} {item.name} {item.patronymic}, {item.date_of_birth.slice(0, 4)} г.р</span></div>
+                    <div className="staff_item__info">Издательство: <span>{item.pub_name}</span></div>
+                    <div className="staff_item__info">Город издания: <span>{item.city_of_publication}</span></div>
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
@@ -101,6 +109,10 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
                             type={"submit"}
                             onClick={() => setModalActive(true)}
                             className={"standard_btn"}>Редактировать</button>
+                        <button
+                            type={"submit"}
+                            onClick={async () => await onDeleteBook(item.id_book)}
+                            className={"standard_btn"}>Удалить</button>
                     </div>
                 </div>
             </div>
@@ -184,6 +196,28 @@ export const StaffItem = ({ item, onDeleteHandler, onEditHandler }) => {
                                 value={oblLocation.value}
                                 onChange={e => oblLocation.onChange(e)}
                                 onBlur={e => oblLocation.onBlur(e)}
+                                type="text"/>
+                        </div>
+                        <div className={"standard_input__wrap"}>
+                            {(pubName.isDirty && pubName.isEmpty)
+                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                            <h1 className={"staff_modal__subtitle"}>Издательство</h1>
+                            <input
+                                placeholder={"Введите ссылку на файл в облаке"}
+                                value={pubName.value}
+                                onChange={e => pubName.onChange(e)}
+                                onBlur={e => pubName.onBlur(e)}
+                                type="text"/>
+                        </div>
+                        <div className={"standard_input__wrap"}>
+                            {(pubCity.isDirty && pubCity.isEmpty)
+                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                            <h1 className={"staff_modal__subtitle"}>Город издания</h1>
+                            <input
+                                placeholder={"Введите ссылку на файл в облаке"}
+                                value={pubCity.value}
+                                onChange={e => pubCity.onChange(e)}
+                                onBlur={e => pubCity.onBlur(e)}
                                 type="text"/>
                         </div>
                         <div className={"standard_input__wrap"}>

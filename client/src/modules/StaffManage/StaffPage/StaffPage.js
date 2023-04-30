@@ -12,7 +12,7 @@ export const StaffPage = () => {
 
     const history = useHistory();
 
-    const fetchStaff = useCallback(async () => {
+    const fetchSources = useCallback(async () => {
         const fetched = await request('/api/books/all', 'GET');
         const docsFetched = await request('/api/documents/all', 'GET')
         const articlesFetched = await request('/api/articles/all', 'GET')
@@ -22,21 +22,24 @@ export const StaffPage = () => {
     }, [ request ]);
 
     useEffect(async () => {
-        await fetchStaff();
-    }, [fetchStaff]);
+        await fetchSources();
+    }, [fetchSources]);
 
-    const onDeleteHandler = async (user_id) => {
-        console.log(`Увольняем: ${user_id}`);
-        const res = await request(`/api/staff/delete/${user_id}`);
-        await fetchStaff();
+    const onDeleteArticle = async (id) => {
+        console.log(id)
+        const deleted = await request('/api/articles/delete', 'POST', {id});
+        await fetchSources();
     }
 
-    const onEditHandler = async (body) => {
-        console.log(body);
-        const res = await request('/api/staff/edit', 'POST', body);
-        await fetchStaff();
+    const onDeleteBook = async (id) => {
+        const deleted = await request('/api/books/delete', 'POST', {id})
+        await fetchSources();
     }
 
+    const onDeleteDoc = async (id) => {
+        const deleted = await request('/api/documents/delete', 'POST', {id})
+        await fetchSources();
+    }
 
     if (loading) {
         return <h1>Loading...</h1>
@@ -48,8 +51,9 @@ export const StaffPage = () => {
                 { !loading &&  <StaffList books={books}
                                           docs={docs}
                                           articles={articles}
-                                          onEditHandler={onEditHandler}
-                                          onDeleteHandler={onDeleteHandler} /> }
+                                          onDeleteBook={onDeleteBook}
+                                          onDeleteDoc={onDeleteDoc}
+                                          onDeleteArticle={onDeleteArticle} /> }
                 <button
                     type={"submit"}
                     onClick={() => history.push('/addEmp')}

@@ -6,7 +6,7 @@ import './DocsItem.css';
 import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../../hooks/validationHook";
 
-export const DocsItem = ({ item }) => {
+export const DocsItem = ({ item, onDeleteDoc }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
@@ -62,6 +62,10 @@ export const DocsItem = ({ item }) => {
                         type={"submit"}
                         onClick={() => setModalActive(true)}
                         className={"standard_btn docs_standard__btn"}>Редактировать</button>
+                    <button
+                        type={"submit"}
+                        onClick={async () => await onDeleteDoc(item.id_document)}
+                        className={"standard_btn docs_standard__btn"}>Удалить</button>
                 </div>
             </div>
             <RecordModal active={modalActive} setActive={setModalActive}>

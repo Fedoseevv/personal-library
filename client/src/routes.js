@@ -29,6 +29,9 @@ import {PaymentPage} from "./modules/Payment/PaymentPage/PaymentPage";
 import {CollectionPage} from "./modules/Collection/CollectionPage/CollectionPage";
 import {AddCollection} from "./modules/Collection/AddCollection/AddCollection";
 import {TargetCollection} from "./modules/Collection/TargetCollection/TargetCollection";
+import {SearchPage} from "./modules/Search/SearchPage";
+import {AddAuthor} from "./modules/Author/AddAuthor/AddAuthor";
+import {AuthorPage} from "./modules/Author/AuthorPage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -49,6 +52,15 @@ export const useRoutes = isAuthenticated => {
                 </Route>
                 <Route path={"/addCollection"}>
                     <AddCollection />
+                </Route>
+                <Route path={"/search"}>
+                    <SearchPage />
+                </Route>
+                <Route path={'/authors'}>
+                    <AuthorPage />
+                </Route>
+                <Route path={'/addAuthor'}>
+                    <AddAuthor />
                 </Route>
 
                 <Route path="/addPatient">

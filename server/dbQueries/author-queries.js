@@ -1,10 +1,23 @@
 const pool = require('../db-connector');
 const {request} = require('express');
 
-const addAuthor = (name, patronymic, surname, birthDate) => {
+const maxId = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT MAX(id_author) as id FROM course_work.library.author",
+            [], (error, result) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve(result.rows[0]);
+                }
+            })
+    })
+}
+
+const addAuthor = (id, name, patronymic, surname, birthDate) => {
     return new Promise((resolve, reject) => {
         pool.query("INSERT INTO course_work.library.author (id_author, name, patronymic, surname, date_of_birth)" +
-            "VALUES (DEFAULT, $1, $2, $3, $4)", [name, patronymic, surname, birthDate],
+            "VALUES ($1, $2, $3, $4, $5)", [id, name, patronymic, surname, birthDate],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -18,13 +31,13 @@ const addAuthor = (name, patronymic, surname, birthDate) => {
 
 const deleteAuthor = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("DELETE FROM course_work.library.author WHERE id = $1", [id],
+        pool.query("DELETE FROM course_work.library.author WHERE id_author = $1", [id],
             (error, result) => {
                 if (error) {
                     reject(error);
                 } else {
                     request.isDeleted = true;
-                    resolve("Документ успешно удален!")
+                    resolve("Автор успешно удален!")
                 }
             })
     });
@@ -72,6 +85,7 @@ const authorById = (id) => {
 }
 
 module.exports = {
+    maxId,
     addAuthor,
     deleteAuthor,
     allAuthors,

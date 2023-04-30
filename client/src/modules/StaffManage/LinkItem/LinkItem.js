@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from "react";
 import {useInput} from "../../../hooks/validationHook";
 import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 
-export const LinkItem = ({ item }) => {
+export const LinkItem = ({ item, onDeleteArticle }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
@@ -42,8 +42,6 @@ export const LinkItem = ({ item }) => {
             .then(response => history.go(0))
     }
 
-
-
     return (
         <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
@@ -58,6 +56,10 @@ export const LinkItem = ({ item }) => {
                         type={"submit"}
                         onClick={() => setModalActive(true)}
                         className={"standard_btn article_standard__btn"}>Редактировать</button>
+                    <button
+                        type={"submit"}
+                        onClick={async () => await onDeleteArticle(item.id_article)}
+                        className={"standard_btn article_standard__btn"}>Удалить</button>
                 </div>
             </div>
             <RecordModal active={modalActive} setActive={setModalActive}>

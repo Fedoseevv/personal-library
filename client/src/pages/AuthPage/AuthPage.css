@@ -77,3 +77,6 @@
 .auth_incorrect__value {
     right: 31%!important;
 }
+.hide_block {
+    display: none;
+}

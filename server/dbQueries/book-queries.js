@@ -46,7 +46,7 @@ const addBookAuthor = (bookId, authorId) => {
 
 const deleteBook = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("DELETE FROM course_work.library.book WHERE id = $1", [id],
+        pool.query("DELETE FROM course_work.library.book WHERE id_book = $1", [id],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -57,13 +57,43 @@ const deleteBook = (id) => {
             })
     });
 }
+const deleteBookAuthor = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("DELETE FROM course_work.library.book_author WHERE id_book = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    request.isDeleted = true;
+                    resolve("Запись успешно удалена!")
+                }
+            })
+    });
+}
+const deleteBookCollection = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("DELETE FROM course_work.library.book_collection WHERE id_book = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    request.isDeleted = true;
+                    resolve("Запись успешно удалена!")
+                }
+            })
+    });
+}
 
 const allBooks = () => {
+    const updatedQuery = "SELECT *, g.name AS genre, ph.name as pub_name, a.name as name\n" +
+        "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
+        "     library.book_publishing_house bph, library.publishing_house ph\n" +
+        "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house;\n"
     const query = "SELECT *, g.name AS genre \n" +
         "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a\n" +
         "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author"
     return new Promise((resolve, reject) => {
-        pool.query(query,
+        pool.query(updatedQuery,
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -125,6 +155,20 @@ const updateBook = (id_book, title, year_of_publication, keywords, cover, id_gen
     });
 }
 
+const updateBookPublish = (id, pubName, pubCity) => {
+    return new Promise((resolve, reject) => {
+        pool.query("UPDATE course_work.library.publishing_house SET name=$1, city_of_publication=$2 " +
+            "WHERE id_publishing_house=$3", [pubName, pubCity, id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve("Запись успешно обновлена!");
+                }
+            })
+    })
+}
+
 const updateBookAuthor = (id_ba, id_book, id_author) => {
     return new Promise((resolve, reject) => {
         pool.query("UPDATE course_work.library.book_author SET id_book = $1, id_author = $2 WHERE id_ba = $3", [id_book, id_author, id_ba],
@@ -178,6 +222,115 @@ const bookById = (id) => {
     });
 }
 
+const findBooksByTitle = (title) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND LOWER(title) LIKE $1", [`%${title}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+
+const findBooksByGenre = (genre) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND LOWER(genre) LIKE $1", [`%${genre}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+
+const findBooksByPubHouse = (pubHouse) => { // TODO тут надо будет доделывать
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, " +
+            "library.publishing_house ph\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND LOWER(genre) LIKE $1", [`%${pubHouse}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+const findBooksByKeywords = (keywords) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, " +
+            "library.publishing_house ph\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND LOWER(keywords) LIKE $1", [`%${keywords}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+const findBooksByPubYear = (pubYear) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, " +
+            "library.publishing_house ph\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND year_of_publication=$1", [`%${pubYear}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+
+}
+const findBooksByAuthor = (author) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, " +
+            "library.publishing_house ph\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND (LOWER(name) LIKE $1 OR LOWER(patronymic) LIKE $1 OR LOWER(surname) LIKE $1)",
+            [`%${author}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+
+}
+const findBooksByBriefAnn = (briefAnn) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT *, g.name AS genre \n" +
+            "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, " +
+            "library.publishing_house ph\n" +
+            "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND LOWER(brief_annotation) LIKE $1", [`%${briefAnn}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+
 module.exports = {
     addBook,
     deleteBook,
@@ -190,5 +343,17 @@ module.exports = {
     booksInCollection,
     booksNotInCollection,
     deleteFromCollection,
-    addInCollection
+    addInCollection,
+    findBooksByTitle,
+    findBooksByGenre,
+    findBooksByPubHouse,
+    findBooksByKeywords,
+    findBooksByPubYear,
+    findBooksByAuthor,
+    findBooksByBriefAnn,
+
+    deleteBookAuthor,
+    deleteBookCollection,
+
+    updateBookPublish
 }

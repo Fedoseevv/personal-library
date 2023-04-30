@@ -41,7 +41,7 @@ export const AddArticle = () => {
                 authorId: authorId
             }
             console.log(form);
-            // await request('/api/articles/add', 'POST', {...form});
+            await request('/api/articles/add', 'POST', {...form});
             history.push('/staffManage');
         } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
     }

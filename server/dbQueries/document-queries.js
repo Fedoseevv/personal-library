@@ -57,6 +57,32 @@ const deleteDocument = (id) => {
             })
     });
 }
+const deleteDocAuthor = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("DELETE FROM course_work.library.document_author WHERE id_document = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    request.isDeleted = true;
+                    resolve("Запись успешно удален!")
+                }
+            })
+    });
+}
+const deleteDocCollection = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("DELETE FROM course_work.library.document_collection WHERE id_document = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    request.isDeleted = true;
+                    resolve("Запись успешно удален!")
+                }
+            })
+    });
+}
 
 const allDocuments = () => {
     return new Promise((resolve, reject) => {
@@ -176,6 +202,51 @@ const documentById = (id) => {
     });
 }
 
+const findByTitle = (title) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * \n" +
+            "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND LOWER(d.title) LIKE $1", [`%${title.toLowerCase()}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+const findByAuthor = (someName) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * \n" +
+            "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND " +
+            "(LOWER(a.name) LIKE $1 OR LOWER(a.patronymic) LIKE $1 OR LOWER(a.surname) LIKE $1)", [`%${someName.toLowerCase()}%`],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+const findByDate = (date) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * \n" +
+            "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND " +
+            "d.date_of_publication=$1", [date],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    });
+}
+
 module.exports = {
     addDocument,
     deleteDocument,
@@ -188,5 +259,11 @@ module.exports = {
     docInCollection,
     docNotInCollection,
     deleteFromCollection,
-    addInCollection
+    addInCollection,
+    findByTitle,
+    findByAuthor,
+    findByDate,
+
+    deleteDocAuthor,
+    deleteDocCollection
 }
