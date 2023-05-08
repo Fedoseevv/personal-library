@@ -1,9 +1,9 @@
 import {Switch, Route, Redirect} from "react-router-dom";
 import {MainPage} from "./pages/MainPage/MainPage";
-import {AddEmployee} from './pages/AddBook/AddEmployee';
+import {AddBook} from './pages/AddBook/AddBook';
 import {StatisticPage} from "./modules/Statistic/StatisticPage/StatisticPage";
 import {AuthPage} from "./pages/AuthPage/AuthPage";
-import {AddPatient} from "./pages/AddDoc/AddPatient";
+import {AddDocument} from "./pages/AddDoc/AddDocument";
 import {PharmacyPage} from "./pages/PharmacyPage/PharmacyPage";
 import {AddArticle} from "./pages/AddPharmPage/AddArticle";
 import {PharmaOrders} from "./pages/PharmaOrders/PharmaOrders";
@@ -38,7 +38,7 @@ export const useRoutes = isAuthenticated => {
         return (
             <Switch>
                 <Route path="/addEmp" exact>
-                    <AddEmployee/>
+                    <AddBook/>
                 </Route>
 
                 <Route path={"/collections"}>
@@ -60,7 +60,7 @@ export const useRoutes = isAuthenticated => {
                     <AddAuthor />
                 </Route>
                 <Route path="/addPatient">
-                    <AddPatient/>
+                    <AddDocument/>
                 </Route>
 
                 <Route path='/pharmacy'>

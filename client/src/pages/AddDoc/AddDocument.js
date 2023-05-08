@@ -2,15 +2,12 @@ import {useCallback, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
-
 import {useInput} from '../../hooks/validationHook';
-import {changeMobile, changePass, changeDate, changeSnils, stopInput} from "../../helpfulFunctions/validationFunctions";
 
 import './AddPatient.css';
 
 
-export const AddPatient = () => {
+export const AddDocument = () => {
     const title = useInput('', {isEmpty: true, minLength: 6});
     const dateOfPub = useInput('', {isEmpty: true, isDigit: true});
     const location = useInput('', {isEmpty: true, minLength: 1});

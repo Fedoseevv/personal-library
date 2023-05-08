@@ -1,10 +1,10 @@
 import {useCallback, useContext, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {useHttp} from "../../hooks/httpHook";
-import './AddEmployee.css';
+import './AddBook.css';
 import {useInput} from "../../hooks/validationHook";
 
-export const AddEmployee = () => {
+export const AddBook = () => {
     const history = useHistory();
     const {request, loading, clearError} = useHttp();
 

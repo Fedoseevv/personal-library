@@ -138,7 +138,7 @@ export const AddArticle = () => {
                     <button
                         onClick={registerHandler}
                         className="standard_btn addPat_form__btn addDoc_btn"
-                        disabled={loading || !title.inputValid}
+                        disabled={loading || !title.inputValid || linkArt.isEmpty || dateOfPub.isEmpty || curAuthors.length === 0}
                     >Сохранить
                     </button>
                 </div>
