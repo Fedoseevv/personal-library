@@ -164,6 +164,8 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                             <div className="staff_modal__btns">
                                 <button
                                     type={"submit"}
+                                    disabled={title.isEmpty || pubYear.isEmpty || pcLocation.isEmpty
+                                    || oblLocation.isEmpty || curAuthorsId.length === 0}
                                     onClick={async e => await sendUpdates()}
                                     className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                                 <button

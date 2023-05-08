@@ -167,6 +167,8 @@ export const AuthorItem = ({ item, onDeleteHandler, onEditHandler }) => {
                                     <button
                                         type={"submit"}
                                         onClick={prepForUpdate}
+                                        disabled={name.isEmpty || surname.isEmpty || patronymic.isEmpty
+                                                || birthDate.isEmpty}
                                         className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                                     <button
                                         type={"submit"}

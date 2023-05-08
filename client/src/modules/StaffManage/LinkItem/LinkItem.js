@@ -147,6 +147,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                                 <button
                                     type={"submit"}
                                     onClick={async e => await sendUpdates()}
+                                    disabled={curAuthorsId.length === 0 || title.isEmpty || pubYear.isEmpty || hyperlink.isEmpty}
                                     className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                                 <button
                                     type={"submit"}
