@@ -265,7 +265,8 @@ export const StaffItem = ({ item, onDeleteBook, authors }) => {
                                 onClick={async e => await sendUpdates()}
                                 disabled={curAuthorsId.length === 0 || title.isEmpty
                                     || pubYear.isEmpty || keywords.isEmpty || pcLocation.isEmpty
-                                    || oblLocation.isEmpty || annotation.isEmpty}
+                                    || oblLocation.isEmpty || annotation.isEmpty || cover.isEmpty
+                                    || pubName.isEmpty || pubCity.isEmpty}
                                 className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                             <button
                                 type={"submit"}
