@@ -40,9 +40,6 @@ export const useRoutes = isAuthenticated => {
                 <Route path="/addEmp" exact>
                     <AddEmployee/>
                 </Route>
-                <Route path="/statistics" exact>
-                    <StatisticPage/>
-                </Route>
 
                 <Route path={"/collections"}>
                     <CollectionPage />
@@ -62,10 +59,10 @@ export const useRoutes = isAuthenticated => {
                 <Route path={'/addAuthor'}>
                     <AddAuthor />
                 </Route>
-
                 <Route path="/addPatient">
                     <AddPatient/>
                 </Route>
+
                 <Route path='/pharmacy'>
                     <PharmacyPage/>
                 </Route>
