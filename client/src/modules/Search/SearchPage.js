@@ -3,7 +3,6 @@ import { RadioGroup, RadioButton } from 'react-radio-buttons';
 import './SearchPage.css';
 import {useInput} from "../../hooks/validationHook";
 import {useHttp} from "../../hooks/httpHook";
-import {RecordModal} from "../DocRecords/RecordModal/RecordModal";
 
 
 export const SearchPage = () => {
@@ -229,7 +228,7 @@ export const SearchPage = () => {
             </div>
             <button
                 onClick={searchSources}
-                className="standard_btn addPat_form__btn search_btn"
+                className="standard_btn addPat_form__btn search_btn search_btn__main"
                 disabled={loading || !fieldVal.inputValid}
             >Найти
             </button>

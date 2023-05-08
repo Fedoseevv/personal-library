@@ -4,7 +4,8 @@
     box-shadow: 5px 5px 15px rgb(21 74 126), -5px -5px 5px rgb(21 74 126);
     padding: 20px;
     border-radius: 5px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px auto;
+    /*margin-bottom: 40px;*/
     max-width: 1200px;
 }
 .staff_item__wrap {

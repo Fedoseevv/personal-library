@@ -374,7 +374,7 @@ const findBooksByGenre = (genre) => {
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING LOWER(genre) LIKE $1", [`%${genre.toLowerCase()}%`],
+            "\t\tHAVING LOWER(g.name) LIKE $1", [`%${genre.toLowerCase()}%`],
             (error, result) => {
                 if (error) {
                     reject(error);

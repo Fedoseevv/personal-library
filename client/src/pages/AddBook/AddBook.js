@@ -242,7 +242,10 @@ export const AddBook = () => {
                     <button
                         onClick={registerHandler}
                         className="standard_btn addPat_form__btn addDoc_btn"
-                        disabled={loading || !title.inputValid || curAuthors.length === 0}
+                        disabled={loading || !title.inputValid || curAuthors.length === 0
+                                || annotation.isEmpty || keywords.isEmpty || pcLocation.isEmpty
+                                || oblLocation.isEmpty || pubYear.isEmpty || pubHouse.isEmpty
+                                || pubCity.isEmpty}
                     >Сохранить
                     </button>
                 </div>

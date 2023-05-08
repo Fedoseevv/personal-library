@@ -1,8 +1,0 @@
-.ambulanceCalls__container {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(400px, 460px));
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 25px;
-    padding: 25px 50px;
-}

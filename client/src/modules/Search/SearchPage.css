@@ -152,6 +152,10 @@ input ~ .checkbox__body {} /* выбирает .checkbox__body */
 .search_btn {
     width: 500px!important;
 }
+.search_btn__main {
+    margin-right: 0!important;
+    margin-bottom: 50px;
+}
 .search_radio__group {
     font-size: 23px;
     font-weight: 300;

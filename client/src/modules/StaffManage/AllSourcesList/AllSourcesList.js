@@ -1,9 +1,9 @@
-import './StaffList.css';
+import './AllSourcesList.css';
 import {StaffItem} from "../StaffItem/StaffItem";
 import {DocsItem} from "../DocsItem/DocsItem";
 import {LinkItem} from "../LinkItem/LinkItem";
 
-export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook, onDeleteDoc, authors }) => {
+export const AllSourcesList = ({ books, docs, articles, onDeleteArticle, onDeleteBook, onDeleteDoc, authors }) => {
     return (
         <>
             <h1 className={"staff_title"}>Книги</h1>

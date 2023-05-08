@@ -1,11 +1,11 @@
-import './StaffPage.css';
+import './AllSourcesPage.css';
 import {useHttp} from "../../../hooks/httpHook";
 import {useCallback, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
-import {StaffList} from "../StaffList/StaffList";
+import {AllSourcesList} from "../AllSourcesList/AllSourcesList";
 import {Loader} from '../../../components/loader/Loader';
 
-export const StaffPage = () => {
+export const AllSourcesPage = () => {
     const { loading, request } = useHttp();
     const [ books, setBooks ] = useState([]);
     const [ docs, setDocs ] = useState([]);
@@ -66,13 +66,13 @@ export const StaffPage = () => {
     return (
         <>
             <div className={"staff"}>
-                { !loading &&  <StaffList books={books}
-                                          docs={docs}
-                                          articles={articles}
-                                          authors={authors}
-                                          onDeleteBook={onDeleteBook}
-                                          onDeleteDoc={onDeleteDoc}
-                                          onDeleteArticle={onDeleteArticle} /> }
+                { !loading &&  <AllSourcesList books={books}
+                                               docs={docs}
+                                               articles={articles}
+                                               authors={authors}
+                                               onDeleteBook={onDeleteBook}
+                                               onDeleteDoc={onDeleteDoc}
+                                               onDeleteArticle={onDeleteArticle} /> }
                 <button
                     type={"submit"}
                     onClick={() => history.push('/addEmp')}
