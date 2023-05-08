@@ -1,5 +1,3 @@
-import {useState} from "react";
-
 export const TargetItemBook = ({ item, colId, onDeleteHandler }) => {
     console.log(item)
 
@@ -13,12 +11,13 @@ export const TargetItemBook = ({ item, colId, onDeleteHandler }) => {
                 </div>
                 <div className="staff_item__container">
                     <div className="staff_item__info">Год издания: <span>{item.year_of_publication} г.</span></div>
-                    <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
                     <div className="staff_item__info">Жанр: <span>{item.genre}</span></div>
                     <div className="staff_item__info">Краткая аннотация: <span>{item.brief_annotation}</span></div>
                     <div className="staff_item__info">Расположение на компьютере: <span>{item.location.replace("myproto://", "")}</span></div>
                     <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
-                    <div className="staff_item__info">Автор: <span>{item.surname} {item.name} {item.patronymic}, {item.date_of_birth.slice(0, 4)} г.р</span></div>
+                    <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
+                    <div className="staff_item__info">Издательство: <span>{item.pub_name}</span></div>
+                    <div className="staff_item__info">Город издания: <span>{item.city_of_publication}</span></div>
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
@@ -40,12 +39,12 @@ export const TargetItemBook = ({ item, colId, onDeleteHandler }) => {
 export const TargetItemDoc = ({ item, colId, onDeleteHandler }) => {
 
     return (
-        <div className={"docs_item"}>
+        <div className={"docs_item docs_item__free"}>
             <div className="docs_item__title">Название документа: '{item.title}'</div>
             <div className="docs_item__container">
                 <div className="docs_item__info">Дата публикации документа: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
                 <div className="docs_item__info">Расположение локально: {item.location}</div>
-                <div className="docs_item__info">Автор: {item.name} {item.patronymic} {item.surname}, {new Date(Date.parse(item.date_of_birth)).toLocaleDateString()} г.р.</div>
+                <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="docs_item__btns">
                     <button
                         type={"submit"}
@@ -56,7 +55,7 @@ export const TargetItemDoc = ({ item, colId, onDeleteHandler }) => {
                     <button
                         type={"submit"}
                         onClick={async () => await onDeleteHandler(item.id_document, colId)}
-                        className={"standard_btn"}>Удалить</button>
+                        className={"standard_btn"}>Удалить из коллекции</button>
                 </div>
             </div>
         </div>
@@ -64,13 +63,14 @@ export const TargetItemDoc = ({ item, colId, onDeleteHandler }) => {
 }
 
 export const TargetItemArticle = ({ item, colId, onDeleteHandler }) => {
+
     console.log(item)
     return (
         <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
-                <div className="article_item__info">Автор: {item.name} {item.patronymic} {item.surname}, {new Date(Date.parse(item.date_of_birth)).toLocaleDateString()} г.р.</div>
+                <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="article_item__btns">
                     <button
                         type={"submit"}

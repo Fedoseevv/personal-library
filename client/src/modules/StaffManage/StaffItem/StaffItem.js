@@ -8,8 +8,7 @@ import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../../hooks/validationHook";
 
 
-export const StaffItem = ({ item, onDeleteBook }) => {
-    console.log(item);
+export const StaffItem = ({ item, onDeleteBook, authors }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
@@ -25,42 +24,31 @@ export const StaffItem = ({ item, onDeleteBook }) => {
     const pubName = useInput(item.pub_name, {isEmpty: true, minLength: 1});
     const pubCity = useInput(item.city_of_publication, {isEmpty: true, minLength: 1});
     const [genre, setGenre] = useState(item.id_genre);
-    const [authors, setAuthors] = useState([]);
-    const [authorId, setAuthorId] = useState(item.id_author);
+    const [curAuthorsId, setCurAuthorsId] = useState(item.authors_id);
+    const [curAuthors, setCurAuthors] = useState(item.authors);
+    const [ authorId, setAuthorId ] = useState('1');
 
-
-    const fetchAuthors = useCallback(async () => {
-        const authorsFetched = await request(`/api/author/all`, 'GET');
-        setAuthors(authorsFetched);
-    }, [ request ]);
-
-    useEffect(async () => {
-        await fetchAuthors();
-        console.log(item);
-    }, [ fetchAuthors ]);
-
-    const [form, setForm] = useState({
-        title: item.title,
-        year_of_publication: item.year_of_publication,
-        keywords: item.keywords,
-        cover: item.cover,
-        brief_annotation: item.brief_annotation,
-        location: item.location,
-        location_obl: item.location_obl,
-        id_author: item.id_author,
-        id_genre: item.id_genre,
-        pubName: item.pub_name
-    });
-    const changeHandler = event => {
-        console.log(event.target.value);
-        setForm({...form, [event.target.name]: event.target.value});
+    const onDeleteAuthor = (e) => {
+        const newAuthors = curAuthorsId.filter(item => item != e.target.value)
+        setCurAuthorsId([...newAuthors]);
+        console.log(e.target.value);
+    }
+    const changeAuthor = event => {
+        setAuthorId(event.target.value);
+    }
+    const onAddAuthor = () => {
+        if (curAuthorsId.indexOf(authorId.toString()) !== -1) {
+            console.log("Уже есть")
+        } else {
+            setCurAuthorsId([...curAuthorsId, authorId])
+        }
     }
 
     const sendUpdates = async () => {
 
         const body = {
             id_book: item.id_book,
-            id_ba: item.id_ba,
+            id_ba: item.ba_array,
             title: title.value,
             year_of_publication: pubYear.value,
             keywords: keywords.value,
@@ -68,7 +56,7 @@ export const StaffItem = ({ item, onDeleteBook }) => {
             brief_annotation: annotation.value,
             location: pcLocation.value,
             location_obl: oblLocation.value,
-            id_author: authorId,
+            id_authors: curAuthorsId.map(item => parseInt(item)),
             id_genre: genre,
             id_publishing_house: item.id_publishing_house,
             pub_name: pubName.value,
@@ -90,18 +78,17 @@ export const StaffItem = ({ item, onDeleteBook }) => {
                 </div>
                 <div className="staff_item__container">
                     <div className="staff_item__info">Год издания: <span>{item.year_of_publication} г.</span></div>
-                    <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
                     <div className="staff_item__info">Жанр: <span>{item.genre}</span></div>
                     <div className="staff_item__info">Краткая аннотация: <span>{item.brief_annotation}</span></div>
                     <div className="staff_item__info">Расположение на компьютере: <span>{item.location.replace("myproto://", "")}</span></div>
                     <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
-                    <div className="staff_item__info">Автор: <span>{item.surname} {item.name} {item.patronymic}, {item.date_of_birth.slice(0, 4)} г.р</span></div>
+                    <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                     <div className="staff_item__info">Издательство: <span>{item.pub_name}</span></div>
                     <div className="staff_item__info">Город издания: <span>{item.city_of_publication}</span></div>
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
-                            className={"standard_btn"}><a href={item.location}>Открыть локально</a></button>
+                            className={"standard_btn"}><a href={"myproto://" + item.location}>Открыть локально</a></button>
                         <button
                             type={"submit"}
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
@@ -237,25 +224,48 @@ export const StaffItem = ({ item, onDeleteBook }) => {
                                 <option value="7">Поэма</option>
                             </select>
                         </div>
-                        <div className={"standard_input__wrap"}>
-                            {(oblLocation.isDirty && oblLocation.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
-                            <h1 className={"staff_modal__subtitle"}>Выберите автора</h1>
-                            <select className="auth_form__role"
-                                    value={authorId}
-                                    name="author" id="author"
-                                    onChange={(e) => setAuthorId(e.target.value)}>
-                                {
-                                    authors.map(item => {
-                                        return <option value={item.id_author}>{item.name} {item.patronymic} {item.surname}, {item.date_of_birth.slice(0, 4)} г.р</option>
-                                    })
-                                }
-                            </select>
+                        <h1 className={"staff_modal__subtitle"}>Укажите автора(-ов)</h1>
+                        <div className="addPat_form__rec">
+                            <div className="emp_role">
+                                <select className="auth_form__role"
+                                        name="author" id="author"
+                                        onChange={changeAuthor}>
+                                    {authors.map(item => (
+                                        <option key={item.id_author} value={item.id_author}>
+                                            {item.name + " " + item.patronymic + " " + item.surname + " " + item.date_of_birth.slice(0, 4) + "г."}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <button
+                                onClick={onAddAuthor}
+                                className="standard_btn addPat_form__btn"
+                            >Добавить автора
+                            </button>
+                        </div>
+                        <div className={"addPat_form__author"}>
+                            {
+                                curAuthorsId.length === 0 && <div>Выберите автора(-ов)</div>
+                            }
+                            {
+                                curAuthorsId.map((item, index) => {
+                                    const author = authors.filter(author => author.id_author == item)[0]
+                                    return <button
+                                        value={item}
+                                        style={{border: "none", backgroundColor: "transparent"}}
+                                        onClick={onDeleteAuthor}>
+                                        {index + 1}. {author.surname} {author.name} {author.patronymic}
+                                    </button>
+                                })
+                            }
                         </div>
                         <div className="staff_modal__btns">
                             <button
                                 type={"submit"}
                                 onClick={async e => await sendUpdates()}
+                                disabled={curAuthorsId.length === 0 || title.isEmpty
+                                    || pubYear.isEmpty || keywords.isEmpty || pcLocation.isEmpty
+                                    || oblLocation.isEmpty || annotation.isEmpty}
                                 className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                             <button
                                 type={"submit"}

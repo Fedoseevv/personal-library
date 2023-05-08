@@ -10,6 +10,27 @@ export const TargetCollection = ({ item }) => {
 
     const { loading, request } = useHttp();
 
+    const downloadPdf = async () => {
+        try {
+            // Выполняем GET-запрос на сервер
+            const response = await fetch(`/api/collections/report/${id}`);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            // Создаем ссылку для скачивания PDF-файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Collection.pdf';
+
+            // Добавляем ссылку на страницу и нажимаем на нее
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const [ isNewVisible, setIsNewVisible ] = useState(false);
     const [ isBtnVisible, setBtnVisible ] = useState(true);
     const setVisible = () => {
@@ -154,10 +175,16 @@ export const TargetCollection = ({ item }) => {
                         })
                     }
                 </div>
-                <button
-                    type={"submit"}
-                    onClick={setVisible}
-                    className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>
+                <div className="collection_btn__wrap">
+                    <button
+                        type={"submit"}
+                        onClick={setVisible}
+                        className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>
+                    <button
+                        type={"submit"}
+                        onClick={downloadPdf}
+                        className={"standard_btn collection_btn"}>Сформировать отчет</button>
+                </div>
             </div>
         </>
     )

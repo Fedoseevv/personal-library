@@ -3,7 +3,7 @@ import {StaffItem} from "../StaffItem/StaffItem";
 import {DocsItem} from "../DocsItem/DocsItem";
 import {LinkItem} from "../LinkItem/LinkItem";
 
-export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook, onDeleteDoc }) => {
+export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook, onDeleteDoc, authors }) => {
     return (
         <>
             <h1 className={"staff_title"}>Литературные источники</h1>
@@ -12,6 +12,7 @@ export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook
                     books.map(item => {
                         return <StaffItem
                             item={item}
+                            authors={authors}
                             onDeleteBook={onDeleteBook} />
                     })
                 }
@@ -20,7 +21,10 @@ export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook
             <div className={"staff_container"}>
                 {
                     docs.map(item => {
-                        return <DocsItem item={item} onDeleteDoc={onDeleteDoc} />
+                        return <DocsItem
+                                    item={item}
+                                    authors={authors}
+                                    onDeleteDoc={onDeleteDoc} />
                     })
                 }
             </div>
@@ -29,6 +33,7 @@ export const StaffList = ({ books, docs, articles, onDeleteArticle, onDeleteBook
                 {
                     articles.map(item => {
                         return <LinkItem
+                            authors={authors}
                             item={item}
                             onDeleteArticle={onDeleteArticle} />
                     })

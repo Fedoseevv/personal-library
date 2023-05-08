@@ -22,7 +22,7 @@ export const Header = (props) => {
                 <div className="wrapper">
                     <ul className="navigation">
                         <li><Link  to={'/staffManage'}>Главная страница</Link></li>
-                        <li><Link to={'/addEmp'}>Моя литература</Link>
+                        <li><Link to={'/addEmp'}>Добавить источник</Link>
                             <ul>
                                 <li><Link  to={'/addEmp'}>Добавить книгу</Link></li>
                                 <li><Link  to={'/addPatient'}>Добавить документ</Link></li>
@@ -30,27 +30,8 @@ export const Header = (props) => {
                             </ul>
                         </li>
                         <li><Link to={'/collections'}>Мои коллекции</Link></li>
-                        <li><Link to={'/addCollection'}>Добавить коллекцию</Link></li>
-                        <li><Link to={'/search'}>Расширенный поиск</Link></li>
+                        <li><Link to={'/search'}>Поиск</Link></li>
                         <li><Link to={'/authors'}>Авторы</Link></li>
-                        <li><Link to={'/addAuthor'}>Добавить автора</Link></li>
-                        {/*<li><Link to={'/pharmacy'}>Управленческие модули</Link>*/}
-                        {/*    <ul>*/}
-                        {/*        <li><Link to={'/pharmacy'}>Склад медицинских препаратов</Link></li>*/}
-                        {/*        <li><Link  to={'/payment'}>Касса</Link></li>*/}
-                        {/*        <li><Link to={'/bedFund'}>Коечный фонд</Link></li>*/}
-                        {/*    </ul>*/}
-                        {/*</li>*/}
-                        {/*<li><Link to={''}>Регистратура</Link>*/}
-                        {/*    <ul>*/}
-                        {/*        <li><Link to={'/patManage'}>Посетители МО</Link></li>*/}
-                        {/*        <li><Link to={'findPatient'}>Модуль "ЭМК"</Link></li>*/}
-                        {/*        <li><Link to={'/analysis'}>Модуль "Анализы"</Link></li>*/}
-                        {/*    </ul>*/}
-                        {/*</li>*/}
-                        {/*<li><Link to={'/statistics'}>Статистика</Link></li>*/}
-                        {/*<li><Link to={'/vacList'}>Вакцинация</Link></li>*/}
-                        {/*<li><Link to={'/ambulance'}>Скорая помощь</Link></li>*/}
                         <li><a href="/" onClick={logoutHandler}>Выйти</a></li>
                         <div className={"clear"}></div>
                     </ul>

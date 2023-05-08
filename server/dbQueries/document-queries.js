@@ -86,9 +86,13 @@ const deleteDocCollection = (id) => {
 
 const allDocuments = () => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * \n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author",
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl",
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -101,10 +105,14 @@ const allDocuments = () => {
 
 const docInCollection = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT *\n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
             "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
-            "AND d.id_document IN (SELECT id_document\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING d.id_document IN (SELECT id_document\n" +
             "FROM course_work.library.document_collection\n" +
             "WHERE id_collection = $1)", [id],
             (error, result) => {
@@ -119,10 +127,14 @@ const docInCollection = (id) => {
 
 const docNotInCollection = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT *\n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
             "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
-            "AND d.id_document NOT IN (SELECT id_document\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING d.id_document NOT IN (SELECT id_document\n" +
             "FROM course_work.library.document_collection\n" +
             "WHERE id_collection = $1)", [id],
             (error, result) => {
@@ -191,7 +203,14 @@ const addInCollection = (docId, colId) => {
 
 const documentById = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT name FROM course_work.library.document WHERE id_book = $1", [id],
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
+            "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING d.id_document = $1", [id],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -204,9 +223,14 @@ const documentById = (id) => {
 
 const findByTitle = (title) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * \n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND LOWER(d.title) LIKE $1", [`%${title.toLowerCase()}%`],
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING LOWER(d.title) LIKE $1", [`%${title.toLowerCase()}%`],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -218,9 +242,14 @@ const findByTitle = (title) => {
 }
 const findByAuthor = (someName) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * \n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND " +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING " +
             "(LOWER(a.name) LIKE $1 OR LOWER(a.patronymic) LIKE $1 OR LOWER(a.surname) LIKE $1)", [`%${someName.toLowerCase()}%`],
             (error, result) => {
                 if (error) {
@@ -233,10 +262,14 @@ const findByAuthor = (someName) => {
 }
 const findByDate = (date) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * \n" +
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+            "        array_agg(da.id_da) as da_array,\n" +
+            "        array_agg(a.id_author) as authors_id,\n" +
+            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND " +
-            "d.date_of_publication=$1", [date],
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
+            "HAVING d.date_of_publication=$1", [date],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -245,6 +278,20 @@ const findByDate = (date) => {
                 }
             })
     });
+}
+
+const authorsByDocId = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT id_document, array_agg(id_author) as authors " +
+            "FROM course_work.library.document_author WHERE id_document=$1 GROUP BY id_document", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    })
 }
 
 module.exports = {
@@ -265,5 +312,6 @@ module.exports = {
     findByDate,
 
     deleteDocAuthor,
-    deleteDocCollection
+    deleteDocCollection,
+    authorsByDocId
 }

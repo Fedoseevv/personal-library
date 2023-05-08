@@ -1,4 +1,11 @@
+.collection_btn__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 .collection_btn {
+    margin-bottom: 25px;
     margin-right: 0;
 }
 .hide_block {

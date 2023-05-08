@@ -21,7 +21,9 @@ export const AddPatient = () => {
     const {request, loading, clearError} = useHttp();
 
     const [authors, setAuthors] = useState([])
-    const [authorId, setAuthorId] = useState(1)
+    const [authorId, setAuthorId] = useState('1')
+    const [curAuthors, setCurAuthors] = useState([]);
+
 
     const fetchAuthors = useCallback(async () => {
         const fetched = await request('/api/author/all', 'GET');
@@ -32,8 +34,20 @@ export const AddPatient = () => {
         await fetchAuthors();
     }, [fetchAuthors]);
 
-    const changeAuthor = event => {
+    const changeAuthor = (event) => {
         setAuthorId(event.target.value);
+    }
+    const onAddAuthor = () => {
+        if (curAuthors.indexOf(authorId.toString()) !== -1) {
+            console.log("Уже есть")
+        } else {
+            setCurAuthors([...curAuthors, authorId])
+        }
+    }
+    const onDeleteAuthor = (e) => {
+        const newAuthors = curAuthors.filter(item => item !== e.target.value)
+        setCurAuthors([...newAuthors]);
+        console.log(e.target.value);
     }
 
     const registerHandler = async () => {
@@ -43,7 +57,7 @@ export const AddPatient = () => {
                 dateOfPub: dateOfPub.value,
                 location: location.value,
                 locationObl: locationObl.value,
-                authorId: authorId
+                authorsId: curAuthors.map(item => parseInt(item)),
             }
             console.log(form);
             await request('/api/documents/add', 'POST', {...form});
@@ -120,13 +134,35 @@ export const AddPatient = () => {
                             </select>
                         </div>
                         <button
-                            onClick={registerHandler}
+                            onClick={onAddAuthor}
                             className="standard_btn addPat_form__btn"
+                        >Добавить автора
+                        </button>
+                    </div>
+                    <div className={"addPat_form__author"}>
+                        {
+                            curAuthors.length === 0 && <div>Выберите автора(-ов)</div>
+                        }
+                        {
+                            curAuthors.map((item, index) => {
+                                const author = authors.filter(author => author.id_author == item)[0]
+                                return <button
+                                    value={item}
+                                    style={{border: "none", backgroundColor: "transparent"}}
+                                    onClick={onDeleteAuthor}>
+                                    {index + 1}. {author.surname} {author.name} {author.patronymic}
+                                </button>
+                            })
+                        }
+                    </div>
+
+                        <button
+                            onClick={registerHandler}
+                            className="standard_btn addPat_form__btn addDoc_btn"
                             disabled={loading || !title.inputValid}
                             >Сохранить
                         </button>
                     </div>
-                </div>
             </div>
         </div>
     );

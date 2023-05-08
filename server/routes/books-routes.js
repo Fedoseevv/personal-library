@@ -20,5 +20,6 @@ router.post('/find/pubYear', bookControllers.findByPubYear);
 router.post('/find/author', bookControllers.findByAuthor);
 router.post('/find/briefAnnotation', bookControllers.findByBriefAnn);
 
+router.get('/report/:id', bookControllers.generateReport);
 
 module.exports = router;

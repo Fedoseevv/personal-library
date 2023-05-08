@@ -23,7 +23,7 @@ const findUser = (email) => {
                     reject(error);
                 }
                 request.isFound = true;
-                resolve(result.rows[0]);
+                resolve(result.rows);
             });
     });
 }

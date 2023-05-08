@@ -1,10 +1,11 @@
 const ApiError = require('../handlers/api-error');
 const articleQueries = require('../dbQueries/article-queries');
+const PDFDocument = require("pdfkit");
 
 class ArticlesController {
     async addArticle(req, res, next) {
         try {
-            const {title, linkArt, dateOfPub, authorId} = req.body;
+            const {title, linkArt, dateOfPub, id_authors} = req.body;
             console.log(req.body)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
@@ -13,12 +14,11 @@ class ArticlesController {
             await articleQueries.maxArtId()
                 .then(response => {
                     const artId = response["max_id"]
-                    articleQueries.addRec(artId, authorId)
-                        .then(resp => {
-                            return res.status(201).json({message: "Запись успешно добавлена!"});
-                        })
+                    for(const id of id_authors) {
+                        articleQueries.addRec(artId, id);
+                    }
                 })
-
+            return res.status(201).json({message: "Запись успешно добавлена!"});
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
@@ -102,16 +102,28 @@ class ArticlesController {
 
     async updateArticle(req, res, next) {
         try {
-            const {id_article, id_aa, title, date_of_publication, hyperlink, id_author} = req.body;
+            const {id_article, id_aa, title, date_of_publication, hyperlink, id_authors} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            console.log([id_article, id_aa, title, date_of_publication, hyperlink, id_author].join("\n"))
+            console.log(req.body);
             await articleQueries.updateArticle(id_article, title, hyperlink, date_of_publication)
-            await articleQueries.updateArticleAuthor(id_aa, id_author, id_article)
-                .then(response => {
-                    return res.status(201).json({message: response});
-                })
+
+            const authorQuery = await articleQueries.authorsByArtId(id_article);
+            const currentAuthors = authorQuery[0].authors;
+            console.log(currentAuthors)
+            if (id_authors.length === currentAuthors.length &&
+                id_authors.sort().every((value, index) =>
+                    value === currentAuthors.sort()[index])) {
+                console.log("Авторы не изменились")
+            } else {
+                console.log("авторы изменились")
+                await articleQueries.deleteAuthorArticle(id_article);
+                for(const id of id_authors) {
+                    await articleQueries.addRec(id_article, id)
+                }
+            }
+            return res.status(200).json({message: "Запись успешно обновлена!"});
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
@@ -170,6 +182,26 @@ class ArticlesController {
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
+    }
+    async generateReport(req, res, next) {
+        const id = req.params.id;
+        console.log(id)
+        const articles = await articleQueries.articleById(id)
+        const article = articles[0]
+
+        const doc = new PDFDocument({ margin: 35 });
+        doc.page.margins = { top: 72, left: 100, bottom: 72, right: 50 };
+        doc.font('D:\\downloads\\Times New Roman\\target.ttf');
+        doc.fontSize(18).text('Отчет о выбранной статье', {align: 'center', paragraphGap: 25, underline: true});
+
+        doc.fontSize(14).text(`Название статьи: ${article.title}`, {align: "center", paragraphGap: 10});
+        doc.fontSize(12).text(`Дата публикации: ${new Date(article.date_of_publication).toLocaleDateString()}`, {align: "justify"});
+        doc.fontSize(12).text(`Ссылка на статью: ${article.hyperlink}`, {align: "justify"});
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=article.pdf');
+        doc.pipe(res);
+        doc.end();
     }
 }
 

@@ -31,19 +31,16 @@ class UserController {
 
     async login(req, res, next) {
         const {email, password} = req.body;
-        await userQueries.findUser(email)
-            .then(async response => {
-               if (!response) {
-                   return next(ApiError.badReq("Пользователь не найден!"));
-               }
-               const isMatch = await bcrypt.compareSync(password, response.password);
-               if (!isMatch) {
-                   return next(ApiError.badReq("Неверный пароль!"));
-               }
-                const token = generateJwt(response.id, email)
-                return res.json({token});
-            });
-
+        console.log(req.body);
+        const queryResult = await userQueries.findUser(email);
+        console.log(queryResult)
+        const user = queryResult[0]
+        const isMatch = await bcrypt.compareSync(password, user.password);
+        if (!isMatch) {
+            return next(ApiError.badReq("Неверный пароль!"));
+        }
+        const token = generateJwt(1, email)
+        return res.json({token});
     }
 
     async isAuthenticated(req, res, next) {

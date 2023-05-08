@@ -3,6 +3,7 @@ import { RadioGroup, RadioButton } from 'react-radio-buttons';
 import './SearchPage.css';
 import {useInput} from "../../hooks/validationHook";
 import {useHttp} from "../../hooks/httpHook";
+import {RecordModal} from "../DocRecords/RecordModal/RecordModal";
 
 
 export const SearchPage = () => {
@@ -247,16 +248,16 @@ const InformationWindow = ({articles, docs, books, loading}) => {
         <>
             {articles.length > 0 ? <div className={"informationWindow"}>
 
-                <ArticlesListInfo articles={articles} />
+                <ArticlesListInfo articles={articles} loading={loading} />
             </div> : ''}
             {docs.length > 0 ? <div className={"informationWindow"}>
 
-                <DocsListInfo docs={docs} />
+                <DocsListInfo docs={docs} loading={loading} />
             </div> : ''}
             {books.length > 0 ? <div className={"informationWindow"}>
 
 
-                    <BooksListInfo books={books} />
+                    <BooksListInfo books={books} loading={loading} />
 
             </div> : ''}
         </>
@@ -264,7 +265,33 @@ const InformationWindow = ({articles, docs, books, loading}) => {
     )
 }
 
-const BookItem = ({ item }) => {
+const BookItem = ({ item, loading }) => {
+    const downloadPdf = async () => {
+        try {
+            // Выполняем GET-запрос на сервер
+            const response = await fetch(`/api/books/report/${item.id_book}`);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            // Создаем ссылку для скачивания PDF-файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'book.pdf';
+
+            // Добавляем ссылку на страницу и нажимаем на нее
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    if (loading) {
+        return (
+            <h1>Loading...</h1>
+        )
+    }
+
     return (
         <div className={"staff_item"}>
             <div className="staff_item__title">Название книги: '{item.title}'</div>
@@ -275,12 +302,13 @@ const BookItem = ({ item }) => {
                 </div>
                 <div className="staff_item__container">
                     <div className="staff_item__info">Год издания: <span>{item.year_of_publication} г.</span></div>
-                    <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
                     <div className="staff_item__info">Жанр: <span>{item.genre}</span></div>
                     <div className="staff_item__info">Краткая аннотация: <span>{item.brief_annotation}</span></div>
                     <div className="staff_item__info">Расположение на компьютере: <span>{item.location.replace("myproto://", "")}</span></div>
                     <div className="staff_item__info">Ключевые слова: <span>{item.keywords.toLowerCase().split(';').join(", ")}</span></div>
-                    <div className="staff_item__info">Автор: <span>{item.surname} {item.name} {item.patronymic}, {item.date_of_birth.slice(0, 4)} г.р</span></div>
+                    <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
+                    <div className="staff_item__info">Издательство: <span>{item.pub_name}</span></div>
+                    <div className="staff_item__info">Город издания: <span>{item.city_of_publication}</span></div>
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
@@ -288,6 +316,10 @@ const BookItem = ({ item }) => {
                         <button
                             type={"submit"}
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
+                        <button
+                            type={"submit"}
+                            onClick={downloadPdf}
+                            className={"standard_btn"}>Сформировать отчет</button>
                     </div>
                 </div>
             </div>
@@ -295,26 +327,51 @@ const BookItem = ({ item }) => {
     )
 
 }
-const BooksListInfo = ({ books }) => {
+const BooksListInfo = ({ books, loading }) => {
     return (
         <>
             {
                 books.map(book => {
-                    return <BookItem item={book} />
+                    return <BookItem item={book} loading={loading} />
                 })
             }
         </>
     )
 }
 
-const DocItem = ({ item }) => {
+const DocItem = ({ item, loading }) => {
+    const downloadPdf = async () => {
+        try {
+            // Выполняем GET-запрос на сервер
+            const response = await fetch(`/api/documents/report/${item.id_document}`);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            // Создаем ссылку для скачивания PDF-файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'document.pdf';
+
+            // Добавляем ссылку на страницу и нажимаем на нее
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    if (loading) {
+        return (
+            <h1>Loading...</h1>
+        )
+    }
     return (
         <div className={"doc_item__search docs_item"}>
             <div className="docs_item__title">Название документа: '{item.title}'</div>
             <div className="docs_item__container">
                 <div className="docs_item__info">Дата публикации документа: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
                 <div className="docs_item__info">Расположение локально: {item.location}</div>
-                <div className="docs_item__info">Автор: {item.name} {item.patronymic} {item.surname}, {new Date(Date.parse(item.date_of_birth)).toLocaleDateString()} г.р.</div>
+                <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="docs_item__btns">
                     <button
                         type={"submit"}
@@ -322,45 +379,80 @@ const DocItem = ({ item }) => {
                     <button
                         type={"submit"}
                         className={"standard_btn docs_standard__btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
+                    <button
+                        type={"submit"}
+                        onClick={downloadPdf}
+                        className={"standard_btn"}>Сформировать отчет</button>
+
                 </div>
             </div>
         </div>
     )
 }
-const DocsListInfo = ({ docs }) => {
+const DocsListInfo = ({ docs, loading }) => {
     return (
         <>
             {
                 docs.map(doc => {
-                    return <DocItem item={doc} />
+                    return <DocItem item={doc} loading={loading} />
                 })
             }
         </>
     )
 }
 
-const ArticleItem = ({ item }) => {
+const ArticleItem = ({ item, loading }) => {
+    const downloadPdf = async () => {
+        try {
+            // Выполняем GET-запрос на сервер
+            const response = await fetch(`/api/articles/report/${item.id_article}`);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            // Создаем ссылку для скачивания PDF-файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'article.pdf';
+
+            // Добавляем ссылку на страницу и нажимаем на нее
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    if (loading) {
+        return (
+            <h1>Loading...</h1>
+        )
+    }
     return (
-        <div className={"doc_item__search article_item"}>
+        <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
-                <div className="article_item__info">Автор: {item.name} {item.patronymic} {item.surname}, {new Date(Date.parse(item.date_of_birth)).toLocaleDateString()} г.р.</div>
+                <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="article_item__btns">
                     <button
                         type={"submit"}
                         className={"standard_btn article_standard__btn"}><a target="_blank" href={item.hyperlink}>Открыть статью</a></button>
+                    <button
+                        type={"submit"}
+                        onClick={downloadPdf}
+                        className={"standard_btn"}>Сформировать отчет</button>
+
                 </div>
             </div>
         </div>
     )
 }
-const ArticlesListInfo = ({ articles }) => {
+const ArticlesListInfo = ({ articles, loading }) => {
     return (
         <>
             {
                 articles.map(art => {
-                    return <ArticleItem item={art} />
+                    return <ArticleItem item={art} loading={loading} />
                 })
             }
         </>

@@ -29,6 +29,14 @@
     justify-content: center;
     gap: 30px;
 }
+.addPat_form__rec {
+    margin: 0 0 30px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 49%);
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
 .addPat_form__input {
     position: relative;
 }
@@ -62,6 +70,26 @@
     margin: 15px 0;
 }
 
+.addDoc_btn {
+    width: 50%!important;
+}
+
 .addPat_incorrect__value {
     right: 0!important;
+}
+.addPat_form__author {
+    font-size: 25px;
+    font-weight: 300;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.addPat_form__author button {
+    color: #fff;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+.addPat_form__author button:hover {
+    opacity: 0.7;
 }

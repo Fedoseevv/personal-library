@@ -3,12 +3,14 @@ import {useHttp} from "../../../hooks/httpHook";
 import {useCallback, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {StaffList} from "../StaffList/StaffList";
+import {Loader} from '../../../components/loader/Loader';
 
 export const StaffPage = () => {
     const { loading, request } = useHttp();
     const [ books, setBooks ] = useState([]);
     const [ docs, setDocs ] = useState([]);
     const [ articles, setArticles ] = useState([]);
+    const [ authors, setAuthors ] = useState([]);
 
     const history = useHistory();
 
@@ -25,24 +27,40 @@ export const StaffPage = () => {
         await fetchSources();
     }, [fetchSources]);
 
+    const fetchAuthors = useCallback(async () => {
+        const authorsFetched = await request(`/api/author/all`, 'GET');
+        setAuthors(authorsFetched);
+    }, [ request ]);
+
+    useEffect(async () => {
+        await fetchAuthors();
+    }, [ fetchAuthors ]);
+
     const onDeleteArticle = async (id) => {
         console.log(id)
         const deleted = await request('/api/articles/delete', 'POST', {id});
+        const filteredArt = articles.filter(item => item.id_article != id);
+        setArticles([...filteredArt])
         await fetchSources();
     }
 
     const onDeleteBook = async (id) => {
         const deleted = await request('/api/books/delete', 'POST', {id})
+        console.log(id);
+        const filteredBooks = books.filter(item => item.id_book != id)
+        setBooks([...filteredBooks])
         await fetchSources();
     }
 
     const onDeleteDoc = async (id) => {
         const deleted = await request('/api/documents/delete', 'POST', {id})
+        const filteredDocs = docs.filter(item => item.id_document != id);
+        setDocs([...filteredDocs]);
         await fetchSources();
     }
 
     if (loading) {
-        return <h1>Loading...</h1>
+        return <Loader />
     }
 
     return (
@@ -51,6 +69,7 @@ export const StaffPage = () => {
                 { !loading &&  <StaffList books={books}
                                           docs={docs}
                                           articles={articles}
+                                          authors={authors}
                                           onDeleteBook={onDeleteBook}
                                           onDeleteDoc={onDeleteDoc}
                                           onDeleteArticle={onDeleteArticle} /> }

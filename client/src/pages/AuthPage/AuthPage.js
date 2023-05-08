@@ -9,7 +9,7 @@ export const AuthPage = () => {
     const auth = useContext(AuthContext);
     const { loading, error, request } = useHttp();
     const [form, setForm] = useState({
-        user_id: '', email: '', password: '', role: ''
+        email: '', password: ''
     });
     const email = useInput('', { isEmpty: true, isEmail: true });
     const password = useInput('', { isEmpty: true, minLength: 6 });
@@ -26,11 +26,14 @@ export const AuthPage = () => {
                 email: email.value,
                 password: password.value
             });
+            const body = {
+                email: email.value,
+                password: password.value
+            }
             console.log(form.email);
             console.log(form.password);
-            console.log(form.role);
-            const data = await request('/api/user/login', 'POST', {...form});
-            auth.login(data.token, data.userId, data.role);
+            const data = await request('/api/user/login', 'POST', body);
+            auth.login(data.token);
         } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
     }
 

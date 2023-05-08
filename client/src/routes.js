@@ -148,6 +148,11 @@ export const useRoutes = isAuthenticated => {
                     <PaymentPage />
                 </Route>
 
+
+                <Route path={"/"}>
+                    <StaffPage />
+                </Route>
+
             </Switch>
         );
     }

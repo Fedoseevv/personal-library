@@ -5,36 +5,42 @@ import {useCallback, useEffect, useState} from "react";
 import {useInput} from "../../../hooks/validationHook";
 import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 
-export const LinkItem = ({ item, onDeleteArticle }) => {
+export const LinkItem = ({ item, onDeleteArticle, authors }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
 
     const title = useInput(item.title, {isEmpty: true, minLength: 1});
     const hyperlink = useInput(item.hyperlink, {isEmpty: true, minLength: 1});
-    const pubYear = useInput(item.date_of_publication, {isEmpty: true, minLength: 1, isDigit: true});
-    const [authors, setAuthors] = useState([])
-    const [authorId, setAuthorId] = useState(item.id_author)
+    const pubYear = useInput(new Date(Date.parse(item.date_of_publication)).toLocaleDateString(), {isEmpty: true, minLength: 1, isDigit: true});
+    const [curAuthorsId, setCurAuthorsId] = useState(item.authors_id);
+    const [curAuthors, setCurAuthors] = useState(item.authors);
+    const [ authorId, setAuthorId ] = useState('1');
 
-
-    const fetchAuthors = useCallback(async () => {
-        const authorsFetched = await request(`/api/author/all`, 'GET');
-        setAuthors(authorsFetched);
-    }, [ request ]);
-
-    useEffect(async () => {
-        await fetchAuthors();
-        console.log(item);
-    }, [ fetchAuthors ]);
+    const onDeleteAuthor = (e) => {
+        const newAuthors = curAuthorsId.filter(item => item != e.target.value)
+        setCurAuthorsId([...newAuthors]);
+        console.log(e.target.value);
+    }
+    const changeAuthor = event => {
+        setAuthorId(event.target.value);
+    }
+    const onAddAuthor = () => {
+        if (curAuthorsId.indexOf(authorId.toString()) !== -1) {
+            console.log("Уже есть")
+        } else {
+            setCurAuthorsId([...curAuthorsId, authorId])
+        }
+    }
 
     const sendUpdates = async () => {
         const body = {
             id_article: item.id_article,
-            id_aa: item.id_aa,
+            id_aa: item.aa_array,
             title: title.value,
             date_of_publication: pubYear.value,
             hyperlink: hyperlink.value,
-            id_author: authorId
+            id_authors: curAuthorsId.map(item => parseInt(item))
         }
         console.log(body);
         const fetched = request('/api/articles/update', 'POST', body)
@@ -47,7 +53,7 @@ export const LinkItem = ({ item, onDeleteArticle }) => {
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
-                <div className="article_item__info">Автор: {item.name} {item.patronymic} {item.surname}, {new Date(Date.parse(item.date_of_birth)).toLocaleDateString()} г.р.</div>
+                <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="article_item__btns">
                     <button
                         type={"submit"}
@@ -84,7 +90,7 @@ export const LinkItem = ({ item, onDeleteArticle }) => {
                                 <h1 className={"staff_modal__subtitle"}>Дата публикации статьи</h1>
                                 <input
                                     placeholder={"Введите дату публикации"}
-                                    value={new Date(Date.parse(pubYear.value)).toLocaleDateString()}
+                                    value={pubYear.value}
                                     onChange={e => pubYear.onChange(e)}
                                     onBlur={e => pubYear.onBlur(e)}
                                     type="text"/>
@@ -100,19 +106,43 @@ export const LinkItem = ({ item, onDeleteArticle }) => {
                                     onBlur={e => hyperlink.onBlur(e)}
                                     type="text"/>
                             </div>
-                            <div className={"standard_input__wrap"}>
-                                <h1 className={"staff_modal__subtitle"}>Выберите автора</h1>
-                                <select className="auth_form__role"
-                                        value={authorId}
-                                        name="author" id="author"
-                                        onChange={(e) => setAuthorId(e.target.value)}>
-                                    {
-                                        authors.map(item => {
-                                            return <option value={item.id_author}>{item.name} {item.patronymic} {item.surname}, {item.date_of_birth.slice(0, 4)} г.р</option>
-                                        })
-                                    }
-                                </select>
+
+                            <h1 className={"staff_modal__subtitle"}>Укажите автора(-ов)</h1>
+                            <div className="addPat_form__rec">
+                                <div className="emp_role">
+                                    <select className="auth_form__role"
+                                            name="author" id="author"
+                                            onChange={changeAuthor}>
+                                        {authors.map(item => (
+                                            <option key={item.id_author} value={item.id_author}>
+                                                {item.name + " " + item.patronymic + " " + item.surname + " " + item.date_of_birth.slice(0, 4) + "г."}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <button
+                                    onClick={onAddAuthor}
+                                    className="standard_btn addPat_form__btn"
+                                >Добавить автора
+                                </button>
                             </div>
+                            <div className={"addPat_form__author"}>
+                                {
+                                    curAuthorsId.length === 0 && <div>Выберите автора(-ов)</div>
+                                }
+                                {
+                                    curAuthorsId.map((item, index) => {
+                                        const author = authors.filter(author => author.id_author == item)[0]
+                                        return <button
+                                            value={item}
+                                            style={{border: "none", backgroundColor: "transparent"}}
+                                            onClick={onDeleteAuthor}>
+                                            {index + 1}. {author.surname} {author.name} {author.patronymic}
+                                        </button>
+                                    })
+                                }
+                            </div>
+
                             <div className="staff_modal__btns">
                                 <button
                                     type={"submit"}

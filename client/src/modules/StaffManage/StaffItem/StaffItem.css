@@ -12,11 +12,15 @@
     justify-content: space-between;
 }
 .book_img__wrap {
+    display: block;
     width: 900px;
     margin-right: 50px;
     padding-bottom: 50px;
 }
 .book_img__wrap img {
+    margin: 0;
+    display: block;
+    width: 500px;
     height: auto;
 }
 .staff_item__btns {

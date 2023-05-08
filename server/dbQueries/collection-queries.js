@@ -42,8 +42,22 @@ const allCollections = () => {
     })
 }
 
+const collectionById = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM course_work.library.collection WHERE id_collection = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    })
+}
+
 module.exports = {
     addCollection,
     deleteCollection,
-    allCollections
+    allCollections,
+    collectionById
 }

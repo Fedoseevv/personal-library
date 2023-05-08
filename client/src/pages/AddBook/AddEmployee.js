@@ -1,13 +1,10 @@
 import {useCallback, useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import {useHttp} from "../../hooks/httpHook";
 import './AddEmployee.css';
 import {useInput} from "../../hooks/validationHook";
 
-
 export const AddEmployee = () => {
-    const auth = useContext(AuthContext);
     const history = useHistory();
     const {request, loading, clearError} = useHttp();
 
@@ -18,9 +15,14 @@ export const AddEmployee = () => {
     const annotation = useInput('', {isEmpty: true, minLength: 10});
     const pcLocation = useInput('', {isEmpty: true, minLength: 1});
     const oblLocation = useInput('', {isEmpty: true, minLength: 1});
+    const pubHouse = useInput('', {isEmpty: true, minLength: 1});
+    const pubCity = useInput('', {isEmpty: true, minLength: 1});
+
     const [genre, setGenre] = useState(1);
+    const [authorId, setAuthorId] = useState('1')
+
     const [authors, setAuthors] = useState([])
-    const [authorId, setAuthorId] = useState(1)
+    const [curAuthors, setCurAuthors] = useState([]);
 
     const fetchAuthors = useCallback(async () => {
         const fetched = await request('/api/author/all', 'GET');
@@ -37,6 +39,18 @@ export const AddEmployee = () => {
     const changeAuthor = event => {
         setAuthorId(event.target.value);
     }
+    const onAddAuthor = () => {
+        if (curAuthors.indexOf(authorId.toString()) !== -1) {
+            console.log("Уже есть")
+        } else {
+            setCurAuthors([...curAuthors, authorId])
+        }
+    }
+    const onDeleteAuthor = (e) => {
+        const newAuthors = curAuthors.filter(item => item !== e.target.value)
+        setCurAuthors([...newAuthors]);
+        console.log(e.target.value);
+    }
 
     const registerHandler = async () => {
         try {
@@ -49,11 +63,13 @@ export const AddEmployee = () => {
                 location: pcLocation.value,
                 locationObl: oblLocation.value,
                 id_genre: genre,
-                id_author: authorId
+                id_authors: curAuthors,
+                pubHouse: pubHouse.value,
+                pubCity: pubCity.value
             }
             console.log(form);
             const data = await request('/api/books/add', 'POST', {...form});
-            history.push('/');
+            history.push('/staffManage');
         } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
     }
 
@@ -149,6 +165,32 @@ export const AddEmployee = () => {
                                 onBlur={e => oblLocation.onBlur(e)}
                             />
                         </div>
+                        <div className="addPat_form__input">
+                            {(pubHouse.isDirty && pubHouse.minLengthError)
+                                && <div className="incorrect_value">Необходимо указать издательство</div>}
+                            <input
+                                placeholder="Введите издательство книги"
+                                id="pubHouse"
+                                type="text"
+                                name="pubHouse"
+                                value={pubHouse.value}
+                                onChange={e => pubHouse.onChange(e)}
+                                onBlur={e => pubHouse.onBlur(e)}
+                            />
+                        </div>
+                        <div className="addPat_form__input">
+                            {(pubCity.isDirty && pubCity.minLengthError)
+                                && <div className="incorrect_value">Необходимо указать город издания</div>}
+                            <input
+                                placeholder="Введите город издания книги"
+                                id="pubCity"
+                                type="text"
+                                name="pubCity"
+                                value={pubCity.value}
+                                onChange={e => pubCity.onChange(e)}
+                                onBlur={e => pubCity.onBlur(e)}
+                            />
+                        </div>
                         <div className="emp_role">
                             <select className="auth_form__role"
                                     name="genre" id="genre"
@@ -173,14 +215,36 @@ export const AddEmployee = () => {
                                 ))}
                             </select>
                         </div>
-
                         <button
-                                onClick={registerHandler}
-                                className="standard_btn addPat_form__btn"
-                                disabled={loading || !title.inputValid}
-                            >Сохранить
-                            </button>
+                            onClick={onAddAuthor}
+                            className="standard_btn addPat_form__btn"
+                        >Добавить автора
+                        </button>
                     </div>
+
+                    <div className={"addPat_form__author"}>
+                        {
+                            curAuthors.length === 0 && <div>Выберите автора(-ов)</div>
+                        }
+                        {
+                            curAuthors.map((item, index) => {
+                                const author = authors.filter(author => author.id_author == item)[0]
+                                return <button
+                                    value={item}
+                                    style={{border: "none", backgroundColor: "transparent"}}
+                                    onClick={onDeleteAuthor}>
+                                    {index + 1}. {author.surname} {author.name} {author.patronymic}
+                                </button>
+                            })
+                        }
+                    </div>
+
+                    <button
+                        onClick={registerHandler}
+                        className="standard_btn addPat_form__btn addDoc_btn"
+                        disabled={loading || !title.inputValid || curAuthors.length === 0}
+                    >Сохранить
+                    </button>
                 </div>
             </div>
         </div>

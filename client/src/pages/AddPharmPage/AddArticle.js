@@ -1,8 +1,6 @@
 import {useCallback, useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../context/AuthContext";
 import {useHttp} from "../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
 
 import {useInput} from '../../hooks/validationHook';
 
@@ -13,11 +11,12 @@ export const AddArticle = () => {
     const linkArt = useInput('', {isEmpty: true, minLength: 1});
 
     const history = useHistory();
-    const auth = useContext(AuthContext);
     const {request, loading, clearError} = useHttp();
 
+    const [authorId, setAuthorId] = useState('1')
+
     const [authors, setAuthors] = useState([])
-    const [authorId, setAuthorId] = useState(1)
+    const [curAuthors, setCurAuthors] = useState([]);
 
     const fetchAuthors = useCallback(async () => {
         const fetched = await request('/api/author/all', 'GET');
@@ -28,8 +27,20 @@ export const AddArticle = () => {
         await fetchAuthors();
     }, [fetchAuthors]);
 
-    const changeAuthor = event => {
-        setAuthorId(event.target.value);
+    const changeAuthor = (e) => {
+        setAuthorId(e.target.value);
+    }
+    const onAddAuthor = () => {
+        if (curAuthors.indexOf(authorId.toString()) !== -1) {
+            console.log("Такой автор уже есть")
+        } else {
+            setCurAuthors([...curAuthors, authorId])
+        }
+    }
+    const onDeleteAuthor = (e) => {
+        const newAuthors = curAuthors.filter(item => item !== e.target.value)
+        setCurAuthors([...newAuthors]);
+        console.log(e.target.value);
     }
 
     const registerHandler = async () => {
@@ -38,7 +49,7 @@ export const AddArticle = () => {
                 title: title.value,
                 dateOfPub: dateOfPub.value,
                 linkArt: linkArt.value,
-                authorId: authorId
+                id_authors: curAuthors,
             }
             console.log(form);
             await request('/api/articles/add', 'POST', {...form});
@@ -103,12 +114,33 @@ export const AddArticle = () => {
                             </select>
                         </div>
                         <button
-                            onClick={registerHandler}
+                            onClick={onAddAuthor}
                             className="standard_btn addPat_form__btn"
-                            disabled={loading || !title.inputValid}
-                        >Сохранить
+                        >Добавить автора
                         </button>
                     </div>
+                    <div className={"addPat_form__author"}>
+                        {
+                            curAuthors.length === 0 && <div>Выберите автора(-ов)</div>
+                        }
+                        {
+                            curAuthors.map((item, index) => {
+                                const author = authors.filter(author => author.id_author == item)[0]
+                                return <button
+                                    value={item}
+                                    style={{border: "none", backgroundColor: "transparent"}}
+                                    onClick={onDeleteAuthor}>
+                                    {index + 1}. {author.surname} {author.name} {author.patronymic}
+                                </button>
+                            })
+                        }
+                    </div>
+                    <button
+                        onClick={registerHandler}
+                        className="standard_btn addPat_form__btn addDoc_btn"
+                        disabled={loading || !title.inputValid}
+                    >Сохранить
+                    </button>
                 </div>
             </div>
         </div>

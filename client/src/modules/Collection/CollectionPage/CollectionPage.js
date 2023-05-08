@@ -50,7 +50,7 @@ export const CollectionPage = () => {
 
     return (
         <>
-            <div className={"staff"}>
+            <div className={"staff"} id={"report"}>
                 <h1 className={"staff_title"}>Мои коллекции</h1>
                 <div className="collection_wrap">
                     {

@@ -1,5 +1,10 @@
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 const ApiError = require('../handlers/api-error');
 const collectionQueries = require('../dbQueries/collection-queries');
+const bookQueries = require("../dbQueries/book-queries");
+const docQueries = require("../dbQueries/document-queries");
+const artQueries = require("../dbQueries/article-queries");
 
 class CollectionController {
     async addCollection(req, res, next) {
@@ -42,6 +47,53 @@ class CollectionController {
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
+    }
+
+    async getCollectionsReport(req, res) {
+        const id = req.params.id;
+
+        const collections = await collectionQueries.collectionById(id)
+        const collection = collections[0];
+        const books = await bookQueries.booksInCollection(id)
+        const docs = await docQueries.docInCollection(id)
+        const articles = await artQueries.articlesInCollection(id)
+
+        const doc = new PDFDocument({ margin: 35 });
+        doc.page.margins = { top: 72, left: 100, bottom: 72, right: 50 };
+        doc.font('D:\\downloads\\Times New Roman\\target.ttf');
+        doc.fontSize(18).text('Отчет о содержании выбранной коллекции', {align: 'center', paragraphGap: 25, underline: true});
+        doc.fontSize(16).text(`Название коллекции: ${collection.name}`, {align: 'center', paragraphGap: 5});
+        doc.fontSize(16).text(`Дата создания коллекции: ${(new Date(collection.date_of_creation)).toLocaleDateString()}`, {align: 'center', paragraphGap: 25});
+
+        for (const item of books) {
+            doc.fontSize(14).text(`Название книги: ${item.title}`, {align: "center", paragraphGap: 10});
+            doc.fontSize(12).text(`Год публикации: ${item.year_of_publication}`, {align: "justify"});
+            doc.fontSize(12).text(`Ключевые слова: ${item.keywords}`, {align: "justify"});
+            doc.fontSize(12).text(`Жанр: ${item.genre}`, {align: "justify"});
+            doc.fontSize(12).text(`Краткая аннотация: ${item.brief_annotation}`, {align: "justify"});
+            doc.fontSize(12).text(`Расположение на компьютере: ${item.location.replace("myproto://", "")}`, {align: "justify"});
+            doc.fontSize(12).text(`Автор(-ы): ${item.authors}`, {align: "justify"});
+            doc.fontSize(12).text(`Издательство: ${item.pub_name}`, {align: "justify"});
+            doc.fontSize(12).text(`Город издания: ${item.city_of_publication}`, {align: "justify", lineGap: 10});
+        }
+
+        for(const item of docs) {
+            doc.fontSize(14).text(`Название документа: ${item.title}`, {align: "center", paragraphGap: 10});
+            doc.fontSize(12).text(`Дата публикации: ${(new Date(item.date_of_publication)).toLocaleDateString()}`, {align: "justify"});
+            doc.fontSize(12).text(`Расположение на компьютере: ${item.location.replace("myproto://", "")}`, {align: "justify"});
+            doc.fontSize(12).text(`Автор(-ы): ${item.authors}`, {align: "justify", lineGap: 10});
+        }
+
+        for(const item of articles) {
+            doc.fontSize(14).text(`Название статьи: ${item.title}`, {align: "center", paragraphGap: 10});
+            doc.fontSize(12).text(`Дата публикации: ${(new Date(item.date_of_publication)).toLocaleDateString()}`, {align: "justify"});
+            doc.fontSize(12).text(`Автор(-ы): ${item.authors}`, {align: "justify"});
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=Collection.pdf');
+        doc.pipe(res);
+        doc.end();
     }
 }
 
