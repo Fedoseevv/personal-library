@@ -86,7 +86,7 @@ export const AddAuthor = () => {
                     <button
                         onClick={registerHandler}
                         className="standard_btn addAuthor_btn"
-                        disabled={loading || !name.inputValid || !patronymic.inputValid || !surname.inputValid || !birthDate.inputValid}
+                        disabled={loading || !name.inputValid || !surname.inputValid || !birthDate.inputValid}
                     >Сохранить
                     </button>
                 </div>
