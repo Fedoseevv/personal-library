@@ -82,14 +82,13 @@ export const AddAuthor = () => {
                                 onChange={e => birthDate.onChange(e)}
                                 onBlur={e => birthDate.onBlur(e)}/>
                         </div>
-
-                        <button
-                            onClick={registerHandler}
-                            className="standard_btn addPat_form__btn"
-                            disabled={loading || !name.inputValid || !patronymic.inputValid || !surname.inputValid || !birthDate.inputValid}
-                        >Сохранить
-                        </button>
                     </div>
+                    <button
+                        onClick={registerHandler}
+                        className="standard_btn addAuthor_btn"
+                        disabled={loading || !name.inputValid || !patronymic.inputValid || !surname.inputValid || !birthDate.inputValid}
+                    >Сохранить
+                    </button>
                 </div>
             </div>
         </div>

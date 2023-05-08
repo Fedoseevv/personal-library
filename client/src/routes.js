@@ -5,7 +5,7 @@ import {StatisticPage} from "./modules/Statistic/StatisticPage/StatisticPage";
 import {AuthPage} from "./pages/AuthPage/AuthPage";
 import {AddDocument} from "./pages/AddDoc/AddDocument";
 import {PharmacyPage} from "./pages/PharmacyPage/PharmacyPage";
-import {AddArticle} from "./pages/AddPharmPage/AddArticle";
+import {AddArticle} from "./pages/AddArticle/AddArticle";
 import {PharmaOrders} from "./pages/PharmaOrders/PharmaOrders";
 import {AmbulancePage} from "./pages/AmbulancePage/AmbulancePage";
 import {AddAmbulancePage} from "./pages/AddAmbulancePage/AddAmbulancePage";

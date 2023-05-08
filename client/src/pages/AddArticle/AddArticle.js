@@ -1,7 +1,7 @@
 import {useCallback, useContext, useEffect, useState} from "react";
 import {useHttp} from "../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
-
+import './AddArticle.css';
 import {useInput} from '../../hooks/validationHook';
 
 export const AddArticle = () => {
