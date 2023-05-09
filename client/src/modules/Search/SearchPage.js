@@ -3,6 +3,7 @@ import { RadioGroup, RadioButton } from 'react-radio-buttons';
 import './SearchPage.css';
 import {useInput} from "../../hooks/validationHook";
 import {useHttp} from "../../hooks/httpHook";
+import {Loader} from "../../components/loader/Loader";
 
 
 export const SearchPage = () => {
@@ -240,8 +241,9 @@ export const SearchPage = () => {
 const InformationWindow = ({articles, docs, books, loading}) => {
 
     if (loading) {
-        return <h1>Loading...</h1>
+        return <Loader />
     }
+
 
     return (
         <>
@@ -286,10 +288,9 @@ const BookItem = ({ item, loading }) => {
         }
     };
     if (loading) {
-        return (
-            <h1>Loading...</h1>
-        )
+        return <Loader />
     }
+
 
     return (
         <div className={"staff_item"}>
@@ -360,10 +361,9 @@ const DocItem = ({ item, loading }) => {
         }
     };
     if (loading) {
-        return (
-            <h1>Loading...</h1>
-        )
+        return <Loader />
     }
+
     return (
         <div className={"doc_item__search docs_item"}>
             <div className="docs_item__title">Название документа: '{item.title}'</div>
@@ -422,10 +422,9 @@ const ArticleItem = ({ item, loading }) => {
         }
     };
     if (loading) {
-        return (
-            <h1>Loading...</h1>
-        )
+        return <Loader />
     }
+
     return (
         <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>

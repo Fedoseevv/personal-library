@@ -3,6 +3,7 @@ import {useCallback, useEffect, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {RecordModal} from "../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../hooks/validationHook";
+import {Loader} from "../../components/loader/Loader";
 
 export const AuthorPage = () => {
     const { loading, request } = useHttp();
@@ -20,8 +21,9 @@ export const AuthorPage = () => {
     }, [ fetchAuthors ]);
 
     if (loading) {
-        return <h1>Loading...</h1>
+        return <Loader />
     }
+
 
     const onDeleteHandler = async (id) => {
         const deleted = request('/api/author/delete', 'POST', {id});

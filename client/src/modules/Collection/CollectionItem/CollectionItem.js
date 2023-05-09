@@ -1,16 +1,9 @@
 import './CollectionItem.css';
-import {useHttp} from "../../../hooks/httpHook";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 
-export const CollectionItem = ({item, onDeleteHandler, openCollection}) => {
-    const { loading, request } = useHttp();
-    const history = useHistory();
-
+export const CollectionItem = ({item, onDeleteHandler}) => {
     const prepForDelete = async () => {
         await onDeleteHandler(item.id_collection)
-    }
-    const prepForOpen = async () => {
-        await openCollection(item.id_collection);
     }
 
     return (

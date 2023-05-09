@@ -3,6 +3,7 @@ import {useHttp} from "../../../hooks/httpHook";
 import {useCallback, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {CollectionList} from "../CollectionList/CollectionList";
+import {Loader} from "../../../components/loader/Loader";
 
 export const CollectionPage = () => {
     const { loading, request } = useHttp();
@@ -45,8 +46,9 @@ export const CollectionPage = () => {
     }, [fetchAllSources]);
 
     if (loading) {
-        return <h1>Loading...</h1>
+        return <Loader />
     }
+
 
     return (
         <>

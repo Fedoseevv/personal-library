@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from "react";
 import {TargetItemArticle, TargetItemBook, TargetItemDoc} from "./TargetTypes";
 import './TargetCollection.css';
 import {FreeItemArticle, FreeItemBook, FreeItemDoc} from "./FreeTypes";
+import {Loader} from "../../../components/loader/Loader";
 
 export const TargetCollection = ({ item }) => {
     const id = useParams().id;
@@ -124,7 +125,7 @@ export const TargetCollection = ({ item }) => {
     }
 
     if (loading) {
-        return <h1>Loading...</h1>
+        return <Loader />
     }
 
     return (

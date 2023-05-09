@@ -1,5 +1,5 @@
 import './AllSourcesList.css';
-import {StaffItem} from "../StaffItem/StaffItem";
+import {BookItem} from "../BookItem/BookItem";
 import {DocsItem} from "../DocsItem/DocsItem";
 import {LinkItem} from "../LinkItem/LinkItem";
 
@@ -10,7 +10,7 @@ export const AllSourcesList = ({ books, docs, articles, onDeleteArticle, onDelet
             <div className={"staff_container"}>
                 {
                     books.map(item => {
-                        return <StaffItem
+                        return <BookItem
                             item={item}
                             authors={authors}
                             onDeleteBook={onDeleteBook} />

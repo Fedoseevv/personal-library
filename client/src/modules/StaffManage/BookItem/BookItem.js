@@ -1,14 +1,14 @@
-import './StaffItem.css';
+import './BookItem.css';
 import {useCallback, useEffect, useState} from "react";
 import {Modal} from '../../../components/modal/Modal';
-import './StaffModal.css';
+import './BookModal.css';
 import {useHttp} from "../../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
 import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../../hooks/validationHook";
 
 
-export const StaffItem = ({ item, onDeleteBook, authors }) => {
+export const BookItem = ({ item, onDeleteBook, authors }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();

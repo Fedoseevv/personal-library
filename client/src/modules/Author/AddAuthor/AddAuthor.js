@@ -2,6 +2,7 @@ import './AddAuthor.css';
 import {useInput} from "../../../hooks/validationHook";
 import {useHttp} from "../../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
+import {Loader} from "../../../components/loader/Loader";
 
 export const AddAuthor = () => {
     const name = useInput('', {isEmpty: true, minLength: 1})
@@ -27,6 +28,10 @@ export const AddAuthor = () => {
                 })
         } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
     }
+    if (loading) {
+        return <Loader />
+    }
+
 
     return (
         <div className="add_patient">
