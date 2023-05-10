@@ -203,7 +203,7 @@ class DocumentController {
         doc.fontSize(12).text(`Автор(-ы): ${document.authors}`, {align: "justify"});
 
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=book.pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
         doc.pipe(res);
         doc.end();
     }
