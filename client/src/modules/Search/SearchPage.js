@@ -17,8 +17,8 @@ export const SearchPage = () => {
 
     const handleOnChange = (value) => {
         setFieldVal("")
+        setSearchField("Название")
         setSelectedValue(value);
-        console.log(value)
     };
 
     const [ books, setBooks ] = useState([]);
@@ -31,6 +31,9 @@ export const SearchPage = () => {
     }
 
     const searchSources = async () => {
+        console.log(`selectedValue: ${selectedValue}`)
+        console.log(`selectedField: ${searchField}`)
+        console.log(`fieldVal: ${fieldVal}`)
         setIsSearched(true);
         if (selectedValue === "articles") {
             if (searchField === "Название") {

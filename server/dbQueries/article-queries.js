@@ -252,7 +252,7 @@ const findByAuthor = (someName) => {
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
             "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
-            "HAVING (LOWER(a.name) LIKE $1 OR LOWER(a.patronymic) LIKE $1 OR LOWER(a.surname) LIKE $1)",
+            "HAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') LIKE $1",
             [`%${someName.toLowerCase()}%`],
             (error, result) => {
                 if (error) {

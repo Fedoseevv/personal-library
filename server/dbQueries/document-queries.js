@@ -242,15 +242,15 @@ const findByTitle = (title) => {
 }
 const findByAuthor = (someName) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
-            "        array_agg(da.id_da) as da_array,\n" +
-            "        array_agg(a.id_author) as authors_id,\n" +
-            "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
-            "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
-            "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
-            "HAVING " +
-            "(LOWER(a.name) LIKE $1 OR LOWER(a.patronymic) LIKE $1 OR LOWER(a.surname) LIKE $1)", [`%${someName.toLowerCase()}%`],
+        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl, \n" +
+            "                    array_agg(da.id_da) as da_array, \n" +
+            "                    array_agg(a.id_author) as authors_id, \n" +
+            "                    array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors \n" +
+            "            FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a \n" +
+            "            WHERE d.id_document=da.id_document AND da.id_author=a.id_author \n" +
+            "            GROUP BY d.id_document, title, date_of_publication, location, location_obl \n" +
+            "\tHAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') " +
+            "LIKE $1", [`%${someName.toLowerCase()}%`],
             (error, result) => {
                 if (error) {
                     reject(error);
