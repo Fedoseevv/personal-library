@@ -122,6 +122,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Год публикации") {
+                console.log("yes")
                 const body = { pubYear: fieldVal.value }
                 const fetched = request('/api/books/find/pubYear', 'POST', body)
                     .then(response => {

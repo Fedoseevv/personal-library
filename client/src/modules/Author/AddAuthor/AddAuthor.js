@@ -52,7 +52,6 @@ export const AddAuthor = () => {
                                 onBlur={e => name.onBlur(e)}/>
                         </div>
                         <div className="addPat_form__input">
-                                && <div className="incorrect_value">Необходимо указать отчество</div>}
                             <input
                                 placeholder="Введите отчество автора"
                                 id="patronymic"
