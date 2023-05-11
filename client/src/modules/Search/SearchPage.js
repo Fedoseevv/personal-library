@@ -16,8 +16,8 @@ export const SearchPage = () => {
     const [ searchField, setSearchField ] = useState('Название');
 
     const handleOnChange = (value) => {
-        setFieldVal("")
         setSearchField("Название")
+        setFieldVal("")
         setSelectedValue(value);
     };
 

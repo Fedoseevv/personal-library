@@ -202,6 +202,35 @@ export const AddBook = () => {
                                 <option value="5">Учебное пособие</option>
                                 <option value="6">Роман в стихах</option>
                                 <option value="7">Поэма</option>
+                                <option value="8">роман о политике</option>
+                                <option value="9">сказка</option>
+                                <option value="10">Поэзия</option>
+                                <option value="11">Драма</option>
+                                <option value="12">Эссе</option>
+                                <option value="13">Исторический роман</option>
+                                <option value="14">Фантастика</option>
+                                <option value="15">Детектив</option>
+                                <option value="16">Научно-популярная литература</option>
+                                <option value="17">Биография</option>
+                                <option value="18">Героическая поэма</option>
+                                <option value="19">Интеллектуальный роман</option>
+                                <option value="20">Комедия</option>
+                                <option value="21">Пародия</option>
+                                <option value="22">Аллегория</option>
+                                <option value="23">Хроника</option>
+                                <option value="24">Мистика</option>
+                                <option value="25">Антиутопия</option>
+                                <option value="26">Трагедия</option>
+                                <option value="27">Сатира</option>
+                                <option value="28">Фэнтези</option>
+                                <option value="29">Психологический роман</option>
+                                <option value="30">Роман-эпопея</option>
+                                <option value="31">Приключенческий роман</option>
+                                <option value="32">Роман-антиутопия</option>
+                                <option value="33">Роман-история</option>
+                                <option value="34">Фантазия</option>
+                                <option value="35">Притча</option>
+                                <option value="36">историческая проза</option>
                             </select>
                         </div>
                         <div className="emp_role">
