@@ -197,6 +197,7 @@ class ArticlesController {
         doc.fontSize(14).text(`Название статьи: ${article.title}`, {align: "center", paragraphGap: 10});
         doc.fontSize(12).text(`Дата публикации: ${new Date(article.date_of_publication).toLocaleDateString()}`, {align: "justify"});
         doc.fontSize(12).text(`Ссылка на статью: ${article.hyperlink}`, {align: "justify"});
+        doc.fontSize(12).text(`Автор(-ы): ${article.authors}`, {align: "justify"});
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=article.pdf');
