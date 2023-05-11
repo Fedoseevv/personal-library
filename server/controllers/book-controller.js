@@ -260,6 +260,7 @@ class BookController {
             if (!pubYear) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
+            console.log(pubYear)
             await bookQueries.findBooksByPubYear(pubYear)
                 .then(response => {
                     return res.status(200).send(response);

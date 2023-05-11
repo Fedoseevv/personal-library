@@ -421,12 +421,15 @@ const ArticleItem = ({ item, loading }) => {
         } catch (err) {
             console.error(err);
         }
-    };
+    }
     if (loading) {
         return <Loader />
     }
 
     return (
+        // <div>
+        //     Hello
+        // </div>
         <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">

@@ -448,7 +448,7 @@ const findBooksByPubYear = (pubYear) => {
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING year_of_publication=$1", [`%${pubYear}%`],
+            "\t\tHAVING year_of_publication=$1", [pubYear],
             (error, result) => {
                 if (error) {
                     reject(error);
