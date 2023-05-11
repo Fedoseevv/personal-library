@@ -7,13 +7,16 @@ import {Loader} from "../../components/loader/Loader";
 
 
 export const SearchPage = () => {
-    const fieldVal = useInput('', {isEmpty: true, minLength: 1});
+    // const fieldVal = useInput('', {isEmpty: true, minLength: 1});
+    const [fieldVal, setFieldVal] = useState('')
     const {loading, request} = useHttp();
+    const [isSearched, setIsSearched] = useState(false)
 
     const [selectedValue, setSelectedValue] = useState('books');
     const [ searchField, setSearchField ] = useState('Название');
 
     const handleOnChange = (value) => {
+        setFieldVal("")
         setSelectedValue(value);
         console.log(value)
     };
@@ -23,13 +26,15 @@ export const SearchPage = () => {
     const [ articles, setArticles ] = useState([]);
 
     const changeField = (e) => {
+        setFieldVal("")
         setSearchField(e.target.value)
     }
 
     const searchSources = async () => {
+        setIsSearched(true);
         if (selectedValue === "articles") {
             if (searchField === "Название") {
-                const body = { title: fieldVal.value }
+                const body = { title: fieldVal }
                 const fetched = request('/api/articles/find/title', 'POST', body)
                     .then(response => {
                         setArticles(response);
@@ -38,7 +43,7 @@ export const SearchPage = () => {
                     })
 
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal.value }
+                const body = { author: fieldVal }
                 const fetched = request('/api/articles/find/author', 'POST', body)
                     .then(response => {
                         setArticles(response);
@@ -47,7 +52,7 @@ export const SearchPage = () => {
                     })
 
             } else if (searchField === "Дата публикации") {
-                const body = { date: fieldVal.value }
+                const body = { date: fieldVal }
                 console.log(body)
                 const fetched = request('/api/articles/find/date', 'POST', body)
                     .then(response => {
@@ -60,7 +65,7 @@ export const SearchPage = () => {
 
         else if (selectedValue === "docs") {
             if (searchField === "Название") {
-                const body = { title: fieldVal.value }
+                const body = { title: fieldVal }
                 const fetched = request('/api/documents/find/title', 'POST', body)
                     .then(response => {
                         setArticles([]);
@@ -68,7 +73,7 @@ export const SearchPage = () => {
                         setDocs(response);
                     })
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal.value }
+                const body = { author: fieldVal }
                 const fetched = request('/api/documents/find/author', 'POST', body)
                     .then(response => {
                         setArticles([]);
@@ -77,7 +82,7 @@ export const SearchPage = () => {
                     })
 
             }  else if (searchField === "Дата публикации") {
-                const body = { date: fieldVal.value }
+                const body = { date: fieldVal }
                 console.log(body)
                 const fetched = request('/api/documents/find/date', 'POST', body)
                     .then(response => {
@@ -90,7 +95,7 @@ export const SearchPage = () => {
 
         else if (selectedValue === "books") {
             if (searchField === "Название") {
-                const body = { title: fieldVal.value }
+                const body = { title: fieldVal }
                 const fetched = request('/api/books/find/title', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -98,7 +103,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Жанр") {
-                const body = { genre: fieldVal.value }
+                const body = { genre: fieldVal }
                 const fetched = request('/api/books/find/genre', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -106,7 +111,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Издательство") {
-                const body = { pubHouse: fieldVal.value }
+                const body = { pubHouse: fieldVal }
                 const fetched = request('/api/books/find/pubHouse', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -114,7 +119,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Ключевые слова") {
-                const body = { keywords: fieldVal.value }
+                const body = { keywords: fieldVal }
                 const fetched = request('/api/books/find/keywords', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -123,7 +128,7 @@ export const SearchPage = () => {
                     })
             } else if (searchField === "Год публикации") {
                 console.log("yes")
-                const body = { pubYear: fieldVal.value }
+                const body = { pubYear: fieldVal }
                 const fetched = request('/api/books/find/pubYear', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -131,7 +136,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal.value }
+                const body = { author: fieldVal }
                 const fetched = request('/api/books/find/author', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -139,7 +144,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Краткая аннотация") {
-                const body = { briefAnnotation: fieldVal.value }
+                const body = { briefAnnotation: fieldVal }
                 const fetched = request('/api/books/find/briefAnnotation', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -217,34 +222,35 @@ export const SearchPage = () => {
                 </select>
             </div>
             <div className="addPat_form__input search_field__input">
-                {(fieldVal.minLengthError && fieldVal.isDirty)
-                    && <div className="incorrect_value">Поле не может быть пустым</div>}
                 <input
                     placeholder="Введите год публикации"
                     id="pub_year"
                     type="text"
                     name="pub_year"
-                    value={fieldVal.value}
-                    onChange={e => fieldVal.onChange(e)}
-                    onBlur={e => fieldVal.onBlur(e)}/>
+                    value={fieldVal}
+                    onChange={e => setFieldVal(e.target.value)}/>
             </div>
             <button
                 onClick={searchSources}
                 className="standard_btn addPat_form__btn search_btn search_btn__main"
-                disabled={loading || !fieldVal.inputValid}
+                disabled={loading || fieldVal.length === 0}
             >Найти
             </button>
-            <InformationWindow loading={loading} articles={articles} docs={docs} books={books} />
+            <InformationWindow isSearched={isSearched} loading={loading} articles={articles} docs={docs} books={books} />
         </div>
     )
 }
 
-const InformationWindow = ({articles, docs, books, loading}) => {
+const InformationWindow = ({articles, docs, books, loading, isSearched}) => {
 
+    console.log(`isSearched: ${isSearched}`)
     if (loading) {
         return <Loader />
     }
 
+    if (articles.length === 0 && docs.length === 0 && books.length === 0 && isSearched) {
+        return <h1 style={{fontWeight: 300, fontSize: 35}}>Ничего не найдено</h1>
+    }
 
     return (
         <>

@@ -60,24 +60,9 @@ const useValidation = (value, validations) => {
                     re.test(String(value).toLowerCase()) ? setEmailError(false) : setEmailError(true);
                     break;
 
-                case 'isPhoneNumber':
-                    const regExp = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
-                    regExp.test(String(value)) ? setPhoneError(false) : setPhoneError(true);
-                    break;
-
                 case 'isDate':
                     const reg = /\d{4}(-|\/)\d{2}(-|\/)\d{2}/g
                     reg.test(String(value)) ? setDateError(false) : setDateError(true);
-                    break;
-
-                case 'isPass':
-                    const regPass = /\d{4}(-)\d{6}/
-                    regPass.test(String(value)) ? setPassError(false) : setPassError(true);
-                    break;
-
-                case 'isSnils':
-                    const regSnils = /\d{3}(-)\d{3}(-)\d{3}( )\d{2}/
-                    regSnils.test(String(value)) ? setSnilsError(false) : setSnilsError(true);
                     break;
 
                 case 'isDigit':
