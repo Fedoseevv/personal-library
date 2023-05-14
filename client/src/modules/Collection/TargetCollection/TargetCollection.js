@@ -131,7 +131,18 @@ export const TargetCollection = ({ item }) => {
     return (
         <>
             <div className={"staff"}>
-                <h1 className={"staff_title"}>{collection.name}</h1>
+                <h1 className={"staff_title__main"}>Действия</h1>
+                <div className="collection_btn__wrap">
+                    {/*<button*/}
+                    {/*    type={"submit"}*/}
+                    {/*    onClick={setVisible}*/}
+                    {/*    className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>*/}
+                    <button
+                        type={"submit"}
+                        onClick={downloadPdf}
+                        className={"standard_btn collection_btn"}>Сформировать отчет</button>
+                </div>
+                <h1 className={"staff_title__main"} style={{marginTop: '15px', marginBottom: '25px'}}>Название коллекции: {collection.name}</h1>
                 <div className="staff_container">
                     {
                         collBooks.map((item, ind) => {
@@ -175,16 +186,6 @@ export const TargetCollection = ({ item }) => {
                             return <FreeItemArticle key={ind} item={item} colId={id} onAddHandler={addArtInCollection} />
                         })
                     }
-                </div>
-                <div className="collection_btn__wrap">
-                    {/*<button*/}
-                    {/*    type={"submit"}*/}
-                    {/*    onClick={setVisible}*/}
-                    {/*    className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>*/}
-                    <button
-                        type={"submit"}
-                        onClick={downloadPdf}
-                        className={"standard_btn collection_btn"}>Сформировать отчет</button>
                 </div>
             </div>
         </>
