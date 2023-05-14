@@ -1,10 +1,11 @@
-import {useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import { RadioGroup, RadioButton } from 'react-radio-buttons';
 import './SearchPage.css';
 import {useInput} from "../../hooks/validationHook";
 import {useHttp} from "../../hooks/httpHook";
 import {Loader} from "../../components/loader/Loader";
-
+import {RecordModal} from "../DocRecords/RecordModal/RecordModal";
+import {Modal} from "../../components/modal/Modal";
 
 export const SearchPage = () => {
     // const fieldVal = useInput('', {isEmpty: true, minLength: 1});
@@ -24,6 +25,8 @@ export const SearchPage = () => {
     const [ books, setBooks ] = useState([]);
     const [ docs, setDocs ] = useState([]);
     const [ articles, setArticles ] = useState([]);
+
+
 
     const changeField = (e) => {
         setFieldVal("")
@@ -239,12 +242,12 @@ export const SearchPage = () => {
                 disabled={loading || fieldVal.length === 0}
             >Найти
             </button>
-            <InformationWindow isSearched={isSearched} loading={loading} articles={articles} docs={docs} books={books} />
+            <InformationWindow request={request} isSearched={isSearched} loading={loading} articles={articles} docs={docs} books={books} />
         </div>
     )
 }
 
-const InformationWindow = ({articles, docs, books, loading, isSearched}) => {
+const InformationWindow = ({articles, docs, books, loading, isSearched, request }) => {
 
     console.log(`isSearched: ${isSearched}`)
     if (loading) {
@@ -268,7 +271,7 @@ const InformationWindow = ({articles, docs, books, loading, isSearched}) => {
             {books.length > 0 ? <div className={"informationWindow"}>
 
 
-                    <BooksListInfo books={books} loading={loading} />
+                    <BooksListInfo books={books} loading={loading} request={request} />
 
             </div> : ''}
         </>
@@ -277,6 +280,21 @@ const InformationWindow = ({articles, docs, books, loading, isSearched}) => {
 }
 
 const BookItem = ({ item, loading }) => {
+    const [ allCollections, setAllCollections ] = useState([]);
+    const [ modalActive, setModalActive ] = useState(false);
+
+    const fetchAllSources = async () => {
+        const collectionsFetched = await fetch(`/api/collections/booksInCollection/${item.id_book}`);
+        const data = await collectionsFetched.json();
+        console.log(data)
+        setAllCollections(data);
+    }
+
+    const openModal = async () => {
+        await fetchAllSources()
+        setModalActive(true);
+    }
+
     const downloadPdf = async () => {
         try {
             // Выполняем GET-запрос на сервер
@@ -297,6 +315,40 @@ const BookItem = ({ item, loading }) => {
             console.error(err);
         }
     };
+
+    const changeCollections = (e) => {
+        const updatedCollections = allCollections.map(item => {
+            if (item.id_collection == e.target.value) {
+                return {
+                    ...item,
+                    isin: !item.isin
+                };
+            }
+            return item;
+        });
+
+        setAllCollections(updatedCollections);
+    };
+
+    const saveCollections = async () => {
+        const body = {
+            bookId: item.id_book,
+            collections: allCollections
+        }
+        const response = await fetch("/api/collections/updateBook", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await response.json(); // Распарсили ответ
+        if (!response.ok) {
+            throw new Error(data.message || 'Что-то пошло не так');
+        }
+        setModalActive(false);
+    }
+
     if (loading) {
         return <Loader />
     }
@@ -322,27 +374,61 @@ const BookItem = ({ item, loading }) => {
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
+                            style={{marginRight: '20px'}}
                             className={"standard_btn"}><a href={item.location}>Открыть локально</a></button>
                         <button
                             type={"submit"}
+                            style={{marginRight: '20px'}}
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
                         <button
                             type={"submit"}
+                            style={{marginRight: '20px'}}
                             onClick={downloadPdf}
                             className={"standard_btn"}>Сформировать отчет</button>
+                        <button
+                            type={"submit"}
+                            onClick={async () => await openModal()}
+                            style={{marginRight: 0}}
+                            className={"standard_btn"}>Добавить в коллекцию</button>
                     </div>
                 </div>
             </div>
+            <Modal active={modalActive} setActive={setModalActive}>
+                <div className={"collection_modal"}>
+                    <h1 className={"staff_title__main"}>Редактирование коллекций</h1>
+
+                    {
+                        allCollections.map(item => {
+                            return (
+                                <div className={"checkbox_wrap"}>
+                                    <input type="checkbox" className="custom-checkbox" id={item.name} name={item.name} value={item.id_collection} checked={item.isin} onChange={changeCollections}/>
+                                    <label htmlFor={item.name}>Название коллекции: "{item.name}"</label>
+                                </div>
+                            )
+                        })
+                    }
+                    <div className="staff_modal__btns collections_modal__btns">
+                        <button
+                            type={"submit"}
+                            onClick={saveCollections}
+                            className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
+                        <button
+                            type={"submit"}
+                            onClick={e => setModalActive(false)}
+                            className={"standard_btn staff_schedule__btn"}>Отмена</button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 
 }
-const BooksListInfo = ({ books, loading }) => {
+const BooksListInfo = ({ books, loading, request }) => {
     return (
         <>
             {
                 books.map(book => {
-                    return <BookItem item={book} loading={loading} />
+                    return <BookItem item={book} loading={loading} request={request} />
                 })
             }
         </>
@@ -350,6 +436,50 @@ const BooksListInfo = ({ books, loading }) => {
 }
 
 const DocItem = ({ item, loading }) => {
+    const [ allCollections, setAllCollections ] = useState([]);
+    const [ modalActive, setModalActive ] = useState(false);
+
+    const fetchAllSources = async () => {
+        const collectionsFetched = await fetch(`/api/collections/docInCollection/${item.id_document}`);
+        const data = await collectionsFetched.json();
+        console.log(data)
+        setAllCollections(data);
+    }
+    const changeCollections = (e) => {
+        const updatedCollections = allCollections.map(item => {
+            if (item.id_collection == e.target.value) {
+                return {
+                    ...item,
+                    isin: !item.isin
+                };
+            }
+            return item;
+        });
+
+        setAllCollections(updatedCollections);
+    };
+    const saveCollections = async () => {
+        const body = {
+            docId: item.id_document,
+            collections: allCollections
+        }
+        const response = await fetch("/api/collections/updateDoc", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await response.json(); // Распарсили ответ
+        if (!response.ok) {
+            throw new Error(data.message || 'Что-то пошло не так');
+        }
+        setModalActive(false);
+    }
+    const openModal = async () => {
+        await fetchAllSources()
+        setModalActive(true);
+    }
     const downloadPdf = async () => {
         try {
             // Выполняем GET-запрос на сервер
@@ -384,17 +514,50 @@ const DocItem = ({ item, loading }) => {
                 <div className="docs_item__btns">
                     <button
                         type={"submit"}
-                        className={"standard_btn docs_standard__btn"}><a href={"myproto://" + item.location}>Открыть локально</a></button>
+                        style={{marginRight: '10px'}}
+                        className={"standard_btn"}><a href={"myproto://" + item.location}>Открыть локально</a></button>
                     <button
                         type={"submit"}
-                        className={"standard_btn docs_standard__btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
+                        style={{marginRight: '10px'}}
+                        className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
                     <button
                         type={"submit"}
                         onClick={downloadPdf}
+                        style={{marginRight: '10px'}}
                         className={"standard_btn"}>Сформировать отчет</button>
-
+                    <button
+                        type={"submit"}
+                        style={{marginRight: 0}}
+                        onClick={openModal}
+                        className={"standard_btn"}>Добавить в коллекцию</button>
                 </div>
             </div>
+            <Modal active={modalActive} setActive={setModalActive}>
+                <div className={"collection_modal"}>
+                    <h1 className={"staff_title__main"}>Редактирование коллекций</h1>
+
+                    {
+                        allCollections.map(item => {
+                            return (
+                                <div className={"checkbox_wrap"}>
+                                    <input type="checkbox" className="custom-checkbox" id={item.name} name={item.name} value={item.id_collection} checked={item.isin} onChange={changeCollections}/>
+                                    <label htmlFor={item.name}>Название коллекции: "{item.name}"</label>
+                                </div>
+                            )
+                        })
+                    }
+                    <div className="staff_modal__btns collections_modal__btns">
+                        <button
+                            type={"submit"}
+                            onClick={saveCollections}
+                            className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
+                        <button
+                            type={"submit"}
+                            onClick={e => setModalActive(false)}
+                            className={"standard_btn staff_schedule__btn"}>Отмена</button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }
@@ -411,6 +574,51 @@ const DocsListInfo = ({ docs, loading }) => {
 }
 
 const ArticleItem = ({ item, loading }) => {
+    console.log(item)
+    const [ allCollections, setAllCollections ] = useState([]);
+    const [ modalActive, setModalActive ] = useState(false);
+
+    const fetchAllSources = async () => {
+        const collectionsFetched = await fetch(`/api/collections/articleInCollection/${item.id_article}`);
+        const data = await collectionsFetched.json();
+        console.log(data)
+        setAllCollections(data);
+    }
+    const changeCollections = (e) => {
+        const updatedCollections = allCollections.map(item => {
+            if (item.id_collection == e.target.value) {
+                return {
+                    ...item,
+                    isin: !item.isin
+                };
+            }
+            return item;
+        });
+
+        setAllCollections(updatedCollections);
+    };
+    const saveCollections = async () => {
+        const body = {
+            articleId: item.id_article,
+            collections: allCollections
+        }
+        const response = await fetch("/api/collections/updateArticle", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await response.json(); // Распарсили ответ
+        if (!response.ok) {
+            throw new Error(data.message || 'Что-то пошло не так');
+        }
+        setModalActive(false);
+    }
+    const openModal = async () => {
+        await fetchAllSources()
+        setModalActive(true);
+    }
     const downloadPdf = async () => {
         try {
             // Выполняем GET-запрос на сервер
@@ -436,9 +644,6 @@ const ArticleItem = ({ item, loading }) => {
     }
 
     return (
-        // <div>
-        //     Hello
-        // </div>
         <div className={"article_item"}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
@@ -450,11 +655,42 @@ const ArticleItem = ({ item, loading }) => {
                         className={"standard_btn article_standard__btn"}><a target="_blank" href={item.hyperlink}>Открыть статью</a></button>
                     <button
                         type={"submit"}
+                        style={{marginRight: '10px'}}
                         onClick={downloadPdf}
                         className={"standard_btn"}>Сформировать отчет</button>
-
+                    <button
+                        type={"submit"}
+                        style={{marginRight: 0}}
+                        onClick={openModal}
+                        className={"standard_btn"}>Добавить в коллекцию</button>
                 </div>
             </div>
+            <Modal active={modalActive} setActive={setModalActive}>
+                <div className={"collection_modal"}>
+                    <h1 className={"staff_title__main"}>Редактирование коллекций</h1>
+
+                    {
+                        allCollections.map(item => {
+                            return (
+                                <div className={"checkbox_wrap"}>
+                                    <input type="checkbox" className="custom-checkbox" id={item.name} name={item.name} value={item.id_collection} checked={item.isin} onChange={changeCollections}/>
+                                    <label htmlFor={item.name}>Название коллекции: "{item.name}"</label>
+                                </div>
+                            )
+                        })
+                    }
+                    <div className="staff_modal__btns collections_modal__btns">
+                        <button
+                            type={"submit"}
+                            onClick={saveCollections}
+                            className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
+                        <button
+                            type={"submit"}
+                            onClick={e => setModalActive(false)}
+                            className={"standard_btn staff_schedule__btn"}>Отмена</button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

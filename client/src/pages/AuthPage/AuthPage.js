@@ -7,6 +7,7 @@ import {useInput} from "../../hooks/validationHook";
 
 export const AuthPage = () => {
     const auth = useContext(AuthContext);
+    const [ msgVisible, setMsgVisible ] = useState(false);
     const { loading, error, request } = useHttp();
     const [form, setForm] = useState({
         email: '', password: ''
@@ -32,9 +33,12 @@ export const AuthPage = () => {
             }
             console.log(form.email);
             console.log(form.password);
-            const data = await request('/api/user/login', 'POST', body);
+            const data = await request('/api/user/login', 'POST', body)
             auth.login(data.token);
-        } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
+        } catch (e) {
+            console.log("ERROR");
+            setMsgVisible(true);
+        } // Пустой, т.к мы его уже обработали в хуке
     }
 
     return (
@@ -80,6 +84,9 @@ export const AuthPage = () => {
                     </div>
                 </div>
             </div>
+            {
+                msgVisible && <div style={{fontSize: '25px', fontWeight: 400, marginTop: '25px'}}>Неверный логин или пароль</div>
+            }
         </div>
     );
 }

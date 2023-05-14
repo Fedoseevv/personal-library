@@ -177,10 +177,10 @@ export const TargetCollection = ({ item }) => {
                     }
                 </div>
                 <div className="collection_btn__wrap">
-                    <button
-                        type={"submit"}
-                        onClick={setVisible}
-                        className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>
+                    {/*<button*/}
+                    {/*    type={"submit"}*/}
+                    {/*    onClick={setVisible}*/}
+                    {/*    className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>*/}
                     <button
                         type={"submit"}
                         onClick={downloadPdf}

@@ -25,6 +25,8 @@ export const AddDocument = () => {
     const fetchAuthors = useCallback(async () => {
         const fetched = await request('/api/author/all', 'GET');
         setAuthors(fetched);
+        const author = fetched[0]
+        setAuthorId(author.id_author.toString())
     }, [ request ]);
 
     useEffect(async () => {

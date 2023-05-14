@@ -7,7 +7,6 @@ import {useInput} from '../../hooks/validationHook';
 export const AddArticle = () => {
     const title = useInput('', {isEmpty: true, minLength: 6});
     const dateOfPub = useInput('', {isEmpty: true, isDigit: true});
-    const location = useInput('', {isEmpty: true, minLength: 1});
     const linkArt = useInput('', {isEmpty: true, minLength: 1});
 
     const history = useHistory();
@@ -21,6 +20,8 @@ export const AddArticle = () => {
     const fetchAuthors = useCallback(async () => {
         const fetched = await request('/api/author/all', 'GET');
         setAuthors(fetched);
+        const author = fetched[0]
+        setAuthorId(author.id_author.toString())
     }, [ request ]);
 
     useEffect(async () => {

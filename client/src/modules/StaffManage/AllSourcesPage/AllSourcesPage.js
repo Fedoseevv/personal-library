@@ -4,8 +4,10 @@ import {useCallback, useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {AllSourcesList} from "../AllSourcesList/AllSourcesList";
 import {Loader} from '../../../components/loader/Loader';
+import {useAuth} from "../../../hooks/auth";
 
 export const AllSourcesPage = () => {
+    const auth = useAuth()
     const { loading, request } = useHttp();
     const [ books, setBooks ] = useState([]);
     const [ docs, setDocs ] = useState([]);
@@ -13,6 +15,24 @@ export const AllSourcesPage = () => {
     const [ authors, setAuthors ] = useState([]);
 
     const history = useHistory();
+
+    const test = useCallback(async () => {
+        try {
+            const token = await JSON.parse(localStorage.getItem('userData')).token
+            const isAuthenticated = await request('/api/user/auth', 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+        } catch (e) {
+            console.log("Пользователь неавторизован")
+            auth.logout()
+            window.location.reload()
+        }
+
+    }, [])
+
+    useEffect(() => {
+        test()
+    }, [test])
 
     const fetchSources = useCallback(async () => {
         const fetched = await request('/api/books/all', 'GET');
@@ -66,6 +86,13 @@ export const AllSourcesPage = () => {
     return (
         <>
             <div className={"staff"}>
+                {/*<div className="staff_title__main">Действия</div>*/}
+                {/*<button*/}
+                {/*    type={"submit"}*/}
+                {/*    style={{marginRight: 0, marginBottom: '25px'}}*/}
+                {/*    onClick={() => history.push('/addEmp')}*/}
+                {/*    className={"standard_btn"}>Добавить источник</button>*/}
+                <div className="staff_title__main">Литературные источники</div>
                 { !loading &&  <AllSourcesList books={books}
                                                docs={docs}
                                                articles={articles}
@@ -73,10 +100,6 @@ export const AllSourcesPage = () => {
                                                onDeleteBook={onDeleteBook}
                                                onDeleteDoc={onDeleteDoc}
                                                onDeleteArticle={onDeleteArticle} /> }
-                <button
-                    type={"submit"}
-                    onClick={() => history.push('/addEmp')}
-                    className={"standard_btn"}>Добавить источник</button>
             </div>
         </>
     );
