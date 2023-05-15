@@ -123,7 +123,7 @@ export const AuthorItem = ({ item, onDeleteHandler, onEditHandler }) => {
                             <div className="card_modal_content">
                                 <div className={"standard_input__wrap"}>
                                     {(name.isDirty && name.isEmpty)
-                                        && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                        && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                     <h1 className={"staff_modal__subtitle"}>Имя автора</h1>
                                     <input
                                         placeholder={"Введите имя автора"}
@@ -134,7 +134,7 @@ export const AuthorItem = ({ item, onDeleteHandler, onEditHandler }) => {
                                 </div>
                                 <div className={"standard_input__wrap"}>
                                     {(patronymic.isDirty && patronymic.isEmpty)
-                                        && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                        && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                     <h1 className={"staff_modal__subtitle"}>Отчество автора</h1>
                                     <input
                                         placeholder={"Введите отчество автора"}
@@ -145,7 +145,7 @@ export const AuthorItem = ({ item, onDeleteHandler, onEditHandler }) => {
                                 </div>
                                 <div className={"standard_input__wrap"}>
                                     {(surname.isDirty && surname.isEmpty)
-                                        && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                        && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                     <h1 className={"staff_modal__subtitle"}>Фамилия автора</h1>
                                     <input
                                         placeholder={"Введите фамилию автора"}
@@ -156,7 +156,7 @@ export const AuthorItem = ({ item, onDeleteHandler, onEditHandler }) => {
                                 </div>
                                 <div className={"standard_input__wrap"}>
                                     {(birthDate.isDirty && birthDate.isEmpty)
-                                        && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                        && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                     <h1 className={"staff_modal__subtitle"}>Дата рождения автора</h1>
                                     <input
                                         placeholder={"Введите дату рождения автора"}
