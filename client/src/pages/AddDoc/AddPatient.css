@@ -52,7 +52,7 @@
     margin-bottom: 20px;
 }
 .addPat_form__input input::placeholder {
-    color: #67aaea;
+    color: #b3d4fa;
     font-size: 20px;
 }
 .addPat_form__input input:focus,
