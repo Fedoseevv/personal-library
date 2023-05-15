@@ -41,12 +41,12 @@
     display: block;
     width: 100%;
     padding: 15px 0;
-    font-size: 18px;
+    font-size: 22px;
     color: #fff;
     margin-bottom: 20px;
 }
 .auth_form__input input::placeholder {
-    color: steelblue;
+    color: #80bdf5;
 }
 .auth_form__input input:focus,
 .auth_form__input input:valid {
@@ -75,7 +75,8 @@
     margin-top: 20px!important;
 }
 .auth_incorrect__value {
-    right: 31%!important;
+    font-size: 18px;
+    right: 29%!important;
 }
 .hide_block {
     display: none;

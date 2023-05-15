@@ -49,6 +49,104 @@ class CollectionController {
         }
     }
 
+    async booksInCollection(req, res, next) {
+        try {
+            const {id} = req.params
+            if (!id) {
+                return next(ApiError.badReq("Идентификатор коллекции не указан!"));
+            }
+            const data = await collectionQueries.booksInCollections(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                })
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+    async docInCollection(req, res, next) {
+        try {
+            const {id} = req.params
+            if (!id) {
+                return next(ApiError.badReq("Идентификатор коллекции не указан!"));
+            }
+            const data = await collectionQueries.docInCollections(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                })
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+    async articleInCollection(req, res, next) {
+        try {
+            const {id} = req.params
+            if (!id) {
+                return next(ApiError.badReq("Идентификатор коллекции не указан!"));
+            }
+            const data = await collectionQueries.articleInCollections(id)
+                .then(response => {
+                    return res.status(200).send(response);
+                })
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+
+    async updateCollectionsBook(req, res) {
+        try {
+            const id = req.body.bookId
+            const data = req.body.collections
+            console.log(data)
+            // Удаляем все старые записи о коллекциях
+            for (const col of data) {
+                await bookQueries.deleteFromCollection(id, col.id_collection)
+            }
+            // Добавляем все коллекции, где isin = true
+            for (const col of data) {
+                if (col.isin) {
+                    await bookQueries.addInCollection(id, col.id_collection)
+                }
+            }
+            return res.status(200).json({message: "Запись успешно обновлена!"});
+        } catch (e) {
+            return res.status(400).json({ message: e.message });
+        }
+    }
+    async updateCollectionsDoc (req, res) {
+        const id = req.body.docId
+        const data = req.body.collections
+        console.log(data)
+        // Удаляем все старые записи о коллекциях
+        for (const col of data) {
+            await docQueries.deleteFromCollection(id, col.id_collection)
+        }
+        // Добавляем все коллекции, где isin = true
+        for (const col of data) {
+            if (col.isin) {
+                await docQueries.addInCollection(id, col.id_collection)
+            }
+        }
+        return res.status(200).json({message: "Запись успешно обновлена!"});
+
+    }
+    async updateCollectionsArticle(req, res) {
+        const id = req.body.articleId
+        console.log(id)
+        const data = req.body.collections
+        console.log(data)
+        // Удаляем все старые записи о коллекциях
+        for (const col of data) {
+            await artQueries.deleteFromCollection(id, col.id_collection)
+        }
+        // Добавляем все коллекции, где isin = true
+        for (const col of data) {
+            if (col.isin) {
+                await artQueries.addInCollection(id, col.id_collection)
+            }
+        }
+        return res.status(200).json({message: "Запись успешно обновлена!"});
+    }
+
     async getCollectionsReport(req, res) {
         const id = req.params.id;
 

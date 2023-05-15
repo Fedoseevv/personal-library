@@ -7,7 +7,7 @@ const generateJwt = (id, email) => {
     return jwt.sign(
         { id, email },
         process.env.SECRET_KEY,
-        {expiresIn: '24h'}
+        {expiresIn: '12h'}
     )
 }
 
@@ -30,17 +30,21 @@ class UserController {
     }
 
     async login(req, res, next) {
-        const {email, password} = req.body;
-        console.log(req.body);
-        const queryResult = await userQueries.findUser(email);
-        console.log(queryResult)
-        const user = queryResult[0]
-        const isMatch = await bcrypt.compareSync(password, user.password);
-        if (!isMatch) {
-            return next(ApiError.badReq("Неверный пароль!"));
+        try {
+            const {email, password} = req.body;
+            console.log(req.body);
+            const queryResult = await userQueries.findUser(email);
+            console.log(queryResult)
+            const user = queryResult[0]
+            const isMatch = await bcrypt.compareSync(password, user.password);
+            if (!isMatch) {
+                return next(ApiError.badReq("Неверный пароль!"));
+            }
+            const token = generateJwt(1, email)
+            return res.json({token});
+        } catch (e) {
+            return res.status(500).json({message: e.message});
         }
-        const token = generateJwt(1, email)
-        return res.json({token});
     }
 
     async isAuthenticated(req, res, next) {
