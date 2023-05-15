@@ -355,7 +355,7 @@ const BookItem = ({ item, loading }) => {
 
 
     return (
-        <div className={"staff_item"}>
+        <div className={"staff_item"} style={{width: "980px"}}>
             <div className="staff_item__title">Название книги: '{item.title}'</div>
 
             <div className="staff_item__wrap">
