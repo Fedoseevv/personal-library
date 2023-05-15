@@ -121,7 +121,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(pubYear.isDirty && pubYear.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Год публикации</h1>
                             <input
                                 placeholder={"Введите год публикации"}
@@ -132,7 +132,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(keywords.isDirty && keywords.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Ключевые слова</h1>
                             <input
                                 placeholder={"Введите ключевые слова"}
@@ -143,7 +143,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(cover.isDirty && cover.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Ссылка на обложку</h1>
                             <input
                                 placeholder={"Введите ссылку на обложку"}
@@ -154,7 +154,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(annotation.isDirty && annotation.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Краткая аннотация</h1>
                             <input
                                 placeholder={"Введите краткую аннотацию"}
@@ -165,7 +165,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(pcLocation.isDirty && pcLocation.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Расположение на компьютере</h1>
                             <input
                                 placeholder={"Введите расположение на компьютере"}
@@ -176,7 +176,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(oblLocation.isDirty && oblLocation.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Расположение в облаке</h1>
                             <input
                                 placeholder={"Введите ссылку на файл в облаке"}
@@ -187,7 +187,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(pubName.isDirty && pubName.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Издательство</h1>
                             <input
                                 placeholder={"Введите ссылку на файл в облаке"}
@@ -198,7 +198,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(pubCity.isDirty && pubCity.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Город издания</h1>
                             <input
                                 placeholder={"Введите ссылку на файл в облаке"}
@@ -209,7 +209,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         </div>
                         <div className={"standard_input__wrap"}>
                             {(oblLocation.isDirty && oblLocation.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Укажите жанр произведения</h1>
                             <select className="auth_form__role"
                                     value={genre}
