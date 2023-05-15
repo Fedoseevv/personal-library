@@ -177,7 +177,7 @@ input ~ .checkbox__body {} /* выбирает .checkbox__body */
 .checkbox_wrap {
     font-size: 25px!important;
     text-align: start;
-    margin-left: 120px;
+    margin-left: 20px;
     margin-bottom: 10px;
 }
 .custom-checkbox {
