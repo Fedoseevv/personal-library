@@ -75,7 +75,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                         <div className="card_modal_content">
                             <div className={"standard_input__wrap"}>
                                 {(title.isDirty && title.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Название статьи</h1>
                                 <input
                                     placeholder={"Введите название статьи"}
@@ -86,7 +86,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                             </div>
                             <div className={"standard_input__wrap"}>
                                 {(pubYear.isDirty && pubYear.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Дата публикации статьи</h1>
                                 <input
                                     placeholder={"Введите дату публикации"}
@@ -97,7 +97,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                             </div>
                             <div className={"standard_input__wrap"}>
                                 {(hyperlink.isDirty && hyperlink.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Ссылка на статью</h1>
                                 <input
                                     placeholder={"Введите ссылку на статью"}
