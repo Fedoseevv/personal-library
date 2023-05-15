@@ -163,7 +163,7 @@ input ~ .checkbox__body {} /* выбирает .checkbox__body */
     width: 500px;
 }
 .doc_item__search {
-    width: 950px!important;
+    width: 1100px!important;
     margin: 30px auto;
 }
 .collection_modal {
