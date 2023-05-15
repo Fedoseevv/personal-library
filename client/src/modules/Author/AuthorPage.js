@@ -44,7 +44,7 @@ export const AuthorPage = () => {
                 <button
                     type={"submit"}
                     onClick={() => history.push('/addAuthor')}
-                    className={"standard_btn"} style={{marginBottom: "20px"}}>Добавить автора</button>
+                    className={"standard_btn without_space"} style={{marginBottom: "20px"}}>Добавить автора</button>
                 <h1 className={"staff_title"}>Список авторов</h1>
                 <div className="collection_wrap">
                     {

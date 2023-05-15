@@ -56,7 +56,7 @@ export const CollectionPage = () => {
                 <button
                     type={"submit"}
                     onClick={() => hist.push('/addCollection')}
-                    className={"standard_btn"} style={{marginBottom: "20px"}}>Добавить коллекцию</button>
+                    className={"standard_btn without_space"} style={{marginBottom: "20px"}}>Добавить коллекцию</button>
                 <h1 className={"staff_title"}>Мои коллекции</h1>
                 <div className="collection_wrap">
                     {
