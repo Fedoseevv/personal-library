@@ -110,7 +110,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                     <div className="card_modal_content">
                         <div className={"standard_input__wrap"}>
                             {(title.isDirty && title.isEmpty)
-                                && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                             <h1 className={"staff_modal__subtitle"}>Название книги</h1>
                             <input
                                 placeholder={"Введите название книги"}
