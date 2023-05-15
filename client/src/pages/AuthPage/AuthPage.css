@@ -58,6 +58,7 @@
     width: 100%;
     height: 60px;
     font-size: 25px;
+    color: rgb(7, 46, 101) !important;
 }
 .auth_form__role {
     outline: none;
