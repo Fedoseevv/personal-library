@@ -66,7 +66,7 @@ export const TargetItemArticle = ({ item, colId, onDeleteHandler }) => {
 
     console.log(item)
     return (
-        <div className={"article_item"}>
+        <div className={"article_item"} style={{width: "900px"}}>
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
