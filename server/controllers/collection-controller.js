@@ -29,6 +29,9 @@ class CollectionController {
             if (!id) {
                 return next(ApiError.badReq("Идентификатор коллекции не указан!"));
             }
+            await bookQueries.deleteAllFromCollection(id)
+            await docQueries.deleteAllFromCollection(id)
+            await artQueries.deleteAllFromCollection(id)
             await collectionQueries.deleteCollection(id)
                 .then(response => {
                     return res.status(200).json({message: response});

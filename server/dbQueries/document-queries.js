@@ -294,6 +294,19 @@ const authorsByDocId = (id) => {
     })
 }
 
+const deleteAllFromCollection = (colId) => {
+    return new Promise((resolve, reject) => {
+        pool.query("DELETE FROM course_work.library.document_collection WHERE id_collection=$1", [colId],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve("Записи удалены");
+                }
+            })
+    })
+}
+
 module.exports = {
     addDocument,
     deleteDocument,
@@ -313,5 +326,6 @@ module.exports = {
 
     deleteDocAuthor,
     deleteDocCollection,
-    authorsByDocId
+    authorsByDocId,
+    deleteAllFromCollection
 }
