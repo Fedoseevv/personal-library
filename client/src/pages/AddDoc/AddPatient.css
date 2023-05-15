@@ -77,7 +77,7 @@
 
 .addPat_incorrect__value {
     right: 0!important;
-    top: 0!important;
+    top: 10px!important;
 }
 .addPat_form__author {
     font-size: 25px;
