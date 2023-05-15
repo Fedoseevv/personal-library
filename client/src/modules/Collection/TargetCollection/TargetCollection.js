@@ -131,7 +131,6 @@ export const TargetCollection = ({ item }) => {
     return (
         <>
             <div className={"staff"}>
-                <h1 className={"staff_title__main"}>Действия</h1>
                 <div className="collection_btn__wrap">
                     {/*<button*/}
                     {/*    type={"submit"}*/}
@@ -140,7 +139,7 @@ export const TargetCollection = ({ item }) => {
                     <button
                         type={"submit"}
                         onClick={downloadPdf}
-                        className={"standard_btn collection_btn"}>Сформировать отчет</button>
+                        className={"standard_btn collection_btn without_space"}>Сформировать отчет</button>
                 </div>
                 <h1 className={"staff_title__main"} style={{marginTop: '15px', marginBottom: '25px'}}>Название коллекции: {collection.name}</h1>
                 <div className="staff_container">
