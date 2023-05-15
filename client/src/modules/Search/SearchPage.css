@@ -230,3 +230,7 @@ input ~ .checkbox__body {} /* выбирает .checkbox__body */
 .custom-checkbox:disabled+label::before {
     background-color: #e9ecef;
 }
+
+.without_space {
+    margin-right: 0!important;
+}

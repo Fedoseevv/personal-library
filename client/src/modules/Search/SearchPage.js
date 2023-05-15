@@ -374,22 +374,18 @@ const BookItem = ({ item, loading }) => {
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
-                            style={{marginRight: '20px'}}
                             className={"standard_btn"}><a href={item.location}>Открыть локально</a></button>
                         <button
                             type={"submit"}
-                            style={{marginRight: '20px'}}
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
                         <button
-                            type={"submit"}
-                            style={{marginRight: '20px'}}
                             onClick={downloadPdf}
                             className={"standard_btn"}>Сформировать отчет</button>
                         <button
                             type={"submit"}
                             onClick={async () => await openModal()}
                             style={{marginRight: 0}}
-                            className={"standard_btn"}>Добавить в коллекцию</button>
+                            className={"standard_btn without_space"}>Добавить в коллекцию</button>
                     </div>
                 </div>
             </div>
