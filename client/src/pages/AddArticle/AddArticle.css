@@ -91,6 +91,7 @@
     background-color: steelblue;
     color: #fff;
 }
+
 .incorrect_value {
     color: #fa7373 !important;
     position: absolute;
