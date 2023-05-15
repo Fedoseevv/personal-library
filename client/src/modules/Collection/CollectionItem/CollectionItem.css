@@ -9,7 +9,7 @@
 .card_btns__wrap {
     margin-top: 10px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 .card_btn {
