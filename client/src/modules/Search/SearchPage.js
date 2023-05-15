@@ -184,7 +184,7 @@ export const SearchPage = () => {
 
     return (
         <div className={"staff"}>
-            <div className={"search_title"}>Расширенный поиск</div>
+            <div className={"search_title"}>Поиск</div>
             <div className={"search_subtitle"}>Выберите категорию</div>
 
             <RadioGroup className={"search_radio__group"} onChange={handleOnChange} value={selectedValue}>

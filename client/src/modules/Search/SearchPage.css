@@ -135,7 +135,7 @@ input ~ .checkbox__body {} /* выбирает .checkbox__body */
 .search_title {
     font-size: 35px;
     font-weight: 300;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
 }
 .search_subtitle {
     font-size: 25px;
