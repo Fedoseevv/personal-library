@@ -525,7 +525,7 @@ const DocItem = ({ item, loading }) => {
                         type={"submit"}
                         style={{marginRight: 0}}
                         onClick={openModal}
-                        className={"standard_btn"}>Добавить в коллекцию</button>
+                        className={"standard_btn without_space"}>Добавить в коллекцию</button>
                 </div>
             </div>
             <Modal active={modalActive} setActive={setModalActive}>
