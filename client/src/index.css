@@ -48,8 +48,8 @@
     border: 2px solid lightblue;
     font-family: inherit;
     border-radius: 5px;
-    color: rgb(45, 87, 150);
-    font-size: 20px;
+    color: rgb(7, 46, 101);
+    font-size: 22px!important;
     transition: all .5s ease;
     box-shadow: 3px 3px 15px rgb(33, 64, 103);
     margin-right: 25px;
@@ -60,7 +60,7 @@
     cursor: default;
 }
 .standard_btn a {
-    color: rgb(45, 87, 150);
+    color: rgb(10, 70, 161);
 }
 .standard_btn:hover {
     border: 2px solid lightblue;
