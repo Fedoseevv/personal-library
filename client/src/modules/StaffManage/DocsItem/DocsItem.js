@@ -82,7 +82,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                         <div className="card_modal_content">
                             <div className={"standard_input__wrap"}>
                                 {(title.isDirty && title.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Название документа</h1>
                                 <input
                                     placeholder={"Введите название документа"}
@@ -93,7 +93,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                             </div>
                             <div className={"standard_input__wrap"}>
                                 {(pubYear.isDirty && pubYear.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Дата публикации документа</h1>
                                 <input
                                     placeholder={"Введите дату публикации"}
@@ -104,7 +104,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                             </div>
                             <div className={"standard_input__wrap"}>
                                 {(pcLocation.isDirty && pcLocation.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Расположение на компьютере</h1>
                                 <input
                                     placeholder={"Введите расположение на компьютере"}
@@ -115,7 +115,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                             </div>
                             <div className={"standard_input__wrap"}>
                                 {(oblLocation.isDirty && oblLocation.isEmpty)
-                                    && <div className="incorrect_value addPat_incorrect__value">Поле не может быть пустым</div>}
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
                                 <h1 className={"staff_modal__subtitle"}>Расположение в облаке</h1>
                                 <input
                                     placeholder={"Введите ссылку на файл в облаке"}
