@@ -95,11 +95,11 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                         <button
                             type={"submit"}
                             onClick={() => setModalActive(true)}
-                            className={"standard_btn"}><a href={""}>Редактировать</a></button>
+                            className={"standard_btn"}>Редактировать</button>
                         <button
                             type={"submit"}
                             onClick={async () => await onDeleteBook(item.id_book)}
-                            className={"standard_btn"}><a href={""}>Удалить</a></button>
+                            className={"standard_btn"}>Удалить</button>
                     </div>
                 </div>
             </div>
