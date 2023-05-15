@@ -51,7 +51,7 @@ export const AuthPage = () => {
                         <div>
                             <div className="auth_form__input">
                                 {(email.isDirty && email.emailError)
-                                    && <div className="incorrect_value auth_incorrect__value">Некорректная почта</div>}
+                                    && <div className=" auth_incorrect__value incorrect">Некорректная почта</div>}
                                 <input
                                     placeholder="Введите email"
                                     id="email"
@@ -63,7 +63,7 @@ export const AuthPage = () => {
                             </div>
                             <div className="auth_form__input">
                                 {(password.isDirty && password.minLengthError)
-                                    && <div className="incorrect_value auth_incorrect__value">Пароль должен быть длиннее 6 символов</div>}
+                                    && <div className=" auth_incorrect__value incorrect">Пароль должен быть длиннее 6 символов</div>}
                                 <input
                                     placeholder="Введите пароль"
                                     id="password"

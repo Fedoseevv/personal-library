@@ -82,3 +82,9 @@
 .hide_block {
     display: none;
 }
+
+.incorrect {
+    color: #fa7373 !important;
+    position: absolute;
+    right: 0;
+}
