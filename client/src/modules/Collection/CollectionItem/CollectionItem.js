@@ -21,7 +21,6 @@ export const CollectionItem = ({item, onDeleteHandler}) => {
                     type={"submit"}
                     onClick={prepForDelete}
                     className={"standard_btn card_btn"}>Удалить</button>
-
             </div>
         </div>
     )
