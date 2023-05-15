@@ -52,7 +52,7 @@
     font-size: 22px!important;
     transition: all .5s ease;
     box-shadow: 3px 3px 15px rgb(33, 64, 103);
-    margin-right: 20px;
+    margin-right: 10px!important;
 }
 .standard_btn:disabled {
     background-color: rgb(5, 69, 105);
