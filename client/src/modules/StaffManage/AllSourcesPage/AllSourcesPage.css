@@ -30,6 +30,7 @@ form input {
     position: relative;
     transition: .3s linear;
     color: #8dc4ff;
+    box-shadow: 2px 2px 20px #0e2d49;
 }
 form input::placeholder {
     color: #7bb4f8;
