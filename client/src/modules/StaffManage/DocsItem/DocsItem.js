@@ -153,6 +153,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                                         const author = authors.filter(author => author.id_author == item)[0]
                                         return <button
                                             value={item}
+                                            key={index}
                                             style={{border: "none", backgroundColor: "transparent"}}
                                             onClick={onDeleteAuthor}>
                                             {index + 1}. {author.surname} {author.name} {author.patronymic}

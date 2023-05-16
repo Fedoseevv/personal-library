@@ -8,24 +8,25 @@ import {RecordModal} from "../../DocRecords/RecordModal/RecordModal";
 import {useInput} from "../../../hooks/validationHook";
 
 
-export const BookItem = ({ item, onDeleteBook, authors }) => {
+export const BookItem = ({ item, onDeleteBook, authors, allBooks }) => {
     const [ modalActive, setModalActive ] = useState(false);
     const { request, loading } = useHttp();
     const history = useHistory();
 
+    const target = allBooks.filter(book => book.id_book == item.id_book)[0];
 
-    const title = useInput(item.title, {isEmpty: true, minLength: 1});
-    const pubYear = useInput(item.year_of_publication, {isEmpty: true, minLength: 1, isDigit: true});
-    const keywords = useInput(item.keywords, {isEmpty: true, minLength: 1});
-    const cover = useInput(item.cover, {isEmpty: true, minLength: 1});
-    const annotation = useInput(item.brief_annotation, {isEmpty: true, minLength: 10});
-    const pcLocation = useInput(item.location, {isEmpty: true, minLength: 1});
-    const oblLocation = useInput(item.location_obl, {isEmpty: true, minLength: 1});
-    const pubName = useInput(item.pub_name, {isEmpty: true, minLength: 1});
-    const pubCity = useInput(item.city_of_publication, {isEmpty: true, minLength: 1});
-    const [genre, setGenre] = useState(item.id_genre);
-    const [curAuthorsId, setCurAuthorsId] = useState(item.authors_id);
-    const [curAuthors, setCurAuthors] = useState(item.authors);
+    const title = useInput(target.title, {isEmpty: true, minLength: 1});
+    const pubYear = useInput(target.year_of_publication, {isEmpty: true, minLength: 1, isDigit: true});
+    const keywords = useInput(target.keywords, {isEmpty: true, minLength: 1});
+    const cover = useInput(target.cover, {isEmpty: true, minLength: 1});
+    const annotation = useInput(target.brief_annotation, {isEmpty: true, minLength: 10});
+    const pcLocation = useInput(target.location, {isEmpty: true, minLength: 1});
+    const oblLocation = useInput(target.location_obl, {isEmpty: true, minLength: 1});
+    const pubName = useInput(target.pub_name, {isEmpty: true, minLength: 1});
+    const pubCity = useInput(target.city_of_publication, {isEmpty: true, minLength: 1});
+    const [genre, setGenre] = useState(target.id_genre);
+    const [curAuthorsId, setCurAuthorsId] = useState(target.authors_id);
+    const [curAuthors, setCurAuthors] = useState(target.authors);
     const [ authorId, setAuthorId ] = useState('1');
 
     const onDeleteAuthor = (e) => {
@@ -47,8 +48,8 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
     const sendUpdates = async () => {
 
         const body = {
-            id_book: item.id_book,
-            id_ba: item.ba_array,
+            id_book: target.id_book,
+            id_ba: target.ba_array,
             title: title.value,
             year_of_publication: pubYear.value,
             keywords: keywords.value,
@@ -58,7 +59,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
             location_obl: oblLocation.value,
             id_authors: curAuthorsId.map(item => parseInt(item)),
             id_genre: genre,
-            id_publishing_house: item.id_publishing_house,
+            id_publishing_house: target.id_publishing_house,
             pub_name: pubName.value,
             pub_city: pubCity.value
         }
@@ -66,6 +67,13 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
         const updated = request('/api/books/update', 'POST', body)
             .then((resp) => setModalActive(false))
             .then(response => history.go(0));
+    }
+
+    const openModal = () => {
+        setModalActive(true)
+        console.log(item)
+        console.log("target")
+        console.log(target)
     }
 
     return (
@@ -94,7 +102,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
                         <button
                             type={"submit"}
-                            onClick={() => setModalActive(true)}
+                            onClick={openModal}
                             className={"standard_btn"}>Редактировать</button>
                         <button
                             type={"submit"}
@@ -281,6 +289,7 @@ export const BookItem = ({ item, onDeleteBook, authors }) => {
                                     const author = authors.filter(author => author.id_author == item)[0]
                                     return <button
                                         value={item}
+                                        key={index}
                                         style={{border: "none", backgroundColor: "transparent"}}
                                         onClick={onDeleteAuthor}>
                                         {index + 1}. {author.surname} {author.name} {author.patronymic}

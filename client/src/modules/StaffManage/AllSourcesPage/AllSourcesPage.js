@@ -40,6 +40,7 @@ export const AllSourcesPage = () => {
     }, [test])
 
     const fetchSources = useCallback(async () => {
+        console.log("fetch sources")
         const fetched = await request('/api/books/all', 'GET');
         const docsFetched = await request('/api/documents/all', 'GET')
         const articlesFetched = await request('/api/articles/all', 'GET')
@@ -56,9 +57,10 @@ export const AllSourcesPage = () => {
     }, [fetchSources]);
 
     const fetchAuthors = useCallback(async () => {
+        console.log("fetch authors")
         const authorsFetched = await request(`/api/author/all`, 'GET');
         setAuthors(authorsFetched);
-    }, [ request ]);
+    }, [  ]);
 
     useEffect(async () => {
         await fetchAuthors();

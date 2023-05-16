@@ -21,7 +21,9 @@ export const AllSourcesList = ({ books, docs, articles, onDeleteArticle, onDelet
                             books.map(item => {
                                 return <BookItem
                                     item={item}
+                                    key={item.id_book}
                                     authors={authors}
+                                    allBooks={books}
                                     onDeleteBook={onDeleteBook} />
                             })
                         }
@@ -37,6 +39,7 @@ export const AllSourcesList = ({ books, docs, articles, onDeleteArticle, onDelet
                             docs.map(item => {
                                 return <DocsItem
                                     item={item}
+                                    key={item.id_document}
                                     authors={authors}
                                     onDeleteDoc={onDeleteDoc} />
                             })
@@ -52,6 +55,7 @@ export const AllSourcesList = ({ books, docs, articles, onDeleteArticle, onDelet
                         {
                             articles.map(item => {
                                 return <LinkItem
+                                    key={item.id_article}
                                     authors={authors}
                                     item={item}
                                     onDeleteArticle={onDeleteArticle} />
