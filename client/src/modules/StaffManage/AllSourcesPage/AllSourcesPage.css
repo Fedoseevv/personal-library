@@ -11,3 +11,38 @@
     text-align: center;
     margin-bottom: 50px;
 }
+
+form {
+    width: auto;
+    margin-right: 50px;
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 25px;
+}
+form input {
+    width: 300px;
+    height: 62px;
+    padding-left: 15px;
+    border-radius: 42px;
+    border: 2px solid #082e64;
+    background: rgb(45, 87, 150);
+    outline: none;
+    position: relative;
+    transition: .3s linear;
+    color: #8dc4ff;
+}
+form input::placeholder {
+    color: #7bb4f8;
+}
+form input:focus {
+    width: 350px;
+}
+form button {
+    width: 42px;
+    height: 42px;
+    background: none;
+    border: none;
+    position: absolute;
+    top: -2px;
+    right: 0;
+}

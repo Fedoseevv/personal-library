@@ -10,9 +10,14 @@ export const AllSourcesPage = () => {
     const auth = useAuth()
     const { loading, request } = useHttp();
     const [ books, setBooks ] = useState([]);
+    const [ visibleBooks, setVisibleBooks ] = useState([]);
     const [ docs, setDocs ] = useState([]);
+    const [ visibleDocs, setVisibleDocs ] = useState([]);
     const [ articles, setArticles ] = useState([]);
+    const [ visibleArticles, setVisibleArticles ] = useState([]);
     const [ authors, setAuthors ] = useState([]);
+
+    const [searchStr, setSearchStr] = useState('');
 
     const history = useHistory();
 
@@ -39,8 +44,11 @@ export const AllSourcesPage = () => {
         const docsFetched = await request('/api/documents/all', 'GET')
         const articlesFetched = await request('/api/articles/all', 'GET')
         setBooks(fetched);
+        setVisibleBooks(fetched);
         setDocs(docsFetched)
+        setVisibleDocs(docsFetched)
         setArticles(articlesFetched)
+        setVisibleArticles(articlesFetched)
     }, [ request ]);
 
     useEffect(async () => {
@@ -79,6 +87,19 @@ export const AllSourcesPage = () => {
         await fetchSources();
     }
 
+    const onChangeSearch = (e) => {
+        const str = e.target.value || ''
+        console.log(e.target.value)
+        const updatedBooks = books.filter(book => book.title.toLowerCase().includes(str))
+        setVisibleBooks([...updatedBooks])
+
+        const updatedDocs = docs.filter(doc => doc.title.toLowerCase().includes(str))
+        setVisibleDocs([...updatedDocs])
+
+        const updatedArticles = articles.filter(art => art.title.toLowerCase().includes(str))
+        setVisibleArticles([...updatedArticles])
+    }
+
     if (loading) {
         return <Loader />
     }
@@ -93,9 +114,13 @@ export const AllSourcesPage = () => {
                 {/*    onClick={() => history.push('/addEmp')}*/}
                 {/*    className={"standard_btn"}>Добавить источник</button>*/}
                 <div className="staff_title__main">Литературные источники</div>
-                { !loading &&  <AllSourcesList books={books}
-                                               docs={docs}
-                                               articles={articles}
+                <form>
+                    <input onChange={onChangeSearch} type="text" placeholder="Искать здесь..." />
+                    <button type="submit"></button>
+                </form>
+                { !loading &&  <AllSourcesList books={visibleBooks}
+                                               docs={visibleDocs}
+                                               articles={visibleArticles}
                                                authors={authors}
                                                onDeleteBook={onDeleteBook}
                                                onDeleteDoc={onDeleteDoc}
