@@ -33,6 +33,15 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
         }
     }
 
+    const closeModal = () => {
+        title.setValue(item.title)
+        hyperlink.setValue(item.hyperlink)
+        pubYear.setValue(new Date(Date.parse(item.date_of_publication)).toLocaleDateString())
+        setCurAuthorsId(item.authors_id)
+        setCurAuthors(item.authors)
+        setModalActive(false)
+    }
+
     const sendUpdates = async () => {
         const body = {
             id_article: item.id_article,
@@ -152,7 +161,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                                     className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                                 <button
                                     type={"submit"}
-                                    onClick={e => setModalActive(false)}
+                                    onClick={closeModal}
                                     className={"standard_btn staff_schedule__btn"}>Отмена</button>
                             </div>
                         </div>

@@ -35,6 +35,17 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
             setCurAuthorsId([...curAuthorsId, authorId])
         }
     }
+
+    const closeModal = () => {
+        title.setValue(item.title)
+        pubYear.setValue(new Date(Date.parse(item.date_of_publication)).toLocaleDateString())
+        pcLocation.setValue(item.location)
+        oblLocation.setValue(item.location_obl)
+        setCurAuthorsId(item.authors_id)
+        setCurAuthors(item.authors)
+        setModalActive(false)
+    }
+
     const sendUpdates = async () => {
         const body = {
             id_document: item.id_document,
@@ -171,7 +182,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
                                     className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                                 <button
                                     type={"submit"}
-                                    onClick={e => setModalActive(false)}
+                                    onClick={closeModal}
                                     className={"standard_btn staff_schedule__btn"}>Отмена</button>
                             </div>
                         </div>

@@ -71,6 +71,21 @@ export const BookItem = ({ item, onDeleteBook, authors, allBooks }) => {
         setModalActive(true)
     }
 
+    const closeModal = () => {
+        title.setValue(item.title)
+        pubYear.setValue(item.year_of_publication)
+        keywords.setValue(item.keywords)
+        cover.setValue(item.cover)
+        annotation.setValue(item.brief_annotation)
+        pcLocation.setValue(item.location)
+        oblLocation.setValue(item.location_obl)
+        pubName.setValue(item.pub_name)
+        pubCity.setValue(item.city_of_publication)
+        setGenre(item.id_genre)
+        setCurAuthorsId(item.authors_id)
+        setModalActive(false)
+    }
+
     return (
         <div className={"staff_item"}>
             <div className="staff_item__title">Название книги: '{item.title}'</div>
@@ -303,7 +318,7 @@ export const BookItem = ({ item, onDeleteBook, authors, allBooks }) => {
                                 className={"standard_btn staff_schedule__btn"}>Сохранить изменения</button>
                             <button
                                 type={"submit"}
-                                onClick={e => setModalActive(false)}
+                                onClick={closeModal}
                                 className={"standard_btn staff_schedule__btn"}>Отмена</button>
                         </div>
                     </div>

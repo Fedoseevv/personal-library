@@ -28,8 +28,8 @@ export const AuthorPage = () => {
     const onDeleteHandler = async (id) => {
         const deleted = request('/api/author/delete', 'POST', {id});
         const filteredAuthors = authors.filter(item => item.id_author != id);
-        setAuthors(filteredAuthors);
         await fetchAuthors();
+        setAuthors(filteredAuthors);
     }
 
     const onEditHandler = async (body) => {

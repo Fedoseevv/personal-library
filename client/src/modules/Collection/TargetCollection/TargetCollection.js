@@ -138,10 +138,14 @@ export const TargetCollection = ({ item }) => {
                     {/*    className={isBtnVisible ? "standard_btn collection_btn" : "hide_block"}>Добавить источник</button>*/}
                     <button
                         type={"submit"}
+                        disabled={collBooks.length === 0 && collArticles.length === 0 && collDocs.length === 0}
                         onClick={downloadPdf}
                         className={"standard_btn collection_btn without_space"}>Сформировать отчет</button>
                 </div>
                 <h1 className={"staff_title__main"} style={{marginTop: '15px', marginBottom: '25px'}}>Название коллекции: {collection.name}</h1>
+                {
+                    collBooks.length === 0 && collArticles.length === 0 && collDocs.length === 0 && <h1>Нет элементов коллекции</h1>
+                }
                 <div className="staff_container">
                     {
                         collBooks.map((item, ind) => {

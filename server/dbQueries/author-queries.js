@@ -84,11 +84,52 @@ const authorById = (id) => {
     });
 }
 
+const docsByAuthor = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT id_document FROM library.document_author WHERE id_author = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    })
+}
+const booksByAuthor = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT id_book FROM library.book_author WHERE id_author = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    })
+}
+
+const articleByAuthor = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT id_article FROM library.article_author WHERE id_author = $1", [id],
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.rows);
+                }
+            })
+    })
+}
+
 module.exports = {
     maxId,
     addAuthor,
     deleteAuthor,
     allAuthors,
     updateAuthor,
-    authorById
+    authorById,
+    docsByAuthor,
+    booksByAuthor,
+    articleByAuthor
 }

@@ -229,7 +229,7 @@ export const SearchPage = () => {
             </div>
             <div className="addPat_form__input search_field__input">
                 <input
-                    placeholder="Введите год публикации"
+                    placeholder="Введите значение для поиска"
                     id="pub_year"
                     type="text"
                     name="pub_year"
