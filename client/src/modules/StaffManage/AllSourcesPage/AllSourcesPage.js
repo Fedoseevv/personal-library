@@ -92,13 +92,13 @@ export const AllSourcesPage = () => {
     const onChangeSearch = (e) => {
         const str = e.target.value || ''
         console.log(e.target.value)
-        const updatedBooks = books.filter(book => book.title.toLowerCase().includes(str))
+        const updatedBooks = books.filter(book => book.title.toLowerCase().includes(str.toLowerCase()))
         setVisibleBooks([...updatedBooks])
 
-        const updatedDocs = docs.filter(doc => doc.title.toLowerCase().includes(str))
+        const updatedDocs = docs.filter(doc => doc.title.toLowerCase().includes(str.toLowerCase()))
         setVisibleDocs([...updatedDocs])
 
-        const updatedArticles = articles.filter(art => art.title.toLowerCase().includes(str))
+        const updatedArticles = articles.filter(art => art.title.toLowerCase().includes(str.toLowerCase()))
         setVisibleArticles([...updatedArticles])
     }
 

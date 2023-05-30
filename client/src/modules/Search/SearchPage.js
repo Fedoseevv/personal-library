@@ -374,7 +374,7 @@ const BookItem = ({ item, loading }) => {
                     <div className="staff_item__btns">
                         <button
                             type={"submit"}
-                            className={"standard_btn"}><a href={item.location}>Открыть локально</a></button>
+                            className={"standard_btn"}><a href={"myproto://" + item.location}>Открыть локально</a></button>
                         <button
                             type={"submit"}
                             className={"standard_btn"}><a target="_blank" href={item.location_obl}>Открыть в облаке</a></button>
