@@ -15,9 +15,10 @@ class UserController {
     async registration(req, res, next) {
         try {
             const {email, password} = req.body
+            const findResult = await userQueries.findUser(email);
             console.log(email, password)
-            if (!email || !password) {
-                return next(ApiError.badReq('Некорректный email или password'))
+            if (!email || !password || findResult.length > 0) {
+                return next(ApiError.badReq('Некорректный email или password. Либо такой пользователь уже существует!'))
             }
             const hashPassword = await bcrypt.hash(password, 5);
             await userQueries.registerUser(email, hashPassword)
@@ -41,7 +42,7 @@ class UserController {
                 return next(ApiError.badReq("Неверный пароль!"));
             }
             const token = generateJwt(1, email)
-            return res.json({token});
+            return res.json({ token: token, userId: user.id_user });
         } catch (e) {
             return res.status(500).json({message: e.message});
         }

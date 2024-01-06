@@ -10,6 +10,7 @@ import {TargetCollection} from "./modules/Collection/TargetCollection/TargetColl
 import {SearchPage} from "./modules/Search/SearchPage";
 import {AddAuthor} from "./modules/Author/AddAuthor/AddAuthor";
 import {AuthorPage} from "./modules/Author/AuthorPage";
+import {RegisterPage} from "./pages/RegisterPage/RegisterPage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -60,6 +61,9 @@ export const useRoutes = isAuthenticated => {
         <Switch>
             <Route path="/" exact>
                 <AuthPage/>
+            </Route>
+            <Route path="/register">
+                <RegisterPage />
             </Route>
             <Redirect to="/"/>
         </Switch>

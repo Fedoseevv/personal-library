@@ -6,7 +6,7 @@ class ApiError extends Error {
     }
 
     static badReq(message) {
-        return new ApiError(404, message);
+        return new ApiError(400, message);
     }
 
     static internalReq(message) {

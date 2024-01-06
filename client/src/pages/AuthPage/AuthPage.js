@@ -4,6 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import {useHttp} from "../../hooks/httpHook";
 import {AuthContext} from "../../context/AuthContext";
 import {useInput} from "../../hooks/validationHook";
+import {Link} from "react-router-dom";
 
 export const AuthPage = () => {
     const auth = useContext(AuthContext);
@@ -34,7 +35,7 @@ export const AuthPage = () => {
             console.log(form.email);
             console.log(form.password);
             const data = await request('/api/user/login', 'POST', body)
-            auth.login(data.token);
+            auth.login(data.token, data.userId, "no-role");
         } catch (e) {
             console.log("ERROR");
             setMsgVisible(true);
@@ -80,6 +81,11 @@ export const AuthPage = () => {
                             onClick={loginHandler}
                             className="standard_btn auth_form__btn"
                             disabled={ loading || !email.inputValid || !password.inputValid }>Войти
+                        </button>
+                        <button
+                            // onClick={loginHandler}
+                            className="standard_btn auth_form__btn"
+                            disabled={ loading }> <Link to={"/register"}>Регистрация</Link>
                         </button>
                     </div>
                 </div>

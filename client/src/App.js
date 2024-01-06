@@ -15,7 +15,7 @@ function App() {
         <AuthContext.Provider value={{
             token, login, logout, userId, role, isAuthenticated
         }}>
-            {isAuthenticated ? <Header isAuth={isAuthenticated} userId={userId} role={role}/> : <></>}
+            {isAuthenticated ? <Header token={token} isAuth={isAuthenticated} userId={userId} role={role}/> : <></>}
             {routes}
         </AuthContext.Provider>
     );
