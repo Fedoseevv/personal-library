@@ -84,15 +84,15 @@ const deleteDocCollection = (id) => {
     });
 }
 
-const allDocuments = () => {
+const allDocuments = (userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+        pool.query("SELECT d.id_document, d.id_user, title, date_of_publication, location, location_obl,\n" +
             "        array_agg(da.id_da) as da_array,\n" +
             "        array_agg(a.id_author) as authors_id,\n" +
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
-            "GROUP BY d.id_document, title, date_of_publication, location, location_obl",
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND id_user=$1\n" +
+            "GROUP BY d.id_document, title, date_of_publication, location, location_obl", [userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -125,18 +125,18 @@ const docInCollection = (id) => {
     })
 }
 
-const docNotInCollection = (id) => {
+const docNotInCollection = (id, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+        pool.query("SELECT d.id_document, d.id_user, title, date_of_publication, location, location_obl,\n" +
             "        array_agg(da.id_da) as da_array,\n" +
             "        array_agg(a.id_author) as authors_id,\n" +
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND id_user=$2\n" +
             "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
             "HAVING d.id_document NOT IN (SELECT id_document\n" +
             "FROM course_work.library.document_collection\n" +
-            "WHERE id_collection = $1)", [id],
+            "WHERE id_collection = $1)", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error)
@@ -221,16 +221,16 @@ const documentById = (id) => {
     });
 }
 
-const findByTitle = (title) => {
+const findByTitle = (title, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+        pool.query("SELECT d.id_document, d.id_user, title, date_of_publication, location, location_obl,\n" +
             "        array_agg(da.id_da) as da_array,\n" +
             "        array_agg(a.id_author) as authors_id,\n" +
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND id_user=$2\n" +
             "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
-            "HAVING LOWER(d.title) LIKE $1", [`%${title.toLowerCase()}%`],
+            "HAVING LOWER(d.title) LIKE $1", [`%${title.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -240,17 +240,17 @@ const findByTitle = (title) => {
             })
     });
 }
-const findByAuthor = (someName) => {
+const findByAuthor = (someName, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl, \n" +
+        pool.query("SELECT d.id_document, d.id_user, title, date_of_publication, location, location_obl, \n" +
             "                    array_agg(da.id_da) as da_array, \n" +
             "                    array_agg(a.id_author) as authors_id, \n" +
             "                    array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors \n" +
             "            FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a \n" +
-            "            WHERE d.id_document=da.id_document AND da.id_author=a.id_author \n" +
+            "            WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND id_user=$2\n" +
             "            GROUP BY d.id_document, title, date_of_publication, location, location_obl \n" +
             "\tHAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') " +
-            "LIKE $1", [`%${someName.toLowerCase()}%`],
+            "LIKE $1", [`%${someName.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -260,16 +260,16 @@ const findByAuthor = (someName) => {
             })
     });
 }
-const findByDate = (date) => {
+const findByDate = (date, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT d.id_document, title, date_of_publication, location, location_obl,\n" +
+        pool.query("SELECT d.id_document, d.id_user, title, date_of_publication, location, location_obl,\n" +
             "        array_agg(da.id_da) as da_array,\n" +
             "        array_agg(a.id_author) as authors_id,\n" +
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.document d, course_work.library.document_author da, course_work.library.author a\n" +
-            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author\n" +
+            "WHERE d.id_document=da.id_document AND da.id_author=a.id_author AND id_user=$2\n" +
             "GROUP BY d.id_document, title, date_of_publication, location, location_obl\n" +
-            "HAVING d.date_of_publication=$1", [date],
+            "HAVING d.date_of_publication=$1", [date, userId],
             (error, result) => {
                 if (error) {
                     reject(error);

@@ -29,9 +29,9 @@ const deleteCollection = (id) => {
     })
 }
 
-const allCollections = () => {
+const allCollections = (userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * FROM course_work.library.collection", [],
+        pool.query("SELECT * FROM course_work.library.collection where id_user=$1", [userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -55,7 +55,7 @@ const collectionById = (id) => {
     })
 }
 
-const booksInCollections = (id) => {
+const booksInCollections = (id, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT\n" +
             "  id_collection,\n" +
@@ -65,9 +65,10 @@ const booksInCollections = (id) => {
             "  library.collection\n" +
             "LEFT JOIN\n" +
             "  library.book_collection USING (id_collection)\n" +
+            "WHERE id_user=$2\n" +
             "GROUP BY\n" +
             "  id_collection,\n" +
-            "  name", [id],
+            "  name", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error)
@@ -77,7 +78,7 @@ const booksInCollections = (id) => {
             })
     })
 }
-const docInCollections = (id) => {
+const docInCollections = (id, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT\n" +
             "  id_collection,\n" +
@@ -87,9 +88,10 @@ const docInCollections = (id) => {
             "  library.collection\n" +
             "LEFT JOIN\n" +
             "  library.document_collection USING (id_collection)\n" +
+            "WHERE id_user=$2\n" +
             "GROUP BY\n" +
             "  id_collection,\n" +
-            "  name", [id],
+            "  name", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error)
@@ -99,7 +101,7 @@ const docInCollections = (id) => {
             })
     })
 }
-const articleInCollections = (id) => {
+const articleInCollections = (id, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT\n" +
             "  id_collection,\n" +
@@ -109,9 +111,10 @@ const articleInCollections = (id) => {
             "  library.collection\n" +
             "LEFT JOIN\n" +
             "  library.article_collection USING (id_collection)\n" +
+            "WHERE id_user=$2\n" +
             "GROUP BY\n" +
             "  id_collection,\n" +
-            "  name", [id],
+            "  name", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error)

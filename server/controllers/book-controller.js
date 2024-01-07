@@ -7,13 +7,13 @@ class BookController {
     async addBook(req, res, next) {
         try {
             const {title, year, keywords, cover, id_genre,
-                annotation, location, locationObl, id_authors, pubHouse, pubCity} = req.body;
+                annotation, location, locationObl, id_authors, pubHouse, pubCity, userId} = req.body;
 
             console.log(req.body)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.addBook(title, year, keywords, cover, id_genre, annotation, location, locationObl)
+            await bookQueries.addBook(title, year, keywords, cover, id_genre, annotation, location, locationObl, userId)
             const targetPubHouses = await bookQueries.findPubHouse(pubHouse, pubCity);
             const targetPubHouse = targetPubHouses[0]
 
@@ -73,7 +73,8 @@ class BookController {
     }
     async allBooks(req, res) {
         try {
-            await bookQueries.allBooks()
+            const id = req.params.id
+            await bookQueries.allBooks(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -94,8 +95,8 @@ class BookController {
     }
     async booksNotInCollection(req, res) {
         try {
-            const {id} = req.body;
-            await bookQueries.booksNotInCollection(id)
+            const {id, userId} = req.body;
+            await bookQueries.booksNotInCollection(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -199,11 +200,11 @@ class BookController {
     }
     async findByTitle(req, res, next) {
         try {
-            const {title} = req.body;
-            if (!title) {
+            const {title, userId} = req.body;
+            if (!title || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByTitle(title)
+            await bookQueries.findBooksByTitle(title, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -213,11 +214,11 @@ class BookController {
     }
     async findByGenre(req, res, next) {
         try {
-            const {genre} = req.body;
-            if (!genre) {
+            const {genre, userId} = req.body;
+            if (!genre || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByGenre(genre)
+            await bookQueries.findBooksByGenre(genre, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -227,12 +228,12 @@ class BookController {
     }
     async findByPubHouse(req, res, next) {
         try {
-            const {pubHouse} = req.body;
+            const {pubHouse, userId} = req.body;
             console.log(pubHouse)
-            if (!pubHouse) {
+            if (!pubHouse || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByPubHouse(pubHouse)
+            await bookQueries.findBooksByPubHouse(pubHouse, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -242,11 +243,11 @@ class BookController {
     }
     async findByKeywords(req, res, next) {
         try {
-            const {keywords} = req.body;
-            if (!keywords) {
+            const {keywords, userId} = req.body;
+            if (!keywords || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByKeywords(keywords)
+            await bookQueries.findBooksByKeywords(keywords, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -256,12 +257,12 @@ class BookController {
     }
     async findByPubYear(req, res, next) {
         try {
-            const {pubYear} = req.body;
-            if (!pubYear) {
+            const {pubYear, userId} = req.body;
+            if (!pubYear || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             console.log(pubYear)
-            await bookQueries.findBooksByPubYear(pubYear)
+            await bookQueries.findBooksByPubYear(pubYear, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -271,11 +272,11 @@ class BookController {
     }
     async findByAuthor(req, res, next) {
         try {
-            const {author} = req.body;
-            if (!author) {
+            const {author, userId} = req.body;
+            if (!author || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByAuthor(author)
+            await bookQueries.findBooksByAuthor(author, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -285,11 +286,11 @@ class BookController {
     }
     async findByBriefAnn(req, res, next) {
         try {
-            const {briefAnnotation} = req.body;
-            if (!briefAnnotation) {
+            const {briefAnnotation, userId} = req.body;
+            if (!briefAnnotation || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await bookQueries.findBooksByBriefAnn(briefAnnotation)
+            await bookQueries.findBooksByBriefAnn(briefAnnotation, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });

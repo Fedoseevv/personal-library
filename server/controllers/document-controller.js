@@ -5,12 +5,12 @@ const PDFDocument = require("pdfkit");
 class DocumentController {
     async addDocument(req, res, next) {
         try {
-            const {title, dateOfPub, location, locationObl, authorsId} = req.body;
+            const {title, dateOfPub, location, locationObl, authorsId, userId} = req.body;
             console.log(req.body)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await documentQueries.addDocument(title, dateOfPub, location, locationObl, 1)
+            await documentQueries.addDocument(title, dateOfPub, location, locationObl, userId)
             await documentQueries.maxDocId()
                 .then(async response => {
                     const docId = response["max_id"]
@@ -41,7 +41,8 @@ class DocumentController {
     }
     async allDocuments(req, res) {
         try {
-            await documentQueries.allDocuments()
+            const id = req.params.id
+            await documentQueries.allDocuments(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -62,8 +63,8 @@ class DocumentController {
     }
     async docNotInCollection(req, res) {
         try {
-            const {id} = req.body;
-            await documentQueries.docNotInCollection(id)
+            const {id, userId} = req.body;
+            await documentQueries.docNotInCollection(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -145,12 +146,12 @@ class DocumentController {
     }
     async findByTitle(req, res, next) {
         try {
-            const {title} = req.body;
+            const {title, userId} = req.body;
             console.log(title)
-            if (!title) {
+            if (!title || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await documentQueries.findByTitle(title)
+            await documentQueries.findByTitle(title, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -160,12 +161,12 @@ class DocumentController {
     }
     async findByAuthor(req, res, next) {
         try {
-            const {author} = req.body;
+            const {author, userId} = req.body;
             console.log(author)
-            if (!author) {
+            if (!author || !userId) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await documentQueries.findByAuthor(author)
+            await documentQueries.findByAuthor(author, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -175,10 +176,10 @@ class DocumentController {
     }
     async findByDate(req, res, next) {
         try {
-            const {date} = req.body;
+            const {date, userId} = req.body;
             console.log(date)
 
-            await documentQueries.findByDate(date)
+            await documentQueries.findByDate(date, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });

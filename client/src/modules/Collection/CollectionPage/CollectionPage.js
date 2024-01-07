@@ -16,10 +16,11 @@ export const CollectionPage = () => {
     const hist = useHistory();
 
     const fetchAllSources = useCallback(async () => {
-        const collectionsFetched = await request('/api/collections/all', 'GET');
-        const booksFetched = await request('/api/books/all', 'GET');
-        const docsFetched = await request('/api/documents/all', 'GET')
-        const articlesFetched = await request('/api/articles/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await request(`/api/collections/all/${userId}`, 'GET');
+        const booksFetched = await request(`/api/books/all/${userId}`, 'GET');
+        const docsFetched = await request(`/api/documents/all/${userId}`, 'GET')
+        const articlesFetched = await request(`/api/articles/all/${userId}`, 'GET');
         setCollections(collectionsFetched);
         setBooks(booksFetched);
         setDocs(docsFetched)

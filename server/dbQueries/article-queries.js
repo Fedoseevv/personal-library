@@ -84,15 +84,15 @@ const deleteArticleCollection = (id) => {
     });
 }
 
-const allArticles = () => {
+const allArticles = (userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
+        pool.query("SELECT ar.id_user, ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
-            "GROUP BY ar.id_article, title, date_of_publication, hyperlink",
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $1\n" +
+            "GROUP BY ar.id_article, title, date_of_publication, hyperlink", [userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -103,18 +103,18 @@ const allArticles = () => {
     });
 }
 
-const articlesInCollection = (id) => {
+const articlesInCollection = (id, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
+        pool.query("SELECT ar.id_user, ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING ar.id_article IN (SELECT id_article\n" +
             "FROM course_work.library.article_collection\n" +
-            "WHERE id_collection = $1)", [id],
+            "WHERE id_collection = $1)", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -125,18 +125,18 @@ const articlesInCollection = (id) => {
     })
 }
 
-const articlesNotInCollection = (id) => {
+const articlesNotInCollection = (id, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING ar.id_article NOT IN (SELECT id_article\n" +
             "FROM course_work.library.article_collection\n" +
-            "WHERE id_collection = $1)", [id],
+            "WHERE id_collection = $1)", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -223,17 +223,17 @@ const articleById = (id) => {
     });
 }
 
-const findByTitle = (title) => {
+const findByTitle = (title, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
+        pool.query("SELECT ar.id_user, ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING LOWER(ar.title) LIKE $1",
-            [`%${title.toLowerCase()}%`],
+            [`%${title.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -243,17 +243,17 @@ const findByTitle = (title) => {
             })
     });
 }
-const findByAuthor = (someName) => {
+const findByAuthor = (someName, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
+        pool.query("SELECT ar.id_user, ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') LIKE $1",
-            [`%${someName.toLowerCase()}%`],
+            [`%${someName.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -263,17 +263,17 @@ const findByAuthor = (someName) => {
             })
     });
 }
-const findByDate = (date) => {
+const findByDate = (date, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("SELECT ar.id_article, title, date_of_publication, hyperlink,\n" +
             "\tarray_agg(aa.id_aa) as aa_array,\n" +
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING date_of_publication=$1",
-            [date],
+            [date, userId],
             (error, result) => {
                 if (error) {
                     reject(error);

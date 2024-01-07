@@ -53,16 +53,17 @@ export const TargetCollection = ({ item }) => {
     const history = useHistory();
 
     const fetchAllData = useCallback(async () => {
-        const collectionsFetched = await request('/api/collections/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await request(`/api/collections/all/${userId}`, 'GET');
 
         const booksFetched = await request('/api/books/inCollection', 'POST', {id: id});
-        const booksFreeFetched = await request('/api/books/notInCollection', 'POST', {id: id});
+        const booksFreeFetched = await request('/api/books/notInCollection', 'POST', {id: id, userId: userId});
 
-        const docsFreeFetched = await request('/api/documents/notInCollection', 'POST', {id: id});
+        const docsFreeFetched = await request('/api/documents/notInCollection', 'POST', {id: id, userId: userId});
         const docsFetched = await request('/api/documents/inCollection', 'POST', {id: id});
 
-        const articleFreeFetched = await request('/api/articles/notInCollection', 'POST', {id: id});
-        const articlesFetched = await request('/api/articles/inCollection', 'POST', {id: id});
+        const articleFreeFetched = await request('/api/articles/notInCollection', 'POST', {id: id, userId: userId});
+        const articlesFetched = await request('/api/articles/inCollection', 'POST', {id: id, userId: userId});
 
 
         setCollection(collectionsFetched.filter(item => item.id_collection == id)[0]);

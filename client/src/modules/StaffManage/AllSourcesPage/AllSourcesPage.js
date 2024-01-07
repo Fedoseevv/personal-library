@@ -41,9 +41,10 @@ export const AllSourcesPage = () => {
 
     const fetchSources = useCallback(async () => {
         console.log("fetch sources")
-        const fetched = await request('/api/books/all', 'GET');
-        const docsFetched = await request('/api/documents/all', 'GET')
-        const articlesFetched = await request('/api/articles/all', 'GET')
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const fetched = await request(`/api/books/all/${userId}`, 'GET');
+        const docsFetched = await request(`/api/documents/all/${userId}`, 'GET')
+        const articlesFetched = await request(`/api/articles/all/${userId}`, 'GET')
         setBooks(fetched);
         setVisibleBooks(fetched);
         setDocs(docsFetched)

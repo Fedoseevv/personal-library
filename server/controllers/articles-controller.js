@@ -5,13 +5,13 @@ const PDFDocument = require("pdfkit");
 class ArticlesController {
     async addArticle(req, res, next) {
         try {
-            const {title, linkArt, dateOfPub, id_authors} = req.body;
+            const {title, linkArt, dateOfPub, id_authors, userId} = req.body;
             console.log(req.body)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.addArticle(title, linkArt, dateOfPub, 1)
-            await articleQueries.maxArtId()
+            await articleQueries.addArticle(title, linkArt, dateOfPub, userId)
+            await articleQueries.maxArtId(userId)
                 .then(response => {
                     const artId = response["max_id"]
                     for(const id of id_authors) {
@@ -42,7 +42,8 @@ class ArticlesController {
     }
     async allArticles(req, res) {
         try {
-            await articleQueries.allArticles()
+            const id = req.params.id
+            await articleQueries.allArticles(id)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -52,8 +53,8 @@ class ArticlesController {
     }
     async artInCollection(req, res) {
         try {
-            const {id} = req.body;
-            await articleQueries.articlesInCollection(id)
+            const {id, userId} = req.body;
+            await articleQueries.articlesInCollection(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -63,8 +64,8 @@ class ArticlesController {
     }
     async artNotInCollection(req, res) {
         try {
-            const {id} = req.body;
-            await articleQueries.articlesNotInCollection(id)
+            const {id, userId} = req.body;
+            await articleQueries.articlesNotInCollection(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -81,7 +82,6 @@ class ArticlesController {
                 .then(response => {
                     return res.status(200).json({message: response});
                 })
-
         } catch (e) {
             return res.status(400).json({ message: e.message });
         }
@@ -145,11 +145,11 @@ class ArticlesController {
 
     async findByTitle(req, res, next) {
         try {
-            const {title} = req.body;
+            const {title, userId} = req.body;
             if (!title) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.findByTitle(title)
+            await articleQueries.findByTitle(title, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -159,11 +159,11 @@ class ArticlesController {
     }
     async findByAuthor(req, res, next) {
         try {
-            const {author} = req.body;
+            const {author, userId} = req.body;
             if (!author) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.findByAuthor(author)
+            await articleQueries.findByAuthor(author, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
@@ -173,9 +173,9 @@ class ArticlesController {
     }
     async findByDate(req, res, next) {
         try {
-            const {date} = req.body;
+            const {date, userId} = req.body;
             console.log(date)
-            await articleQueries.findByDate(date)
+            await articleQueries.findByDate(date, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });

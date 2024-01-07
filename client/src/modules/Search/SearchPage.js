@@ -34,13 +34,14 @@ export const SearchPage = () => {
     }
 
     const searchSources = async () => {
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
         console.log(`selectedValue: ${selectedValue}`)
         console.log(`selectedField: ${searchField}`)
         console.log(`fieldVal: ${fieldVal}`)
         setIsSearched(true);
         if (selectedValue === "articles") {
             if (searchField === "Название") {
-                const body = { title: fieldVal }
+                const body = { title: fieldVal, userId: userId }
                 const fetched = request('/api/articles/find/title', 'POST', body)
                     .then(response => {
                         setArticles(response);
@@ -49,7 +50,7 @@ export const SearchPage = () => {
                     })
 
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal }
+                const body = { author: fieldVal, userId: userId }
                 const fetched = request('/api/articles/find/author', 'POST', body)
                     .then(response => {
                         setArticles(response);
@@ -58,7 +59,7 @@ export const SearchPage = () => {
                     })
 
             } else if (searchField === "Дата публикации") {
-                const body = { date: fieldVal }
+                const body = { date: fieldVal, userId: userId }
                 console.log(body)
                 const fetched = request('/api/articles/find/date', 'POST', body)
                     .then(response => {
@@ -71,7 +72,7 @@ export const SearchPage = () => {
 
         else if (selectedValue === "docs") {
             if (searchField === "Название") {
-                const body = { title: fieldVal }
+                const body = { title: fieldVal, userId: userId }
                 const fetched = request('/api/documents/find/title', 'POST', body)
                     .then(response => {
                         setArticles([]);
@@ -79,7 +80,7 @@ export const SearchPage = () => {
                         setDocs(response);
                     })
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal }
+                const body = { author: fieldVal, userId: userId }
                 const fetched = request('/api/documents/find/author', 'POST', body)
                     .then(response => {
                         setArticles([]);
@@ -88,7 +89,7 @@ export const SearchPage = () => {
                     })
 
             }  else if (searchField === "Дата публикации") {
-                const body = { date: fieldVal }
+                const body = { date: fieldVal, userId: userId }
                 console.log(body)
                 const fetched = request('/api/documents/find/date', 'POST', body)
                     .then(response => {
@@ -101,7 +102,7 @@ export const SearchPage = () => {
 
         else if (selectedValue === "books") {
             if (searchField === "Название") {
-                const body = { title: fieldVal }
+                const body = { title: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/title', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -109,7 +110,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Жанр") {
-                const body = { genre: fieldVal }
+                const body = { genre: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/genre', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -117,7 +118,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Издательство") {
-                const body = { pubHouse: fieldVal }
+                const body = { pubHouse: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/pubHouse', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -125,7 +126,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Ключевые слова") {
-                const body = { keywords: fieldVal }
+                const body = { keywords: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/keywords', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -134,7 +135,7 @@ export const SearchPage = () => {
                     })
             } else if (searchField === "Год публикации") {
                 console.log("yes")
-                const body = { pubYear: fieldVal }
+                const body = { pubYear: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/pubYear', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -142,7 +143,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Автор") {
-                const body = { author: fieldVal }
+                const body = { author: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/author', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -150,7 +151,7 @@ export const SearchPage = () => {
                         setDocs([]);
                     })
             } else if (searchField === "Краткая аннотация") {
-                const body = { briefAnnotation: fieldVal }
+                const body = { briefAnnotation: fieldVal, userId: userId }
                 const fetched = request('/api/books/find/briefAnnotation', 'POST', body)
                     .then(response => {
                         setBooks(response);
@@ -284,7 +285,14 @@ const BookItem = ({ item, loading }) => {
     const [ modalActive, setModalActive ] = useState(false);
 
     const fetchAllSources = async () => {
-        const collectionsFetched = await fetch(`/api/collections/booksInCollection/${item.id_book}`);
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await fetch(`/api/collections/booksInCollection`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: item.id_book, userId: userId })
+        });
         const data = await collectionsFetched.json();
         console.log(data)
         setAllCollections(data);
@@ -436,7 +444,14 @@ const DocItem = ({ item, loading }) => {
     const [ modalActive, setModalActive ] = useState(false);
 
     const fetchAllSources = async () => {
-        const collectionsFetched = await fetch(`/api/collections/docInCollection/${item.id_document}`);
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await fetch(`/api/collections/docInCollection`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: item.id_document, userId: userId })
+        });
         const data = await collectionsFetched.json();
         console.log(data)
         setAllCollections(data);
@@ -575,7 +590,14 @@ const ArticleItem = ({ item, loading }) => {
     const [ modalActive, setModalActive ] = useState(false);
 
     const fetchAllSources = async () => {
-        const collectionsFetched = await fetch(`/api/collections/articleInCollection/${item.id_article}`);
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await fetch(`/api/collections/articleInCollection`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: item.id_article, userId: userId })
+        });
         const data = await collectionsFetched.json();
         console.log(data)
         setAllCollections(data);

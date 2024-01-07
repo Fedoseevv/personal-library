@@ -46,11 +46,13 @@ export const AddArticle = () => {
 
     const registerHandler = async () => {
         try {
+            const userId = await JSON.parse(localStorage.getItem('userData')).userId
             const form = {
                 title: title.value,
                 dateOfPub: dateOfPub.value,
                 linkArt: linkArt.value,
                 id_authors: curAuthors,
+                userId: userId
             }
             console.log(form);
             await request('/api/articles/add', 'POST', {...form});

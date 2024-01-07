@@ -43,7 +43,8 @@ class CollectionController {
 
     async allCollections(req, res) {
         try {
-            await collectionQueries.allCollections()
+            const userId = req.params.id
+            await collectionQueries.allCollections(userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -54,11 +55,11 @@ class CollectionController {
 
     async booksInCollection(req, res, next) {
         try {
-            const {id} = req.params
+            const {id, userId} = req.body
             if (!id) {
                 return next(ApiError.badReq("Идентификатор коллекции не указан!"));
             }
-            const data = await collectionQueries.booksInCollections(id)
+            const data = await collectionQueries.booksInCollections(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -68,11 +69,11 @@ class CollectionController {
     }
     async docInCollection(req, res, next) {
         try {
-            const {id} = req.params
+            const {id, userId} = req.body
             if (!id) {
                 return next(ApiError.badReq("Идентификатор коллекции не указан!"));
             }
-            const data = await collectionQueries.docInCollections(id)
+            const data = await collectionQueries.docInCollections(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })
@@ -82,11 +83,11 @@ class CollectionController {
     }
     async articleInCollection(req, res, next) {
         try {
-            const {id} = req.params
+            const {id, userId} = req.body
             if (!id) {
                 return next(ApiError.badReq("Идентификатор коллекции не указан!"));
             }
-            const data = await collectionQueries.articleInCollections(id)
+            const data = await collectionQueries.articleInCollections(id, userId)
                 .then(response => {
                     return res.status(200).send(response);
                 })

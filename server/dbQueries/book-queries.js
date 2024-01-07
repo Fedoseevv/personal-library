@@ -1,10 +1,10 @@
 const pool = require('../db-connector');
 const {request} = require('express');
 
-const addBook = (title, year, keywords, cover, id_genre, annotation, location, locationObl) => {
+const addBook = (title, year, keywords, cover, id_genre, annotation, location, locationObl, userId) => {
     return new Promise((resolve, reject) => {
         pool.query("INSERT INTO course_work.library.book (id_book, title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl, id_user) " +
-            "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9)", [title, year, keywords, cover, id_genre, annotation, location, locationObl, 1],
+            "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9)", [title, year, keywords, cover, id_genre, annotation, location, locationObl, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -148,8 +148,8 @@ const deleteBookPh = (id) => {
     });
 }
 
-const allBooks = () => {
-    const query = "SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+const allBooks = (userId) => {
+    const query = "SELECT id_genre, b.id_user, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
         "\t\tlocation, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
         "\t\tcity_of_publication, g.name as genre, \n" +
         "\t\tarray_agg(ba.id_ba) as ba_array,\n" +
@@ -157,13 +157,13 @@ const allBooks = () => {
         "\t\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
         "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
         "library.book_publishing_house bph, library.publishing_house ph\n" +
-        "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+        "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$1\n" +
         "GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
         "\t\tlocation, location_obl, b.id_book, ph.id_publishing_house, \n" +
         "\t\tph.name, city_of_publication, g.name "
 
     return new Promise((resolve, reject) => {
-        pool.query(query,
+        pool.query(query, [userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -201,9 +201,9 @@ const booksInCollection = (id) => {
     })
 }
 
-const booksNotInCollection = (id) => {
+const booksNotInCollection = (id, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -211,13 +211,13 @@ const booksNotInCollection = (id) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
             "\t\tHAVING b.id_book NOT IN (SELECT id_book\n" +
             "\t\t\tFROM course_work.library.book_collection\n" +
-            "\t\t\t\tWHERE id_collection = $1)", [id],
+            "\t\t\t\tWHERE id_collection = $1)", [id, userId],
             (error, result) => {
                 if (error) {
                     reject(error)
@@ -335,9 +335,9 @@ const bookById = (id) => {
     });
 }
 
-const findBooksByTitle = (title) => {
+const findBooksByTitle = (title, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -345,11 +345,11 @@ const findBooksByTitle = (title) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING LOWER(title) LIKE $1", [`%${title.toLowerCase()}%`],
+            "\t\tHAVING LOWER(title) LIKE $1", [`%${title.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -360,9 +360,9 @@ const findBooksByTitle = (title) => {
     });
 }
 
-const findBooksByGenre = (genre) => {
+const findBooksByGenre = (genre, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -370,11 +370,11 @@ const findBooksByGenre = (genre) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING LOWER(g.name) LIKE $1", [`%${genre.toLowerCase()}%`],
+            "\t\tHAVING LOWER(g.name) LIKE $1", [`%${genre.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -385,9 +385,9 @@ const findBooksByGenre = (genre) => {
     });
 }
 
-const findBooksByPubHouse = (pubHouse) => {
+const findBooksByPubHouse = (pubHouse, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -395,11 +395,11 @@ const findBooksByPubHouse = (pubHouse) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING  LOWER(ph.name) LIKE $1", [`%${pubHouse.toLowerCase()}%`],
+            "\t\tHAVING  LOWER(ph.name) LIKE $1", [`%${pubHouse.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -410,9 +410,9 @@ const findBooksByPubHouse = (pubHouse) => {
     });
 }
 
-const findBooksByKeywords = (keywords) => {
+const findBooksByKeywords = (keywords, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -420,11 +420,11 @@ const findBooksByKeywords = (keywords) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING LOWER(keywords) LIKE $1", [`%${keywords.toLowerCase()}%`],
+            "\t\tHAVING LOWER(keywords) LIKE $1", [`%${keywords.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -434,9 +434,9 @@ const findBooksByKeywords = (keywords) => {
             })
     });
 }
-const findBooksByPubYear = (pubYear) => {
+const findBooksByPubYear = (pubYear, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -444,11 +444,11 @@ const findBooksByPubYear = (pubYear) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING year_of_publication=$1", [pubYear],
+            "\t\tHAVING year_of_publication=$1", [pubYear, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -459,9 +459,9 @@ const findBooksByPubYear = (pubYear) => {
     });
 
 }
-const findBooksByAuthor = (author) => {
+const findBooksByAuthor = (author, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation,  \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation,  \n" +
             "                    location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name,  \n" +
             "                    city_of_publication, g.name as genre,  \n" +
             "                    array_agg(ba.id_ba) as ba_array, \n" +
@@ -469,12 +469,12 @@ const findBooksByAuthor = (author) => {
             "                    array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors \n" +
             "                    FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, \n" +
             "                    library.book_publishing_house bph, library.publishing_house ph \n" +
-            "                    WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house \n" +
+            "                    WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "                    GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation,  \n" +
             "                    location, location_obl, b.id_book, ph.id_publishing_house,  \n" +
             "                    ph.name, city_of_publication, g.name \n" +
             "\tHAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') LIKE $1",
-            [`%${author.toLowerCase()}%`],
+            [`%${author.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -485,9 +485,9 @@ const findBooksByAuthor = (author) => {
     });
 
 }
-const findBooksByBriefAnn = (briefAnn) => {
+const findBooksByBriefAnn = (briefAnn, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
+        pool.query("SELECT id_genre, b.id_book, b.id_user, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, ph.name as pub_name, \n" +
             "        city_of_publication, g.name as genre, \n" +
             "        array_agg(ba.id_ba) as ba_array,\n" +
@@ -495,11 +495,11 @@ const findBooksByBriefAnn = (briefAnn) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
-            "\t\tHAVING LOWER(brief_annotation) LIKE $1", [`%${briefAnn.toLowerCase()}%`],
+            "\t\tHAVING LOWER(brief_annotation) LIKE $1", [`%${briefAnn.toLowerCase()}%`, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
