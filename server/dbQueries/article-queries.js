@@ -110,7 +110,7 @@ const articlesInCollection = (id, userId) => {
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING ar.id_article IN (SELECT id_article\n" +
             "FROM course_work.library.article_collection\n" +
@@ -132,7 +132,7 @@ const articlesNotInCollection = (id, userId) => {
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING ar.id_article NOT IN (SELECT id_article\n" +
             "FROM course_work.library.article_collection\n" +
@@ -147,10 +147,10 @@ const articlesNotInCollection = (id, userId) => {
     })
 }
 
-const updateArticle = (id_article, title, hyperlink, date_of_publication) => {
+const updateArticle = (id_article, title, hyperlink, date_of_publication, userId) => {
     return new Promise((resolve, reject) => {
-       pool.query("UPDATE course_work.library.article SET title = $1, hyperlink = $2, date_of_publication = $3, id_user = 1 WHERE id_article = $4",
-           [title, hyperlink, date_of_publication, id_article],
+       pool.query("UPDATE course_work.library.article SET title = $1, hyperlink = $2, date_of_publication = $3, id_user = $5 WHERE id_article = $4",
+           [title, hyperlink, date_of_publication, id_article, userId],
            (error, result) => {
             if (error) {
                 reject(error);
@@ -230,7 +230,7 @@ const findByTitle = (title, userId) => {
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING LOWER(ar.title) LIKE $1",
             [`%${title.toLowerCase()}%`, userId],
@@ -250,7 +250,7 @@ const findByAuthor = (someName, userId) => {
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING array_to_string(array_agg(LOWER(concat(a.surname, ' ', a.name, ' ', a.patronymic, ', ', EXTRACT(YEAR FROM a.date_of_birth), ' г.р.'))), ',') LIKE $1",
             [`%${someName.toLowerCase()}%`, userId],
@@ -270,7 +270,7 @@ const findByDate = (date, userId) => {
             "\tarray_agg(a.id_author) as authors_id,\n" +
             "\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "FROM course_work.library.article ar, course_work.library.article_author aa, course_work.library.author a\n" +
-            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND id_user = $2\n" +
+            "WHERE ar.id_article=aa.id_article AND aa.id_author=a.id_author AND ar.id_user = $2\n" +
             "GROUP BY ar.id_article, title, date_of_publication, hyperlink\n" +
             "HAVING date_of_publication=$1",
             [date, userId],

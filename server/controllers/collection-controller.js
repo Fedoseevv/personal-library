@@ -9,12 +9,12 @@ const artQueries = require("../dbQueries/article-queries");
 class CollectionController {
     async addCollection(req, res, next) {
         try {
-            const {name} = req.body;
+            const {name, userId} = req.body;
             console.log(name);
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await collectionQueries.addCollection(name)
+            await collectionQueries.addCollection(name, userId)
                 .then(response => {
                     return res.status(201).json({message: response});
                 })

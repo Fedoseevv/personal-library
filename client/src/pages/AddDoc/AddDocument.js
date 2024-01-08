@@ -21,9 +21,9 @@ export const AddDocument = () => {
     const [authorId, setAuthorId] = useState('1')
     const [curAuthors, setCurAuthors] = useState([]);
 
-
     const fetchAuthors = useCallback(async () => {
-        const fetched = await request('/api/author/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const fetched = await request(`/api/author/all/${userId}`, 'GET');
         setAuthors(fetched);
         const author = fetched[0]
         setAuthorId(author.id_author.toString())
@@ -51,12 +51,14 @@ export const AddDocument = () => {
 
     const registerHandler = async () => {
         try {
+            const userId = await JSON.parse(localStorage.getItem('userData')).userId
             const form = {
                 title: title.value,
                 dateOfPub: dateOfPub.value,
                 location: location.value,
                 locationObl: locationObl.value,
                 authorsId: curAuthors.map(item => parseInt(item)),
+                userId: userId
             }
             console.log(form);
             await request('/api/documents/add', 'POST', {...form});

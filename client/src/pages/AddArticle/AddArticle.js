@@ -18,7 +18,8 @@ export const AddArticle = () => {
     const [curAuthors, setCurAuthors] = useState([]);
 
     const fetchAuthors = useCallback(async () => {
-        const fetched = await request('/api/author/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const fetched = await request(`/api/author/all/${userId}`, 'GET');
         setAuthors(fetched);
         const author = fetched[0]
         setAuthorId(author.id_author.toString())

@@ -102,12 +102,12 @@ class ArticlesController {
 
     async updateArticle(req, res, next) {
         try {
-            const {id_article, id_aa, title, date_of_publication, hyperlink, id_authors} = req.body;
+            const {id_article, id_aa, title, date_of_publication, hyperlink, id_authors, userId} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             console.log(req.body);
-            await articleQueries.updateArticle(id_article, title, hyperlink, date_of_publication)
+            await articleQueries.updateArticle(id_article, title, hyperlink, date_of_publication, userId)
 
             const authorQuery = await articleQueries.authorsByArtId(id_article);
             const currentAuthors = authorQuery[0].authors;

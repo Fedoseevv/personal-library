@@ -44,7 +44,7 @@ export const BookItem = ({ item, onDeleteBook, authors, allBooks }) => {
     }
 
     const sendUpdates = async () => {
-
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
         const body = {
             id_book: item.id_book,
             id_ba: item.ba_array,
@@ -59,7 +59,8 @@ export const BookItem = ({ item, onDeleteBook, authors, allBooks }) => {
             id_genre: genre,
             id_publishing_house: item.id_publishing_house,
             pub_name: pubName.value,
-            pub_city: pubCity.value
+            pub_city: pubCity.value,
+            userId: userId
         }
         console.log(body)
         const updated = request('/api/books/update', 'POST', body)

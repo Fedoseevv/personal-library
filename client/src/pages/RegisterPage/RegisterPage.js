@@ -63,7 +63,7 @@ export const RegisterPage = () => {
                             </div>
                             <div className="auth_form__input">
                                 {(password.isDirty && password.minLengthError)
-                                    && <div className=" auth_incorrect__value incorrect">Пароль должен быть длиннее 6 символов</div>}
+                                    && <div className=" auth_incorrect__value incorrect">Некорректный пароль</div>}
                                 <input
                                     placeholder="Введите пароль"
                                     id="password"
@@ -91,7 +91,7 @@ export const RegisterPage = () => {
                         <button
                             onClick={registerHandler}
                             className="standard_btn auth_form__btn"
-                            disabled={ loading || !email.inputValid || !password.inputValid
+                            disabled={ loading || !email.inputValid || !password.inputValid || !(/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}/g.test(password.value))
                                 || password.value !== passwordRepeat.value }>Регистрация
                         </button>
                         <button

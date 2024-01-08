@@ -18,7 +18,8 @@ export const AddAuthor = () => {
     const [modalActive, setModalActive] = useState(false)
 
     const fetchAuthors = useCallback(async () => {
-        const data = await request('/api/author/all')
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const data = await request(`/api/author/all/${userId}`)
         setAuthors(data)
     }, [ request ])
 
@@ -47,11 +48,13 @@ export const AddAuthor = () => {
             return arr[2] + "." + arr[1] + "." + arr[0]
         }
         try {
+            const userId = await JSON.parse(localStorage.getItem('userData')).userId
             const form = {
                 name: name.value,
                 surname: surname.value,
                 patronymic: patronymic.value,
-                birthDate: birthDate.value
+                birthDate: birthDate.value,
+                userId: userId
             }
             authors.forEach(item => {
                 console.log(item.name + " " + item.patronymic + " " + item.surname + " " + getDate(item.date_of_birth))

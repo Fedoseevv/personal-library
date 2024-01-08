@@ -1,10 +1,10 @@
 const pool = require('../db-connector');
 const {request} = require('express');
 
-const addCollection = (title) => {
+const addCollection = (title, userId) => {
     return new Promise((resolve, reject) => {
-       pool.query("INSERT INTO course_work.library.collection (id_collection, name, date_of_creation) VALUES (DEFAULT, $1, DEFAULT)",
-           [title], (error, result) => {
+       pool.query("INSERT INTO course_work.library.collection (id_collection, name, date_of_creation, id_user) VALUES (DEFAULT, $1, DEFAULT, $2)",
+           [title, userId], (error, result) => {
                 if (error) {
                     reject(error);
                 } else {

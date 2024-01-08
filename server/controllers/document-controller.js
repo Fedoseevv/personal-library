@@ -102,12 +102,12 @@ class DocumentController {
 
     async updateDocument(req, res, next) {
         try {
-            const {id_document, id_da, title, date_of_publication, location, location_obl, id_authors} = req.body;
+            const {id_document, id_da, title, date_of_publication, location, location_obl, id_authors, userId} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             console.log(req.body);
-            await documentQueries.updateDocument(id_document, title, date_of_publication, location, location_obl)
+            await documentQueries.updateDocument(id_document, title, date_of_publication, location, location_obl, userId)
 
             console.log(id_authors)
             const authorQuery = await documentQueries.authorsByDocId(id_document);

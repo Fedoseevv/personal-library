@@ -25,7 +25,8 @@ export const AddBook = () => {
     const [curAuthors, setCurAuthors] = useState([]);
 
     const fetchAuthors = useCallback(async () => {
-        const fetched = await request('/api/author/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const fetched = await request(`/api/author/all/${userId}`, 'GET');
         setAuthors(fetched);
         const author = fetched[0]
         setAuthorId(author.id_author.toString())
@@ -56,6 +57,7 @@ export const AddBook = () => {
 
     const registerHandler = async () => {
         try {
+            const userId = await JSON.parse(localStorage.getItem('userData')).userId
             const form = {
                 title: title.value,
                 year: pubYear.value,
@@ -67,7 +69,8 @@ export const AddBook = () => {
                 id_genre: genre,
                 id_authors: curAuthors,
                 pubHouse: pubHouse.value,
-                pubCity: pubCity.value
+                pubCity: pubCity.value,
+                userId: userId
             }
             console.log(form);
             const data = await request('/api/books/add', 'POST', {...form});

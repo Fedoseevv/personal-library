@@ -43,13 +43,15 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
     }
 
     const sendUpdates = async () => {
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
         const body = {
             id_article: item.id_article,
             id_aa: item.aa_array,
             title: title.value,
             date_of_publication: pubYear.value,
             hyperlink: hyperlink.value,
-            id_authors: curAuthorsId.map(item => parseInt(item))
+            id_authors: curAuthorsId.map(item => parseInt(item)),
+            userId: userId
         }
         console.log(body);
         const fetched = request('/api/articles/update', 'POST', body)

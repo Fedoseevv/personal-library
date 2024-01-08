@@ -157,7 +157,7 @@ const allBooks = (userId) => {
         "\t\tarray_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
         "FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
         "library.book_publishing_house bph, library.publishing_house ph\n" +
-        "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$1\n" +
+        "WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$1\n" +
         "GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
         "\t\tlocation, location_obl, b.id_book, ph.id_publishing_house, \n" +
         "\t\tph.name, city_of_publication, g.name "
@@ -211,7 +211,7 @@ const booksNotInCollection = (id, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -228,10 +228,10 @@ const booksNotInCollection = (id, userId) => {
     })
 }
 
-const updateBook = (id_book, title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl) => {
+const updateBook = (id_book, title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("UPDATE course_work.library.book SET title = $1, year_of_publication = $2, keywords = $3, cover = $4, id_genre = $5, brief_annotation = $6, location = $7, location_obl = $8, id_user = 1 WHERE id_book = $9",
-            [title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl, id_book],
+        pool.query("UPDATE course_work.library.book SET title = $1, year_of_publication = $2, keywords = $3, cover = $4, id_genre = $5, brief_annotation = $6, location = $7, location_obl = $8, id_user = $10 WHERE id_book = $9",
+            [title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl, id_book, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -345,7 +345,7 @@ const findBooksByTitle = (title, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -370,7 +370,7 @@ const findBooksByGenre = (genre, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -395,7 +395,7 @@ const findBooksByPubHouse = (pubHouse, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -420,7 +420,7 @@ const findBooksByKeywords = (keywords, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -444,7 +444,7 @@ const findBooksByPubYear = (pubYear, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +
@@ -469,7 +469,7 @@ const findBooksByAuthor = (author, userId) => {
             "                    array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors \n" +
             "                    FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a, \n" +
             "                    library.book_publishing_house bph, library.publishing_house ph \n" +
-            "                    WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "                    WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "                    GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation,  \n" +
             "                    location, location_obl, b.id_book, ph.id_publishing_house,  \n" +
             "                    ph.name, city_of_publication, g.name \n" +
@@ -495,7 +495,7 @@ const findBooksByBriefAnn = (briefAnn, userId) => {
             "        array_agg(concat(surname, ' ', a.name, ' ', patronymic, ', ', EXTRACT(YEAR FROM date_of_birth), ' г.р.')) AS authors\n" +
             "        FROM library.book b LEFT JOIN library.genre g USING(id_genre), library.book_author ba, library.author a,\n" +
             "        library.book_publishing_house bph, library.publishing_house ph\n" +
-            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND id_user=$2\n" +
+            "        WHERE b.id_book=ba.id_book AND ba.id_author=a.id_author AND b.id_book=bph.id_book AND bph.id_publishing_house=ph.id_publishing_house AND b.id_user=$2\n" +
             "        GROUP BY id_genre, b.id_book, title, year_of_publication, keywords, cover, brief_annotation, \n" +
             "        location, location_obl, b.id_book, ph.id_publishing_house, \n" +
             "        ph.name, city_of_publication, g.name\n" +

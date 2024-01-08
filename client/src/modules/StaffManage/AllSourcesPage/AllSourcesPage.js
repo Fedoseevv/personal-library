@@ -59,7 +59,8 @@ export const AllSourcesPage = () => {
 
     const fetchAuthors = useCallback(async () => {
         console.log("fetch authors")
-        const authorsFetched = await request(`/api/author/all`, 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const authorsFetched = await request(`/api/author/all/${userId}`, 'GET');
         setAuthors(authorsFetched);
     }, [  ]);
 

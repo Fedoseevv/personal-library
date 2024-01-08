@@ -69,18 +69,24 @@ const useValidation = (value, validations) => {
                 case 'isDigit':
                     const regDIgit = /\d/g;
                     regDIgit.test(String(value)) ? setIsDigitError(false) : setIsDigitError(true);
+                    break;
 
+                case 'isPassword':
+                    const regPass = /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}/g;
+                    regPass.test(String(value)) ? setPassError(false) : setPassError(true);
+                    break;
             }
         }
     }, [value])
 
     useEffect(() => {
-        if (isEmpty || maxLengthError ||  minLengthError || emailError) {
+        if (isEmpty || maxLengthError ||  minLengthError || emailError || passError) {
+            console.log(`from use effect: ${passError}`)
             setInputValid(false)
         } else {
             setInputValid(true);
         }
-    }, [isEmpty, maxLengthError, minLengthError, emailError])
+    }, [isEmpty, maxLengthError, minLengthError, passError, emailError])
 
     return {
         isEmpty,

@@ -108,12 +108,12 @@ class BookController {
         try {
             const {id_book, id_ba, title, year_of_publication, keywords, cover,
                 brief_annotation, location, location_obl, id_authors, id_genre,
-                pub_name, pub_city, id_publishing_house} = req.body;
+                pub_name, pub_city, id_publishing_house, userId} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             console.log(req.body)
-            await bookQueries.updateBook(id_book, title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl)
+            await bookQueries.updateBook(id_book, title, year_of_publication, keywords, cover, id_genre, brief_annotation, location, location_obl, userId)
 
             // Для издательства может поменяться название. Смотрим, если изменилось название или город,
             // Тогда добавляем новую строчку, иначе ничего не делаем

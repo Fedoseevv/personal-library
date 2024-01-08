@@ -14,7 +14,8 @@ export const AddCollection = () => {
     const [modalActive, setModalActive] = useState(false)
 
     const fetchCollections = useCallback(async () => {
-        const collectionsFetched = await request('/api/collections/all', 'GET');
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
+        const collectionsFetched = await request(`/api/collections/all/${userId}`, 'GET');
         setCollections(collectionsFetched);
     }, [ request ]);
 
@@ -24,8 +25,10 @@ export const AddCollection = () => {
 
     const registerHandler = async () => {
         try {
+            const userId = await JSON.parse(localStorage.getItem('userData')).userId
             const form = {
-                name: title.value
+                name: title.value,
+                userId: userId
             }
             console.log(form);
             const findByName = collections.filter(item => item.name === title.value)

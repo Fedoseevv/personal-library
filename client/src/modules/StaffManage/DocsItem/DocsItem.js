@@ -47,6 +47,7 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
     }
 
     const sendUpdates = async () => {
+        const userId = await JSON.parse(localStorage.getItem('userData')).userId
         const body = {
             id_document: item.id_document,
             id_da: item.da_array,
@@ -54,7 +55,8 @@ export const DocsItem = ({ item, onDeleteDoc, authors }) => {
             date_of_publication: pubYear.value,
             location: pcLocation.value,
             location_obl: oblLocation.value,
-            id_authors: curAuthorsId.map(item => parseInt(item))
+            id_authors: curAuthorsId.map(item => parseInt(item)),
+            userId: userId
         }
         console.log(body);
         const fetched = request('/api/documents/update', 'POST', body)

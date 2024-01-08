@@ -14,10 +14,10 @@ const maxId = () => {
     })
 }
 
-const addAuthor = (id, name, patronymic, surname, birthDate) => {
+const addAuthor = (id, name, patronymic, surname, birthDate, userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO course_work.library.author (id_author, name, patronymic, surname, date_of_birth)" +
-            "VALUES ($1, $2, $3, $4, $5)", [id, name, patronymic, surname, birthDate],
+        pool.query("INSERT INTO course_work.library.author (id_author, name, patronymic, surname, date_of_birth, id_user)" +
+            "VALUES ($1, $2, $3, $4, $5, $6)", [id, name, patronymic, surname, birthDate, userId],
             (error, result) => {
                 if (error) {
                     reject(error);
@@ -43,9 +43,9 @@ const deleteAuthor = (id) => {
     });
 }
 
-const allAuthors = () => {
+const allAuthors = (userId) => {
     return new Promise((resolve, reject) => {
-        pool.query("SELECT * FROM course_work.library.author",
+        pool.query("SELECT * FROM course_work.library.author WHERE id_user=$1", [userId],
             (error, result) => {
                 if (error) {
                     reject(error);

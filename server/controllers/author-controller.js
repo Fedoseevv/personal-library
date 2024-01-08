@@ -7,13 +7,13 @@ const articleQueries = require("../dbQueries/article-queries");
 class AuthorController {
     async addAuthor(req, res, next) {
         try {
-            const {name, patronymic, surname, birthDate} = req.body;
-            console.log(name, patronymic, surname, birthDate)
+            const {name, patronymic, surname, birthDate, userId} = req.body;
+            console.log(name, patronymic, surname, birthDate, userId)
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             const result = await authorQueries.maxId()
-            await authorQueries.addAuthor(result.id + 1, name, patronymic, surname, birthDate)
+            await authorQueries.addAuthor(result.id + 1, name, patronymic, surname, birthDate, userId)
                 .then(response => {
                     return res.status(200).json({message: response});
                 });
@@ -68,7 +68,8 @@ class AuthorController {
 
     async allAuthors(req, res) {
         try {
-            await authorQueries.allAuthors()
+            const userId = req.params.id
+            await authorQueries.allAuthors(userId)
                 .then(response => {
                     return res.status(200).send(response);
                 });
