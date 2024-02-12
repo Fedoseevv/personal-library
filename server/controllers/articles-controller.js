@@ -10,15 +10,32 @@ class ArticlesController {
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
-            await articleQueries.addArticle(title, linkArt, dateOfPub, userId)
-            await articleQueries.maxArtId(userId)
-                .then(response => {
-                    const artId = response["max_id"]
-                    for(const id of id_authors) {
-                        articleQueries.addRec(artId, id);
-                    }
-                })
-            return res.status(201).json({message: "Запись успешно добавлена!"});
+
+            const url = "http://127.0.0.1:5000/extract_kw"
+            const jsonData = { url: `${linkArt}` }
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Указываем, что отправляем JSON данные
+                },
+                body: JSON.stringify(jsonData) // Преобразуем JSON данные в строку
+            };
+
+            fetch(url, requestOptions)
+                .then(resp => resp.json())
+                .then(async data => {
+                    console.log(data)
+                    const keywords = data.res.join(";");
+                    await articleQueries.addArticle(title, linkArt, dateOfPub, userId, keywords)
+                    await articleQueries.maxArtId(userId)
+                        .then(response => {
+                            const artId = response["max_id"]
+                            for(const id of id_authors) {
+                                articleQueries.addRec(artId, id);
+                            }
+                        })
+                    return res.status(201).json({message: "Запись успешно добавлена!"});
+                    })
         } catch (e) {
             return res.status(400).json({message: e.message});
         }
@@ -102,12 +119,12 @@ class ArticlesController {
 
     async updateArticle(req, res, next) {
         try {
-            const {id_article, id_aa, title, date_of_publication, hyperlink, id_authors, userId} = req.body;
+            const {id_article, id_aa, title, date_of_publication, hyperlink, id_authors, keywords, userId} = req.body;
             if (req.body.isEmpty) {
                 return next(ApiError.badReq("Тело запроса пустое!"));
             }
             console.log(req.body);
-            await articleQueries.updateArticle(id_article, title, hyperlink, date_of_publication, userId)
+            await articleQueries.updateArticle(id_article, title, hyperlink, date_of_publication, userId, keywords)
 
             const authorQuery = await articleQueries.authorsByArtId(id_article);
             const currentAuthors = authorQuery[0].authors;
@@ -183,6 +200,19 @@ class ArticlesController {
             return res.status(400).json({message: e.message});
         }
     }
+    async findByKeywords(req, res, next) {
+        try {
+            const {keywords, userId} = req.body;
+            console.log(keywords)
+            await articleQueries.findByKeywords(keywords, userId)
+                .then(response => {
+                   return res.status(200).send(response);
+                });
+        } catch (e) {
+            return res.status(400).json({message: e.message});
+        }
+    }
+
     async generateReport(req, res, next) {
         const id = req.params.id;
         console.log(id)
@@ -198,6 +228,7 @@ class ArticlesController {
         doc.fontSize(12).text(`Дата публикации: ${new Date(article.date_of_publication).toLocaleDateString()}`, {align: "justify"});
         doc.fontSize(12).text(`Ссылка на статью: ${article.hyperlink}`, {align: "justify"});
         doc.fontSize(12).text(`Автор(-ы): ${article.authors}`, {align: "justify"});
+        doc.fontSize(12).text(`Ключевые слова: ${article.keywords.split(";").join(", ")}`, {align: "justify"});
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=article.pdf');

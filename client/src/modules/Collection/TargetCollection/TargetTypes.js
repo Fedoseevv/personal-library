@@ -71,6 +71,7 @@ export const TargetItemArticle = ({ item, colId, onDeleteHandler }) => {
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
                 <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
+                <div className="staff_item__info">Ключевые слова: <span>{item.keywords.split(";").join(", ")}</span></div>
                 <div className="article_item__btns">
                     <button
                         type={"submit"}

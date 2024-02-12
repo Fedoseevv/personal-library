@@ -3,6 +3,7 @@ import {useHttp} from "../../hooks/httpHook";
 import {useHistory} from "react-router-dom";
 import './AddArticle.css';
 import {useInput} from '../../hooks/validationHook';
+import {Loader} from "../../components/loader/Loader";
 
 export const AddArticle = () => {
     const title = useInput('', {isEmpty: true, minLength: 6});
@@ -59,6 +60,10 @@ export const AddArticle = () => {
             await request('/api/articles/add', 'POST', {...form});
             history.push('/staffManage');
         } catch (e) {} // Пустой, т.к мы его уже обработали в хуке
+    }
+
+    if (loading) {
+        return <Loader />
     }
 
     return (

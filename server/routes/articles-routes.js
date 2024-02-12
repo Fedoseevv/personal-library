@@ -16,6 +16,7 @@ router.post('/addInCollection', articlesController.addInCollection);
 router.post('/find/title', articlesController.findByTitle);
 router.post('/find/author', articlesController.findByAuthor);
 router.post('/find/date', articlesController.findByDate);
+router.post('/find/keywords', articlesController.findByKeywords);
 router.get('/report/:id', articlesController.generateReport);
 
 module.exports = router;

@@ -67,6 +67,15 @@ export const SearchPage = () => {
                         setBooks([]);
                         setDocs([]);
                     })
+            } else if (searchField === "Ключевые слова") {
+                const body = { keywords: fieldVal, userId: userId }
+                console.log(body)
+                const fetched = request('/api/articles/find/keywords', 'POST', body)
+                    .then(response => {
+                        setArticles(response);
+                        setBooks([]);
+                        setDocs([]);
+                    })
             }
         }
 
@@ -179,7 +188,8 @@ export const SearchPage = () => {
     const artFields = {
         title: "Название",
         author: "Автор",
-        datePub: "Дата публикации"
+        datePub: "Дата публикации",
+        keywords: "Ключевые слова"
     }
 
 
@@ -667,6 +677,7 @@ const ArticleItem = ({ item, loading }) => {
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
                 <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
+                <div className="staff_item__info">Ключевые слова: <span>{item.keywords.split(";").join(", ")}</span></div>
                 <div className="article_item__btns">
                     <button
                         type={"submit"}

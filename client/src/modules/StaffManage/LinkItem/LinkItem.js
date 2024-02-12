@@ -13,6 +13,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
     const title = useInput(item.title, {isEmpty: true, minLength: 1});
     const hyperlink = useInput(item.hyperlink, {isEmpty: true, minLength: 1});
     const pubYear = useInput(new Date(Date.parse(item.date_of_publication)).toLocaleDateString(), {isEmpty: true, minLength: 1, isDigit: true});
+    const keywords = useInput(item.keywords, {isEmpty: true, minLength: 1});
     const [curAuthorsId, setCurAuthorsId] = useState(item.authors_id);
     const [curAuthors, setCurAuthors] = useState(item.authors);
     const [ authorId, setAuthorId ] = useState('1');
@@ -50,6 +51,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
             title: title.value,
             date_of_publication: pubYear.value,
             hyperlink: hyperlink.value,
+            keywords: keywords.value,
             id_authors: curAuthorsId.map(item => parseInt(item)),
             userId: userId
         }
@@ -64,6 +66,7 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
             <div className="article_item__title">Название статьи: '{item.title}'</div>
             <div className="article_item__container">
                 <div className="article_item__info">Дата публикации статьи: {new Date(Date.parse(item.date_of_publication)).toLocaleDateString()}</div>
+                <div className={"article_item__info"}>Ключевые слова: {item.keywords.split(";").join(", ")}</div>
                 <div className="staff_item__info">Автор(-ы): <span>{item.authors.join("; ")}</span></div>
                 <div className="article_item__btns">
                     <button
@@ -115,6 +118,18 @@ export const LinkItem = ({ item, onDeleteArticle, authors }) => {
                                     value={hyperlink.value}
                                     onChange={e => hyperlink.onChange(e)}
                                     onBlur={e => hyperlink.onBlur(e)}
+                                    type="text"/>
+                            </div>
+
+                            <div className={"standard_input__wrap"}>
+                                {(keywords.isDirty && keywords.isEmpty)
+                                    && <div className="incorrect_value addPat_incorrect__value incorrect_value__edit">Поле не может быть пустым</div>}
+                                <h1 className={"staff_modal__subtitle"}>Ключевые слова</h1>
+                                <input
+                                    placeholder={"Введите ссылку на статью"}
+                                    value={keywords.value}
+                                    onChange={e => keywords.onChange(e)}
+                                    onBlur={e => keywords.onBlur(e)}
                                     type="text"/>
                             </div>
 

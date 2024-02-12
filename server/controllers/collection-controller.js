@@ -190,6 +190,7 @@ class CollectionController {
             doc.fontSize(14).text(`Название статьи: ${item.title}`, {align: "center", paragraphGap: 10});
             doc.fontSize(12).text(`Дата публикации: ${(new Date(item.date_of_publication)).toLocaleDateString()}`, {align: "justify"});
             doc.fontSize(12).text(`Автор(-ы): ${item.authors}`, {align: "justify"});
+            doc.fontSize(12).text(`Ключевые слова: ${article.keywords.split(";").join(", ")}`, {align: "justify"});
         }
 
         res.setHeader('Content-Type', 'application/pdf');
